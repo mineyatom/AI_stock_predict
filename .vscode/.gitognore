@@ -1,0 +1,17 @@
+# Python 暫存檔
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python 環境
+venv/
+.venv/
+env/
+
+# 環境變數
+.env
