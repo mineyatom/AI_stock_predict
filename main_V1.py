@@ -91,7 +91,7 @@ df["Price_Change"] = (df["Close"] - df["Open"])
 df["Volatility"] = (df["Return"].rolling(10).std() )
 
 # RSI
-df["RSI"] = ta.momentum.RSIIndicator(close=df["Close"],window=14).rsi()
+df["RSI"] = ta.momentum.RSIIndicator(close=df["Close"],n=14).rsi()
 
 
 # ====== MACD ======
@@ -109,8 +109,8 @@ stoch = ta.momentum.StochasticOscillator(
     high=df["High"],
     low=df["Low"],
     close=df["Close"],
-    window=14,
-    smooth_window=3
+    n=14,
+    d_n=3
 )
 df["K"] = stoch.stoch()
 df["D"] = stoch.stoch_signal()
