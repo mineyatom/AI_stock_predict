@@ -907,7 +907,7 @@ print(
 )
 print("-" * 52)
 
-print("【模型名稱】")
+print("【最佳分類模型】")
 print(f"模型名稱：{best_model_name}")
 print(f"模型準確率：{best_accuracy * 100:.2f}%")
 
@@ -943,7 +943,7 @@ recent_volatility = (
 price_range = (
     last_close
     * recent_volatility
-    
+    * 0.20
 )
 
 
