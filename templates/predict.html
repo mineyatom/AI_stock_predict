@@ -1,0 +1,41 @@
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>股票預測</title>
+</head>
+<body>
+    
+<h1>AI 股票預測</h1>
+
+<form method="post">
+    <input 
+           type="text"
+           name="stock_id"
+           placeholder="輸入股票代號’例如 2330"
+    
+    >
+
+    <button type="submit">
+         開始預測
+    </button>
+
+
+</form>    
+
+{% if result %}
+
+<h2>
+    {{ result.stock_id  }}
+</h2>
+<p>方向：{{ result.direction }}</p>
+<p>信心值：{{ result.confidence }}%</p>
+<p>上漲機率：{{ result.up_probability }}%</p>
+<p>下跌機率：{{ result.down_probability }}%</p>
+<p>最新收盤價：{{ result.latest_close }}</p>
+<p>價格區間：{{ result.price_range }}</p>
+
+{% endif %}
+
+</body>
+
+</html>
