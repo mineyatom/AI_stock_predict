@@ -25,7 +25,8 @@
 {% if result %}
 
 <h2>
-    {{ result.stock_id  }}
+    {{ result.stock_name }}
+    ({{ result.stock_id }})
 </h2>
 <p>方向：{{ result.direction }}</p>
 <p>信心值：{{ result.confidence }}%</p>
