@@ -5,6 +5,8 @@ import pandas as pd
 import ta
 import yfinance as yf
 
+import os
+
 from FinMind.data import DataLoader
 from xgboost import XGBClassifier
 
@@ -55,15 +57,24 @@ def resolve_stock_code(stock_code):
 # ===== 股票名稱 =====
 def get_stock_name(stock_code):
 
-    stock_name_map = {
-        "2330.TW": "台積電",
-        "2454.TW": "聯發科",
-        "2317.TW": "鴻海",
-        "1785.TWO": "光洋科",
-    }
+    csv_path = os.path.join(
+        "data",
+        "stock_names.csv"
+    )
 
-    if stock_code in stock_name_map:
-        return stock_name_map[stock_code]
+    if os.path.exists(csv_path):
+
+        stock_name_df = pd.read_csv(
+            csv_path,
+            encoding="utf-8-sig"
+        )
+
+        matched = stock_name_df[
+            stock_name_df["stock_code"] == stock_code
+        ]
+
+        if not matched.empty:
+            return matched.iloc[0]["stock_name"]
 
     ticker = yf.Ticker(stock_code)
 
