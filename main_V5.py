@@ -26,10 +26,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import ta
 import os
+import contextlib
+import io
 
 
 
+# ===== matplotlib 中文字體 =====
+plt.rcParams["font.sans-serif"] = [
+    "Microsoft JhengHei"
+]
 
+plt.rcParams["axes.unicode_minus"] = False
 
 # ===== 股票代號 =====
 stock_code = input(
@@ -39,22 +46,40 @@ stock_code = input(
 # 如果輸入數字，自動判斷台股
 if "." not in stock_code:
 
-    test_ticker = yf.Ticker(
-        stock_code + ".TW"
-    )
+    original_code = stock_code
 
-    try:
-        price = test_ticker.fast_info[
-            "last_price"
-        ]
+    tw_code = original_code + ".TW"
+    two_code = original_code + ".TWO"
+    with contextlib.redirect_stdout(io.StringIO()):
+      with contextlib.redirect_stderr(io.StringIO()):
 
-        if price:
-            stock_code += ".TW"
+       tw_data = yf.download(
+         tw_code,
+         period="5d",
+         progress=False
+        )
+
+    if not tw_data.empty:
+        stock_code = tw_code
+
+    else:
+        with contextlib.redirect_stdout(io.StringIO()):
+         with contextlib.redirect_stderr(io.StringIO()):
+            two_data = yf.download(
+                two_code,
+                period="5d",
+            progress=False
+        )
+
+        if not two_data.empty:
+            stock_code = two_code
+
         else:
-            stock_code += ".TWO"
+            raise ValueError(
+                f"找不到股票代號：{original_code}"
+            )
 
-    except:
-        stock_code += ".TWO"
+print(f"使用股票代號：{stock_code}")
 
 
 ## ===== 抓股票名稱 =====
@@ -262,42 +287,75 @@ def save_prediction_log(
             "股票代號": stock_code,
 
             "預測結果": prediction_text,
-            "信心值": confidence,
-            "上漲機率": up_probability,
-            "下跌機率": down_probability,
 
-            "隔日預測參考價": predict_close,
-            "預測區間下緣": lower_price,
-            "預測區間上緣": upper_price,
+            "信心值": round(
+                confidence,
+                2
+            ),
+
+            "上漲機率": round(
+                up_probability,
+                2
+            ),
+
+            "下跌機率": round(
+                down_probability,
+                2
+            ),
+
+            "隔日預測參考價": round(
+                predict_close
+            ),
+
+            "預測區間下緣": round(
+                lower_price
+            ),
+
+            "預測區間上緣": round(
+                upper_price
+            ),
+
             "實際收盤價": None,
             "實際漲跌": None,
             "是否預測正確": None
         }
     ])
 
+    # ===== 檢查是否已有 CSV =====
     if os.path.exists(log_file):
 
-        old_log = pd.read_csv(log_file)
+        old_log = pd.read_csv(
+            log_file
+        )
 
         duplicated = (
             (old_log["預測日期"] == predict_date)
             &
-            (old_log["股票代號"] == stock_code)    
+            (old_log["股票代號"] == stock_code)
         )
 
+        # ===== 已存在 → 更新 =====
         if duplicated.any():
 
             old_log.loc[
                 duplicated,
                 new_record.columns
-            ] = new_record.iloc[0].values
+            ] = (
+                new_record
+                .iloc[0]
+                .values
+            )
 
             final_log = old_log
 
+        # ===== 不存在 → 新增 =====
         else:
 
             final_log = pd.concat(
-                [old_log, new_record],
+                [
+                    old_log,
+                    new_record
+                ],
                 ignore_index=True
             )
 
@@ -305,14 +363,51 @@ def save_prediction_log(
 
         final_log = new_record
 
+    # ===== 統一整理數字格式 =====
+    final_log["信心值"] = (
+        final_log["信心值"]
+        .round(2)
+    )
 
+    final_log["上漲機率"] = (
+        final_log["上漲機率"]
+        .round(2)
+    )
+
+    final_log["下跌機率"] = (
+        final_log["下跌機率"]
+        .round(2)
+    )
+
+    final_log["隔日預測參考價"] = (
+        final_log["隔日預測參考價"]
+        .round(0)
+        .astype(int)
+    )
+
+    final_log["預測區間下緣"] = (
+        final_log["預測區間下緣"]
+        .round(0)
+        .astype(int)
+    )
+
+    final_log["預測區間上緣"] = (
+        final_log["預測區間上緣"]
+        .round(0)
+        .astype(int)
+    )
+
+    # ===== 存檔 =====
     final_log.to_csv(
         log_file,
         index=False,
         encoding="utf-8-sig"
-    )    
-                    
-    print("\n✅ 預測紀錄已存入 prediction_log.csv")
+    )
+
+    print(
+        "\n✅ 預測紀錄已存入 "
+        "prediction_log.csv"
+    )
 
 
 # ===== 更新預測結果 =====
@@ -710,11 +805,10 @@ down_probability = probability[0] * 100
 
 backtest_days_list = [
     30,
+    60,
     90,
-    180,
-    365
+    120
 ]
-
 # 每筆交易的來回手續費估算
 fee_rate = 0.003
 
@@ -1169,29 +1263,67 @@ print("=" * 52 + "🤖")
 # ===== 畫圖 =====
 plt.figure(figsize=(14, 7))
 
-plt.plot(df.index, df["Close"], label="Close Price")
-plt.plot(df.index, df["MA5"], label="MA5")
-plt.plot(df.index, df["MA20"], label="MA20")
-plt.plot(df.index, df["MA60"], label="MA60")
+# 日期轉 datetime
+plot_date = pd.to_datetime(
+    df["date"]
+)
+
+# 股價與均線
+plt.plot(
+    plot_date,
+    df["Close"],
+    label="收盤價"
+)
+
+plt.plot(
+    plot_date,
+    df["MA5"],
+    label="5日均線"
+)
+
+plt.plot(
+    plot_date,
+    df["MA20"],
+    label="20日均線"
+)
+
+plt.plot(
+    plot_date,
+    df["MA60"],
+    label="60日均線"
+)
 
 # 最新收盤價水平線
 plt.axhline(
     y=last_close,
     linestyle="--",
-    label=f"Latest Close: {last_close:.2f}"
+    label=f"最新收盤價：{last_close:.0f}"
 )
 
 # 預測區間
 plt.axhspan(
     lower_price,
     upper_price,
-    alpha=0.15,
-    label=f"Predicted Range: {lower_price:.2f} ~ {upper_price:.2f}"
+    alpha=0.25,
+    label=(
+        f"預測區間："
+        f"{lower_price:.0f}"
+        f" ~ "
+        f"{upper_price:.0f}"
+    )
 )
 
-plt.title(f"{stock_name} ({stock_code}) Stock Price Prediction")
-plt.xlabel("Date")
-plt.ylabel("Price")
+# 標題
+plt.title(
+    f"{stock_name} "
+    f"({stock_code}) 股價預測"
+)
+
+plt.xlabel("日期")
+plt.ylabel("價格")
+
+# 日期旋轉
+plt.xticks(rotation=30)
 
 plt.legend()
 plt.grid(True)
