@@ -81,7 +81,7 @@
 
             <span class="stock-code">
                 (
-                {{ latest_prediction.stock_code }}
+                {{ latest_prediction.stock_id }}
                 )
             </span>
         </h3>
@@ -123,6 +123,7 @@
 
         </div>
 
+
         <div class="confidence-bar">
 
             <div
@@ -131,6 +132,46 @@
             ></div>
 
         </div>
+
+
+         <div class="today-extra">
+
+            <div class="extra-row">
+                <span>
+                    預測日期
+                </span>
+
+                <strong>
+                    {{ latest_prediction.predict_date }}
+                </strong>
+            </div>
+
+            <div class="extra-row">
+                 <span>
+                     模型
+                </span>
+
+                <strong>
+                    {{ latest_prediction.model }}
+                </strong>
+            </div>
+
+            <div class="extra-row">
+                <span>
+                    預測區間
+                </span>
+
+                <strong>
+                   {{ latest_prediction.lower_bound }}
+                    ~
+                   {{ latest_prediction.upper_bound }}
+                </strong>
+            </div>
+
+    </div>   
+
+
+        
 
     </div>
 
@@ -228,6 +269,21 @@
 
 </section>
 
+<section class="chart-section">
+
+    <div class="chart-card">
+
+        <h2>
+            模型歷史勝率趨勢
+        </h2>
+        <div class="chart-wrapper">
+             <canvas id="accuracyChart"></canvas>
+        <div>
+
+    </div>
+
+</section>
+
 
 <section class="feature-section">
  <div class="feature-grid">
@@ -258,6 +314,83 @@
             confidenceFill.dataset.confidence + "%";
     }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const chartLabels = JSON.parse(
+        '{{ accuracy_chart["labels"] | tojson | safe }}'
+    );
+
+    const chartValues = JSON.parse(
+        '{{ accuracy_chart["values"] | tojson | safe }}'
+    );
+
+    const accuracyCanvas = document.getElementById(
+        "accuracyChart"
+    );
+
+    if (accuracyCanvas) {
+
+        new Chart(
+            accuracyCanvas,
+            {
+                type: "line",
+
+                data: {
+                    labels: chartLabels,
+
+                    datasets: [
+                        {
+                            label: "模型勝率 (%)",
+
+                            data: chartValues,
+
+                            borderColor: "#d4af37",
+
+                            backgroundColor:
+                                "rgba(212, 175, 55, 0.15)",
+
+                            tension: 0.3,
+
+                            fill: true,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+
+                            showLine:
+                                chartLabels.length > 1
+                        }
+                    ]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    plugins:{
+                        legend:{
+                            display:false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 100
+                        },
+
+                        x:{
+                            ticks:{
+                                color: "#999",
+                                maxTicksLimit:7
+                            }
+                        }
+                    }
+                }
+            }
+        );
+    }
+</script>
+
 
 </body>
 

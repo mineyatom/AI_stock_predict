@@ -888,3 +888,60 @@ tr:hover {
     color: var(--up-color);
     font-weight: bold;
 }
+
+
+.chart-section {
+      margin: 60px auto;
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+.chart-card {
+    background: #0f172a;
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255,255,255,0.08);
+
+    height: 380px;
+}
+
+.chart-card h2 {
+    color: #d4af37;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 220px;
+    width: 100%;
+}
+
+#accuracyChart {
+    width: 100% !important;
+    height: 260px !important;
+}
+
+
+.today-extra {
+    margin-top: 25px;
+}
+
+.extra-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 8px 0;
+
+    border-top:
+        1px solid rgba(
+            255,255,255,0.08
+        );
+
+    color: #cbd5e1;
+}
+
+.extra-row strong {
+    color: #ffffff;
+}
