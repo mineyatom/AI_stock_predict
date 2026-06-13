@@ -22,6 +22,11 @@
     </div>
 
     <div class="nav-links">
+
+        <a href="/">
+            首頁
+        </a>
+
         <a href="/predict">
             預測
         </a>
@@ -73,22 +78,26 @@
             </span>
         </h2>
 
-        <div class="result-item">
-            <span>預測方向</span>
+        <div class="prediction-box">
 
-        <div class="prediction-direction">
+            <div class="prediction-label">
+                AI 預測結果
+            </div>
 
-            {% if result.direction == "上漲" %}
-                <span class="up">
-                    ▲ 上漲
-                </span>
-            {% else %}
-                <span class="down">
-                    ▼ 下跌
-                </span>
-            {% endif %}
+            <div class="prediction-direction">
 
-        </div>
+                {% if result.direction == "上漲" %}
+                    <span class="up">
+                        ▲ 上漲
+                    </span>
+                {% else %}
+                    <span class="down">
+                        ▼ 下跌
+                    </span>
+                {% endif %}
+
+            </div>
+
         </div>
 
         <div class="result-item">
@@ -102,7 +111,7 @@
         <div class="confidence-bar">
             <div
                 class="confidence-fill"
-               tyle="width: {{ result.confidence }}%"
+                data-confidence="{{ result.confidence }}"
             ></div>
         </div>
 
@@ -137,6 +146,18 @@
     </div>
 
     {% endif %}
+<script>
+    const confidenceFill = document.querySelector(
+        ".confidence-fill"
+    );
+
+    if (confidenceFill) {
+        confidenceFill.style.width =
+            confidenceFill.dataset.confidence + "%";
+    }
+</script>
+
+
 
 </body>
 

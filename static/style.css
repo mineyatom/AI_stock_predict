@@ -1,217 +1,110 @@
+:root {
+    /* ===== 全域主題色 ===== */
+
+    /* 網站主背景色 */
+    --bg-color: #071120;
+
+    /* 卡片背景色 */
+    --card-color: #101c2e;
+
+    /* 導覽列背景色 */
+    --navbar-color: rgba(7, 17, 32, 0.92);
+
+    /* 主要科技藍 */
+    --primary-color: #2563eb;
+
+    /* 按鈕 hover 藍 */
+    --primary-hover: #3b82f6;
+
+    /* 金色點綴，用於重點數字與標題 */
+    --gold-color: #d4af37;
+
+    /* 主文字色 */
+    --text-color: #f8fafc;
+
+    /* 次要文字色 */
+    --sub-text-color: #94a3b8;
+
+    /* 台股慣例：上漲紅、下跌綠 */
+    --up-color: #ef4444;
+    --down-color: #22c55e;
+
+    /* 通用細邊框 */
+    --border-color: rgba(255, 255, 255, 0.06);
+
+    /* ===== Design Token：統一卡片樣式 ===== */
+
+    /* 通用卡片背景 */
+    --card-bg: rgba(15, 23, 42, 0.92);
+
+    /* 通用卡片邊框 */
+    --card-border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    /* 通用卡片圓角 */
+    --card-radius: 24px;
+
+    /* 通用卡片陰影 */
+    --card-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.20);
+
+    /* 卡片 hover 陰影 */
+    --card-hover-shadow:
+        0 14px 38px
+        rgba(37, 99, 235, 0.15);
+}
+
+/* ===== 全域設定 ===== */
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    font-family: Arial, "Microsoft JhengHei", sans-serif;
-    background: #0f172a;
-    color: white;
+
+    font-family:
+        Arial,
+        "Microsoft JhengHei",
+        sans-serif;
+
+    background: var(--bg-color);
+    color: var(--text-color);
 }
 
-/* Hero */
-.hero {
-    text-align: center;
-    padding: 50px 20px 20px;
-}
-
-.hero h1 {
-    font-size: 48px;
-    margin-bottom: 10px;
-}
-
-.hero p {
-    color: #94a3b8;
-    font-size: 18px;
-}
-
-/* 搜尋框 */
-.search-box {
-    max-width: 600px;
-    margin: 40px auto;
-    display: flex;
-    gap: 10px;
-}
-
-.search-box input {
-    flex: 1;
-    padding: 18px;
-    border-radius: 12px;
-    border: none;
-    font-size: 18px;
-}
-
-.search-box button {
-    padding: 18px 28px;
-    border: none;
-    border-radius: 12px;
-    background: #2563eb;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-.search-box button:hover {
-    opacity: 0.9;
-}
-
-/* 卡片 */
-.result-card {
-    width: 720px;
-    margin: 30px auto;
-    background: #1e293b;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.result-card h2 {
-    margin-top: 0;
-    font-size: 30px;
-}
-
-.result-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid #334155;
-}
-
-.result-item:last-child {
-    border-bottom: none;
-}
-.up {
-    color: #ef4444;
-    font-weight: bold;
-}
-
-.down {
-    color: #22c55e;
-    font-weight: bold;
-}
-
-.confidence-bar {
-    width: 100%;
-    height: 10px;
-    background: #334155;
-    border-radius: 999px;
-    overflow: hidden;
-    margin: 10px 0 10px;
-}
-
-.confidence-fill {
-    height: 100%;
-    background: #3b82f6;
-    border-radius: 999px;
-}
-
-.prediction-direction {
-    display: flex;
-    justify-content: flex-end;
-    font-size: 34px;
-    align-items: 34px;
-    font-weight: bold;
-}
-
-.stock-code {
-    color: #94a3b8;
-    font-size: 20px;
-    font-weight: normal;
-}
-
-
-.history-container {
-    width: 90%;
-    margin: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #1e293b;
-    border-radius: 20px;
-    overflow: hidden;
-}
-
-th {
-    background: #2563eb;
-    padding: 18px;
-}
-
-td {
-    padding: 16px;
-    text-align: center;
-    border-bottom: 1px solid #334155;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    margin-bottom: 28px;
-}
-
-.stat-card {
-    background: #1e293b;
-    padding: 24px;
-    border-radius: 18px;
-    text-align: center;
-}
-
-.stat-label {
-    color: #94a3b8;
-    margin-bottom: 10px;
-}
-
-.stat-value {
-    font-size: 34px;
-    font-weight: bold;
-}
-
-.correct {
-    color: #22c55e;
-    font-weight: bold;
-}
-
-.wrong {
-    color: #ef4444;
-    font-weight: bold;
-}
-
-
-.correct {
-    color: #22c55e;
-    font-weight: bold;
-}
-
-.wrong {
-    color: #ef4444;
-    font-weight: bold;
-}
-
-.rise {
-    color: #ff4d4f;
-    font-weight: bold;
-}
-
-.fall {
-    color: #22c55e;
-    font-weight: bold;
-}
+/* ===== Navbar 導覽列 ===== */
 
 .navbar {
-    width: 100%;
-    padding: 20px 60px;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-sizing: border-box;
+
+    padding: 20px 60px;
+
+    background: rgba(2, 6, 23, 0.9);
+    backdrop-filter: blur(12px);
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.06);
 }
 
 .logo {
-    color: white;
     font-size: 26px;
-    font-weight: bold;
+    font-weight: 800;
+    color: white;
+}
+
+.logo::before {
+    content: "◈";
+    color: var(--gold-color);
+    margin-right: 10px;
 }
 
 .nav-links {
@@ -222,7 +115,7 @@ td {
 .nav-links a {
     color: #cbd5e1;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 17px;
     transition: 0.2s;
 }
 
@@ -230,15 +123,120 @@ td {
     color: white;
 }
 
-.stock-code-small {
-    color: #94a3b8;
-    font-size: 13px;
-    margin-top: 4px;
+/* ===== Hero 主視覺區 ===== */
+
+.hero {
+    position: relative;
+
+    width: 90%;
+    max-width: 1100px;
+
+    margin: 70px auto 45px;
+    padding: 0;
+
+    overflow: visible;
 }
 
+/* Hero 背景金藍光暈 */
+.hero::before {
+    content: "";
 
+    position: absolute;
+
+    width: 1000px;
+    height: 1000px;
+
+    left: 50%;
+    top: -320px;
+
+    transform: translateX(-50%);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(212, 175, 55, 0.14),
+            rgba(37, 99, 235, 0.12),
+            transparent 70%
+        );
+
+    filter: blur(50px);
+
+    z-index: -1;
+}
+
+/* Hero 內容置中 */
+.hero-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+}
+
+.hero-left {
+    width: min(95%, 1000px);
+
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+}
+
+/* Hero 主標題 */
+.hero-left h1 {
+    font-size: 64px;
+    font-weight: 900;
+
+    line-height: 1.15;
+
+    margin: 0 0 18px;
+
+    letter-spacing: -1px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #f7e4a6 55%,
+            #d4af37 100%
+        );
+
+    background-clip: text;
+    -webkit-background-clip: text;
+
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Hero 副標題 */
+.hero-subtitle {
+    font-size: 26px;
+    font-weight: 800;
+
+    margin: 0 0 16px;
+
+    color: #f8fafc;
+}
+
+/* Hero 說明文字 */
+.hero-left p {
+    max-width: 760px;
+
+    margin: auto;
+
+    color: #9fb0c7;
+
+    font-size: 20px;
+    line-height: 1.8;
+}
+
+/* Hero 按鈕區 */
 .home-actions {
     margin-top: 35px;
+
     display: flex;
     justify-content: center;
     gap: 18px;
@@ -247,45 +245,646 @@ td {
 .primary-btn,
 .secondary-btn {
     padding: 16px 28px;
+
     border-radius: 12px;
+
     text-decoration: none;
+
     font-size: 18px;
     font-weight: bold;
 }
 
 .primary-btn {
-    background: #2563eb;
+    background: var(--primary-color);
     color: white;
+}
+
+.primary-btn:hover {
+    background: var(--primary-hover);
 }
 
 .secondary-btn {
     background: #1e293b;
     color: #cbd5e1;
+
     border: 1px solid #334155;
 }
 
-.feature-grid {
+/* ===== 今日 AI 預測區 ===== */
+
+.today-predict {
     width: 90%;
     max-width: 1100px;
-    margin: 40px auto;
+
+    margin: 35px auto 60px;
+}
+
+.today-card {
+    background: var(--card-bg);
+    border: var(--card-border);
+
+    border-radius: 28px;
+
+    padding: 48px 60px;
+
+    max-width: 100%;
+    margin: auto;
+
+    text-align: center;
+
+    box-shadow: var(--card-shadow);
+}
+
+/* 今日預測小標 */
+.today-label {
+    color: var(--gold-color);
+
+    font-size: 16px;
+
+    margin-bottom: 10px;
+}
+
+/* 今日預測股票名稱 */
+.today-stock {
+    font-size: 34px;
+    font-weight: 800;
+
+    margin-bottom: 24px;
+}
+
+/* 今日預測方向 */
+.prediction-big {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 26px 0;
+}
+
+/* ▲ ▼ 箭頭 */
+.prediction-arrow {
+    font-size: 44px;
+    margin-right: 14px;
+}
+
+/* 上漲 / 下跌文字 */
+.prediction-text {
+    font-size: 76px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+/* 信心值文字 */
+.today-confidence {
+    color: var(--sub-text-color);
+
+    margin-bottom: 14px;
+}
+
+.today-confidence strong {
+    color: white;
+}
+
+/* 信心值進度條背景 */
+.confidence-bar {
+    width: 100%;
+    height: 16px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    border-radius: 999px;
+
+    overflow: hidden;
+
+    margin: 10px 0;
+}
+
+/* 信心值進度條 */
+.confidence-fill {
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb 60%,
+            #d4af37
+        );
+
+    border-radius: 999px;
+}
+
+/* ===== 市場觀察區 ===== */
+
+.market-section {
+    width: min(92%, 1450px);
+
+    margin: 20px auto 50px;
+}
+
+.market-section h2 {
+    text-align: left;
+
+    font-size: 26px;
+
+    color: var(--gold-color);
+
+    margin-bottom: 22px;
+}
+
+.market-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(260px, 1fr)
+        );
+
+    gap: 24px;
+}
+
+.market-card {
+    position: relative;
+
+    overflow: hidden;
+
+    background: var(--card-bg);
+    border: var(--card-border);
+
+    border-radius: var(--card-radius);
+
+    padding: 28px;
+
+    text-align: center;
+
+    box-shadow: var(--card-shadow);
+
+    transition: 0.25s;
+}
+
+/* 市場卡片上方淡淡光澤 */
+.market-card::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.04),
+            transparent
+        );
+
+    opacity: 0;
+
+    transition: 0.3s;
+}
+
+.market-card:hover::before {
+    opacity: 1;
+}
+
+.market-card:hover {
+    transform: translateY(-8px);
+
+    border:
+        1px solid
+        rgba(212, 175, 55, 0.25);
+
+    box-shadow: var(--card-hover-shadow);
+}
+
+.market-name {
+    display: block;
+
+    color: var(--sub-text-color);
+
+    margin-bottom: 12px;
+}
+
+.market-value {
+    font-size: 28px;
+    font-weight: 800;
+
+    margin-bottom: 8px;
+}
+
+.market-change {
+    font-size: 15px;
+}
+
+/* ===== 模型驗證成果區 ===== */
+
+.stats-section {
+    width: min(92%, 1200px);
+
+    margin: 60px auto;
+}
+
+.stats-section h2 {
+    text-align: center;
+
+    color: var(--gold-color);
+
+    font-size: 34px;
+
+    margin-bottom: 28px;
+}
+
+.stats-grid-home {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(220px, 1fr)
+        );
+
+    gap: 20px;
+}
+
+.stats-card-home {
+    background: var(--card-bg);
+    border: var(--card-border);
+
+    border-radius: var(--card-radius);
+
+    padding: 34px;
+
+    text-align: center;
+
+    box-shadow: var(--card-shadow);
+
+    transition: 0.25s;
+}
+
+.stats-card-home:hover {
+    transform: translateY(-5px);
+
+    box-shadow: var(--card-hover-shadow);
+}
+
+.stats-number {
+    font-size: 34px;
+    font-weight: 800;
+
+    color: var(--gold-color);
+
+    margin-bottom: 12px;
+}
+
+.stats-label {
+    color: var(--sub-text-color);
+}
+
+/* ===== 功能特色區 ===== */
+
+.feature-grid {
+    width: min(92%, 1100px);
+
+    margin: 40px auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(260px, 1fr)
+        );
+
     gap: 22px;
 }
 
 .feature-card {
-    background: #1e293b;
-    padding: 28px;
-    border-radius: 20px;
+    background: var(--card-bg);
+    border: var(--card-border);
+
+    border-radius: var(--card-radius);
+
+    padding: 34px;
+
     text-align: center;
+
+    box-shadow: var(--card-shadow);
+
+    transition: 0.25s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+
+    border:
+        1px solid
+        rgba(212, 175, 55, 0.18);
+
+    box-shadow: var(--card-hover-shadow);
 }
 
 .feature-card h3 {
     margin-top: 0;
+
     font-size: 24px;
 }
 
 .feature-card p {
-    color: #94a3b8;
+    color: var(--sub-text-color);
+
     line-height: 1.7;
+}
+
+/* ===== 預測頁：搜尋框 ===== */
+
+.search-box {
+    max-width: 600px;
+
+    margin: 40px auto;
+
+    display: flex;
+    gap: 10px;
+}
+
+.search-box input {
+    flex: 1;
+
+    padding: 18px;
+
+    border-radius: 14px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    background:
+        rgba(255, 255, 255, 0.04);
+
+    color: white;
+
+    font-size: 18px;
+
+    outline: none;
+}
+
+.search-box input::placeholder {
+    color: #64748b;
+}
+
+.search-box button {
+    padding: 18px 28px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: var(--primary-color);
+    color: white;
+
+    font-size: 18px;
+
+    cursor: pointer;
+}
+
+.search-box button:hover {
+    background: var(--primary-hover);
+}
+
+/* ===== 預測頁：結果卡 ===== */
+
+.result-card {
+    width: 720px;
+
+    margin: 30px auto;
+
+    background: var(--card-bg);
+    border: var(--card-border);
+
+    border-radius: var(--card-radius);
+
+    padding: 30px;
+
+    box-shadow: var(--card-shadow);
+}
+
+.result-card h2 {
+    margin-top: 0;
+
+    font-size: 34px;
+
+    padding-bottom: 18px;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+}
+
+.stock-code {
+    color: var(--sub-text-color);
+
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #334155;
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+.result-item span:last-child {
+    font-weight: 700;
+
+    color: #f8fafc;
+}
+
+/* 預測方向區塊 */
+.prediction-box {
+    margin: 18px 0;
+
+    padding: 18px 24px;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.04),
+            rgba(255, 255, 255, 0.02)
+        );
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    text-align: center;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.04);
+}
+
+.prediction-label {
+    color: var(--sub-text-color);
+
+    font-size: 15px;
+
+    margin-bottom: 10px;
+}
+
+.prediction-direction {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 32px;
+    font-weight: 800;
+}
+
+/* ===== 歷史紀錄頁 ===== */
+
+.history-container {
+    width: 90%;
+
+    margin: auto;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    background: var(--card-bg);
+    border: var(--card-border);
+
+    border-radius: var(--card-radius);
+
+    overflow: hidden;
+
+    backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 10px 40px
+        rgba(0, 0, 0, 0.18);
+}
+
+th {
+    background:
+        rgba(37, 99, 235, 0.15);
+
+    color: white;
+
+    padding: 20px;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+}
+
+td {
+    padding: 18px;
+
+    text-align: center;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+}
+
+tr:hover {
+    background:
+        rgba(255, 255, 255, 0.03);
+
+    transition: 0.2s;
+}
+
+/* 歷史頁統計卡 */
+.stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(220px, 1fr)
+        );
+
+    gap: 18px;
+
+    margin-bottom: 28px;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    border: var(--card-border);
+
+    padding: 28px;
+
+    border-radius: var(--card-radius);
+
+    text-align: center;
+
+    backdrop-filter: blur(12px);
+
+    transition: 0.25s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 10px 30px
+        rgba(37, 99, 235, 0.15);
+}
+
+.stat-label {
+    color: var(--sub-text-color);
+
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 34px;
+    font-weight: bold;
+
+    color: var(--gold-color);
+}
+
+.stock-code-small {
+    color: var(--sub-text-color);
+
+    font-size: 13px;
+
+    margin-top: 4px;
+}
+
+/* ===== 狀態色 ===== */
+
+/* 台股上漲：紅色 */
+.up,
+.rise {
+    color: var(--up-color);
+    font-weight: bold;
+}
+
+/* 台股下跌：綠色 */
+.down,
+.fall {
+    color: var(--down-color);
+    font-weight: bold;
+}
+
+/* 預測正確 */
+.correct {
+    color: var(--down-color);
+    font-weight: bold;
+}
+
+/* 預測錯誤 */
+.wrong {
+    color: var(--up-color);
+    font-weight: bold;
 }

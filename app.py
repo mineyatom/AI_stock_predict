@@ -1,13 +1,16 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-
+from market_data import(
+    get_market_data
+)
 
 from predictor import predict_stock
 
 from log_manager import(
+    get_latest_prediction,
     get_prediction_history
-)
+    )
 
 app = FastAPI()
 
@@ -27,10 +30,41 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def home(request: Request):
+
+    market_data = (
+        get_market_data()
+    )
+
+    history_data = (
+        get_prediction_history()
+    )
+
+    latest_prediction = get_latest_prediction()
+    
+
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={}
+        context={
+            "market_data":
+                market_data,
+
+            "accuracy" :
+                history_data["accuracy"],    
+
+            "validated_count":
+                history_data[
+                    "validated_count"
+                ],
+
+            "total_count":
+                history_data[
+                    "total_count"
+                ],
+
+            "latest_prediction":latest_prediction
+                       
+        }
     )
 
 

@@ -70,3 +70,41 @@ def get_prediction_history():
         "validated_count": validated_count,
         "total_count": total_count
     }
+
+def get_latest_prediction():
+
+    log_file = (
+        "prediction_log.csv"
+    )
+
+    if not os.path.exists(
+        log_file
+    ):
+        return None
+
+    df = pd.read_csv(
+        log_file,
+        encoding="utf-8-sig"
+    )
+
+    if df.empty:
+        return None
+
+    latest = df.iloc[-1]
+
+    return {
+        "date":
+            latest["預測日期"],
+
+        "stock_code":
+            latest["股票代號"],
+
+        "stock_name":
+            latest["股票名稱"],
+
+        "prediction":
+            latest["預測結果"],
+
+        "confidence":
+            latest["信心值"]
+    }
