@@ -5,6 +5,7 @@
 from multiprocessing.reduction import duplicate
 
 from typing import final
+from xxlimited import Str
 
 from xgboost import XGBClassifier
 
@@ -28,6 +29,8 @@ import ta
 import os
 import contextlib
 import io
+
+from predictor import predict_stock
 
 
 
@@ -82,20 +85,25 @@ if "." not in stock_code:
 print(f"使用股票代號：{stock_code}")
 
 
-## ===== 抓股票名稱 =====
-ticker = yf.Ticker(stock_code)
+# ===== 抓股票名稱 =====
+def get_stock_name_from_csv(stock_code):
 
-try:
-    info = ticker.info
-
-    stock_name = (
-        info.get("longName") or
-        info.get("shortName") or
-        stock_code
+    stock_names = pd.read_csv(
+        "data/stock_names.csv",
+        encoding="utf-8-sig"
     )
 
-except:
-    stock_name = stock_code
+    matched = stock_names[
+        stock_names["stock_code"] == stock_code
+    ]
+
+    if not matched.empty:
+        return matched.iloc[0]["stock_name"]
+
+    return stock_code
+
+
+stock_name = get_stock_name_from_csv(stock_code)
 
 
 # ===== FinMind 測試 =====
@@ -271,6 +279,7 @@ df = df[
 def save_prediction_log(
         predict_date,
         stock_code,
+        stock_name,
         prediction_text,
         confidence,
         up_probability,
@@ -279,12 +288,25 @@ def save_prediction_log(
         lower_price,
         upper_price
 ):
+    
+    # ===== 日期格式統一 =====
+    date = pd.to_datetime(
+        predict_date
+    )
+
+    predict_date = (
+        f"{date.year}/"
+        f"{date.month}/"
+        f"{date.day}"
+    )
+
     log_file = "prediction_log.csv"
 
     new_record = pd.DataFrame([
         {
             "預測日期": predict_date,
             "股票代號": stock_code,
+            "股票名稱": stock_name,
 
             "預測結果": prediction_text,
 
@@ -397,6 +419,30 @@ def save_prediction_log(
         .astype(int)
     )
 
+    columns_order = [
+        "預測日期",
+        "股票代號",
+        "股票名稱",
+        "預測結果",
+        "信心值",
+        "上漲機率",
+        "下跌機率",
+        "隔日預測參考價",
+        "預測區間下緣",
+        "預測區間上緣",
+        "實際收盤價",
+        "實際漲跌",
+        "是否預測正確"
+    ]
+
+    for col in columns_order:
+        if col not in final_log.columns:
+            final_log[col] = ""
+
+    final_log = final_log[
+        columns_order
+    ]
+
     # ===== 存檔 =====
     final_log.to_csv(
         log_file,
@@ -425,23 +471,40 @@ def update_prediction_result():
 
     df_log = pd.read_csv(
         log_file,
-        encoding="utf-8-sig"
+        encoding="utf-8-sig",
+        dtype={
+        "實際漲跌": "object",
+        "是否預測正確": "object"
+        }
     )
+    df_log = df_log.dropna(
+    subset=["預測日期", "股票代號"]
+    )
+
+    
 
     print(f"📄 CSV 筆數：{len(df_log)}")
     today = pd.Timestamp.today().normalize()
 
     for index, row in df_log.iterrows():
 
-        if pd.notna(row["實際收盤價"]):
-            continue
+        #if pd.notna(row["實際收盤價"]):
+         #   continue
 
         predict_date = pd.to_datetime(
-            row["預測日期"]
-        ).normalize()
+            row["預測日期"],
+            errors="coerce")
+        
+        if pd.isna(predict_date):
+            print(
+                f"⚠️ 跳過日期格式錯誤的資料列：第 {index + 2} 列"
+        )
+            continue
+
+        predict_date = predict_date.normalize()
 
         # 預測日還沒過，不更新
-        if predict_date >= today:
+        if predict_date > today:
             print(
                 f"⏳ 尚未到可更新日期："
                 f"{row['股票代號']} "
@@ -484,21 +547,96 @@ def update_prediction_result():
             is_correct = (
                 prediction == actual_direction
             )
+            if is_correct:
+                result_text = "正確"
+            else:
+                result_text = "錯誤"
+                    
 
-            df_log.loc[index, "實際收盤價"] = actual_close
-            df_log.loc[index, "實際漲跌"] = actual_direction
-            df_log.loc[index, "是否預測正確"] = is_correct
+            
+
+            df_log.loc[index, "實際收盤價"] = round(actual_close , 2)
+            df_log.loc[index, "實際漲跌"] = str(actual_direction)
+            df_log.loc[index, "是否預測正確"] = result_text
 
             print(f"✅ 已更新：{stock_code} {predict_date.date()}")
 
         except Exception as e:
             print(f"⚠️ 更新失敗：{stock_code}，原因：{e}")
 
+    # ===== 存檔前整理格式 =====
+    df_log["實際收盤價"] =(
+        pd.to_numeric(
+            df_log["實際收盤價"],
+            errors="coerce"
+        ).round(2)
+    )
+
+    # ===== 去除.0 =====
+    df_log["實際收盤價"] = (
+    df_log["實際收盤價"]
+    .apply(
+        lambda x:
+        int(x)
+        if pd.notna(x)
+        and x.is_integer()
+        else x
+        )
+    )
+
+    df_log["實際漲跌"] = (
+    df_log["實際漲跌"]
+    .astype(str)
+    )
+
+    df_log["是否預測正確"] = (
+    df_log["是否預測正確"]
+    .astype(str)
+    )
     df_log.to_csv(
         log_file,
         index=False,
         encoding="utf-8-sig"
     )
+
+def fill_stock_names():
+
+    df = pd.read_csv(
+        "prediction_log.csv",
+        encoding="utf-8-sig"
+    )
+
+    stock_names = pd.read_csv(
+        "data/stock_names.csv",
+        encoding="utf-8-sig"
+    )
+
+    for index, row in df.iterrows():
+
+        stock_code = row["股票代號"]
+
+        matched = stock_names[
+            stock_names["stock_code"] == stock_code
+        ]
+
+        if not matched.empty:
+            stock_name = matched.iloc[0]["stock_name"]
+        else:
+            stock_name = row["股票名稱"]
+
+        df.loc[index, "股票名稱"] = stock_name
+
+    df.to_csv(
+        "prediction_log.csv",
+        index=False,
+        encoding="utf-8-sig"
+    )
+
+    print("✅ 股票名稱補完")
+
+
+# ===== 補股票名稱（只跑一次）=====
+#fill_stock_names()
 
 
 # ===== 更新昨日預測 =====
@@ -1247,6 +1385,7 @@ print(
 save_prediction_log(
     predict_date.strftime("%Y-%m-%d"),
     stock_code,
+    stock_name,
     prediction_text,
     confidence,
     up_probability,

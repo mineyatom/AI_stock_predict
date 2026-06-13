@@ -1,15 +1,67 @@
-    
-    <html lang="zh-Hant">
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <title>AI 股票預測系統</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
-    <h1>AI 股票預測系統</h1>
+
+<nav class="navbar">
+    <div class="logo">
+        AI 股票預測
+    </div>
+
+    <div class="nav-links">
+        <a href="/">首頁</a>
+        <a href="/predict">預測</a>
+        <a href="/history">歷史紀錄</a>
+    </div>
+</nav>
+
+<div class="hero">
+
+    <h1>
+        AI 台股隔日預測系統
+    </h1>
+
     <p>
-        <a href="/predict">
-            前往股票預測
-        </a>
+        使用 XGBoost、技術指標、法人籌碼與美股領先指標，預測台股隔日漲跌方向。
     </p>
+
+    <div class="home-actions">
+        <a href="/predict" class="primary-btn">
+            開始預測
+        </a>
+
+        <a href="/history" class="secondary-btn">
+            查看歷史紀錄
+        </a>
+    </div>
+
+</div>
+
+<div class="feature-grid">
+
+    <div class="feature-card">
+        <h3>即時預測</h3>
+        <p>輸入股票代號，產生隔日方向、信心值與預測價格區間。</p>
+    </div>
+
+    <div class="feature-card">
+        <h3>自動驗證</h3>
+        <p>記錄每日預測，隔日回填實際收盤價與預測是否正確。</p>
+    </div>
+
+    <div class="feature-card">
+        <h3>模型分析</h3>
+        <p>結合技術指標、法人籌碼、大盤與美股領先資料進行判斷。</p>
+    </div>
+
+</div>
+
 </body>
+
 </html>

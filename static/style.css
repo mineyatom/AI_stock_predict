@@ -1,0 +1,291 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, "Microsoft JhengHei", sans-serif;
+    background: #0f172a;
+    color: white;
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    padding: 50px 20px 20px;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: #94a3b8;
+    font-size: 18px;
+}
+
+/* 搜尋框 */
+.search-box {
+    max-width: 600px;
+    margin: 40px auto;
+    display: flex;
+    gap: 10px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 18px;
+    border-radius: 12px;
+    border: none;
+    font-size: 18px;
+}
+
+.search-box button {
+    padding: 18px 28px;
+    border: none;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.search-box button:hover {
+    opacity: 0.9;
+}
+
+/* 卡片 */
+.result-card {
+    width: 720px;
+    margin: 30px auto;
+    background: #1e293b;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.result-card h2 {
+    margin-top: 0;
+    font-size: 30px;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #334155;
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+.up {
+    color: #ef4444;
+    font-weight: bold;
+}
+
+.down {
+    color: #22c55e;
+    font-weight: bold;
+}
+
+.confidence-bar {
+    width: 100%;
+    height: 10px;
+    background: #334155;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 10px 0 10px;
+}
+
+.confidence-fill {
+    height: 100%;
+    background: #3b82f6;
+    border-radius: 999px;
+}
+
+.prediction-direction {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 34px;
+    align-items: 34px;
+    font-weight: bold;
+}
+
+.stock-code {
+    color: #94a3b8;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+
+.history-container {
+    width: 90%;
+    margin: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1e293b;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+th {
+    background: #2563eb;
+    padding: 18px;
+}
+
+td {
+    padding: 16px;
+    text-align: center;
+    border-bottom: 1px solid #334155;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.stat-card {
+    background: #1e293b;
+    padding: 24px;
+    border-radius: 18px;
+    text-align: center;
+}
+
+.stat-label {
+    color: #94a3b8;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 34px;
+    font-weight: bold;
+}
+
+.correct {
+    color: #22c55e;
+    font-weight: bold;
+}
+
+.wrong {
+    color: #ef4444;
+    font-weight: bold;
+}
+
+
+.correct {
+    color: #22c55e;
+    font-weight: bold;
+}
+
+.wrong {
+    color: #ef4444;
+    font-weight: bold;
+}
+
+.rise {
+    color: #ff4d4f;
+    font-weight: bold;
+}
+
+.fall {
+    color: #22c55e;
+    font-weight: bold;
+}
+
+.navbar {
+    width: 100%;
+    padding: 20px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.logo {
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 18px;
+    transition: 0.2s;
+}
+
+.nav-links a:hover {
+    color: white;
+}
+
+.stock-code-small {
+    color: #94a3b8;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+
+.home-actions {
+    margin-top: 35px;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+}
+
+.primary-btn,
+.secondary-btn {
+    padding: 16px 28px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.primary-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.secondary-btn {
+    background: #1e293b;
+    color: #cbd5e1;
+    border: 1px solid #334155;
+}
+
+.feature-grid {
+    width: 90%;
+    max-width: 1100px;
+    margin: 40px auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+.feature-card {
+    background: #1e293b;
+    padding: 28px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.feature-card h3 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.feature-card p {
+    color: #94a3b8;
+    line-height: 1.7;
+}

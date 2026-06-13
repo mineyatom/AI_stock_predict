@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>
+        預測紀錄
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+</head>
+
+<body>
+<nav class="navbar">
+
+    <div class="logo">
+        AI 股票預測
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/predict">
+            預測
+        </a>
+
+        <a href="/history">
+            歷史紀錄
+        </a>
+
+    </div>
+
+</nav>    
+
+    <div class="hero">
+
+        <h1>
+            預測紀錄
+        </h1>
+
+        <p>
+            AI 股票預測歷史資料
+        </p>
+
+    </div>
+
+    <div class="history-container">
+
+
+        <div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-label">整體準確率</div>
+        <div class="stat-value">{{ accuracy }}%</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-label">已驗證筆數</div>
+        <div class="stat-value">{{ validated_count }}</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-label">預測總數</div>
+        <div class="stat-value">{{ total_count }}</div>
+    </div>
+
+</div>
+        
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>日期</th>
+                    <th>股票</th>
+                    <th>預測</th>
+                    <th>信心值</th>
+                    <th>預測價格</th>
+                    <th>預測區間</th>
+                    <th>實際收盤</th>
+                    <th>實際漲跌</th>
+                    <th>結果</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for row in history %}
+
+                <tr>
+
+                    <td>
+                        {{ row["預測日期"] }}
+                    </td>
+
+                    <td>
+                        {{ row["股票名稱"] }}
+
+                        <div class="stock-code-small">
+                            {{ row["股票代號"] }}
+                        </div>
+                    </td>
+
+                    <td>
+                        {% if row["預測結果"] == "上漲" %}
+
+                           <span class="rise">
+                                ▲ 上漲
+                           </span>
+
+                        {% else %}
+
+                             <span class="fall">
+                                ▼ 下跌
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {{ row["信心值"] }}%
+                    </td>
+
+                    <td>
+                         {{ row["隔日預測參考價"] }}
+                    </td>
+
+                    <td>
+                        {{ row["預測區間下緣"] }}
+                            ~
+                        {{ row["預測區間上緣"] }}
+                    </td>
+
+                    <td>
+                         {{ row["實際收盤價"] | replace(".0", "") }}
+                    </td>
+
+                    <td>
+                        {% if row["實際漲跌"] == "上漲" %}
+                           <span class="rise">
+                              ▲ 上漲
+                           </span>
+  
+                        {% elif row["實際漲跌"] == "下跌" %}
+                        
+                           <span class="fall">
+                                ▼ 下跌
+                            </span>
+                        {% endif %}
+    
+                    </td>
+
+                    <td>
+
+                        {% if row["是否預測正確"] == "正確" %}
+
+                            <span class="correct">
+                                正確
+                            </span>
+
+                        {% elif row["是否預測正確"] == "錯誤" %}
+
+                            <span class="wrong">
+                                錯誤
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</body>
+
+</html>

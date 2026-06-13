@@ -1,41 +1,142 @@
+<!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
-    <title>股票預測</title>
-</head>
-<body>
-    
-<h1>AI 股票預測</h1>
 
-<form method="post">
-    <input 
-           type="text"
-           name="stock_id"
-           placeholder="輸入股票代號’例如 2330"
-    
+    <title>
+        AI 股票預測
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+</head>
+
+<body>
+<nav class="navbar">
+
+    <div class="logo">
+        AI 股票預測
+    </div>
+
+    <div class="nav-links">
+        <a href="/predict">
+            預測
+        </a>
+
+        <a href="/history">
+            歷史紀錄
+        </a>
+    </div>   
+
+</nav>
+    <div class="hero">
+
+        <h1>
+            AI 股票預測系統
+        </h1>
+
+        <p>
+            使用 XGBoost + 技術指標分析預測隔日股價方向
+        </p>
+
+    </div>
+
+    <form
+        action="/predict"
+        method="post"
+        class="search-box"
     >
 
-    <button type="submit">
-         開始預測
-    </button>
+        <input
+            type="text"
+            name="stock_id"
+            placeholder="輸入股票代號，例如 2330"
+        >
 
+        <button type="submit">
+            開始預測
+        </button>
 
-</form>    
+    </form>
 
-{% if result %}
+    {% if result %}
 
-<h2>
-    {{ result.stock_name }}
-    ({{ result.stock_id }})
-</h2>
-<p>方向：{{ result.direction }}</p>
-<p>信心值：{{ result.confidence }}%</p>
-<p>上漲機率：{{ result.up_probability }}%</p>
-<p>下跌機率：{{ result.down_probability }}%</p>
-<p>最新收盤價：{{ result.latest_close }}</p>
-<p>價格區間：{{ result.price_range }}</p>
+    <div class="result-card">
 
-{% endif %}
+        <h2>
+            {{ result.stock_name }}
+            <span class="stock-code">
+                ({{ result.stock_id }})
+            </span>
+        </h2>
+
+        <div class="result-item">
+            <span>預測方向</span>
+
+        <div class="prediction-direction">
+
+            {% if result.direction == "上漲" %}
+                <span class="up">
+                    ▲ 上漲
+                </span>
+            {% else %}
+                <span class="down">
+                    ▼ 下跌
+                </span>
+            {% endif %}
+
+        </div>
+        </div>
+
+        <div class="result-item">
+            <span>信心值</span>
+
+            <span>
+                {{ result.confidence }}%
+            </span>
+        </div>
+
+        <div class="confidence-bar">
+            <div
+                class="confidence-fill"
+               tyle="width: {{ result.confidence }}%"
+            ></div>
+        </div>
+
+        <div class="result-item">
+            <span>上漲機率</span>
+            <span>
+                {{ result.up_probability }}%
+            </span>
+        </div>
+
+        <div class="result-item">
+            <span>下跌機率</span>
+            <span>
+                {{ result.down_probability }}%
+            </span>
+        </div>
+
+        <div class="result-item">
+            <span>最新收盤價</span>
+            <span>
+                {{ result.latest_close }}
+            </span>
+        </div>
+
+        <div class="result-item">
+            <span>預測區間</span>
+            <span>
+                {{ result.price_range }}
+            </span>
+        </div>
+
+    </div>
+
+    {% endif %}
 
 </body>
 
