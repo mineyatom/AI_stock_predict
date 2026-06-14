@@ -18,8 +18,15 @@ from market_price import(
     get_stock_price
 )
 
+from scheduler import start_scheduler
+
+
 app = FastAPI()
 
+
+@app.on_event("startup")
+def startup_event():
+    start_scheduler()
 
 
 app.mount(

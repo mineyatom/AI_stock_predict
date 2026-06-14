@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-Hant">
 
@@ -15,6 +16,7 @@
 </head>
 
 <body>
+
 <nav class="navbar">
 
     <div class="logo">
@@ -34,132 +36,235 @@
         <a href="/history">
             歷史紀錄
         </a>
-    </div>   
-
-</nav>
-    <div class="hero">
-
-        <h1>
-            AI 台股預測平台
-        </h1>
-
-        <p>
-          結合 XGBoost、技術指標與市場訊號，
-          洞察下一個交易日方向
-        </p>
 
     </div>
 
-    <form
-        action="/predict"
-        method="post"
-        class="search-box"
-    >
+</nav>
+
+
+<section class="hero">
+
+    <h1>
+        AI 台股預測平台
+    </h1>
+
+    <p>
+        結合 XGBoost、
+        技術指標與市場訊號，
+        洞察下一個交易日方向
+    </p>
+
+</section>
+
+
+<form
+    action="/predict"
+    method="post"
+    class="predict-form"
+    
+>
+
+    <div class="predict-input-row">
 
         <input
             type="text"
             name="stock_id"
             placeholder="輸入股票代號，例如 2330"
+            required
         >
 
-        <button type="submit">
+        <button
+         type="submit">
             開始預測
         </button>
 
-    </form>
+    </div>
 
-    {% if result %}
 
-    <div class="result-card">
+    <div class="quick-stocks">
 
-        <h2>
-            {{ result.stock_name }}
-            <span class="stock-code">
-                ({{ result.stock_id }})
-            </span>
-        </h2>
+        <button
+            type="button"
+            class="quick-stock-btn"
+            onclick="fillStock('2330')"
+        >
+            台積電
+        </button>
 
-        <div class="prediction-box">
+        <button
+            type="button"
+            class="quick-stock-btn"
+            onclick="fillStock('2454')"
+        >
+            聯發科
+        </button>
 
-            <div class="prediction-label">
-                AI 預測結果
-            </div>
+        <button
+            type="button"
+            class="quick-stock-btn"
+            onclick="fillStock('2317')"
+        >
+            鴻海
+        </button>
 
-            <div class="prediction-direction">
+        <button
+            type="button"
+            class="quick-stock-btn"
+            onclick="fillStock('0050')"
+        >
+            元大台灣50
+        </button>
 
-                {% if result.direction == "上漲" %}
-                    <span class="up">
-                        ▲ 上漲
-                    </span>
-                {% else %}
-                    <span class="down">
-                        ▼ 下跌
-                    </span>
-                {% endif %}
+    </div>
 
-            </div>
+</form>
 
+
+{% if result %}
+
+<div class="result-card">
+
+    <h2>
+
+        {{ result.stock_name }}
+
+        <span class="stock-code">
+            ({{ result.stock_id }})
+        </span>
+
+    </h2>
+
+
+    <div class="prediction-box">
+
+        <div class="prediction-label">
+            AI 預測結果
         </div>
 
-        <div class="result-item">
-            <span>信心值</span>
+        <div class="prediction-direction">
 
-            <span>
-                {{ result.confidence }}%
-            </span>
-        </div>
+            {% if result.direction == "上漲" %}
 
-        <div class="confidence-bar">
-            <div
-                class="confidence-fill"
-                data-confidence="{{ result.confidence }}"
-            ></div>
-        </div>
+                <span class="up">
+                    ▲ 上漲
+                </span>
 
-        <div class="result-item">
-            <span>上漲機率</span>
-            <span>
-                {{ result.up_probability }}%
-            </span>
-        </div>
+            {% else %}
 
-        <div class="result-item">
-            <span>下跌機率</span>
-            <span>
-                {{ result.down_probability }}%
-            </span>
-        </div>
+                <span class="down">
+                    ▼ 下跌
+                </span>
 
-        <div class="result-item">
-            <span>最新收盤價</span>
-            <span>
-                {{ result.latest_close }}
-            </span>
-        </div>
+            {% endif %}
 
-        <div class="result-item">
-            <span>預測區間</span>
-            <span>
-                {{ result.price_range }}
-            </span>
         </div>
 
     </div>
 
-    {% endif %}
+
+    <div class="result-item">
+
+        <span>
+            信心值
+        </span>
+
+        <strong>
+            {{ result.confidence }}%
+        </strong>
+
+    </div>
+
+
+    <div class="confidence-bar">
+
+        <div
+            class="confidence-fill"
+            data-confidence="{{ result.confidence }}"
+        ></div>
+
+    </div>
+
+
+    <div class="result-item">
+
+        <span>
+            上漲機率
+        </span>
+
+        <strong>
+            {{ result.up_probability }}%
+        </strong>
+
+    </div>
+
+
+    <div class="result-item">
+
+        <span>
+            下跌機率
+        </span>
+
+        <strong>
+            {{ result.down_probability }}%
+        </strong>
+
+    </div>
+
+
+    <div class="result-item">
+
+        <span>
+            最新收盤價
+        </span>
+
+        <strong>
+            {{ result.latest_close }}
+        </strong>
+
+    </div>
+
+
+    <div class="result-item">
+
+        <span>
+            預測區間
+        </span>
+
+        <strong>
+            {{ result.price_range }}
+        </strong>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
 <script>
-    const confidenceFill = document.querySelector(
-        ".confidence-fill"
-    );
+
+    const confidenceFill =
+        document.querySelector(
+            ".confidence-fill"
+        );
 
     if (confidenceFill) {
+
         confidenceFill.style.width =
-            confidenceFill.dataset.confidence + "%";
+            confidenceFill.dataset.confidence
+            + "%";
     }
+
+    function fillStock(stockId) {
+
+        document.querySelector(
+            'input[name="stock_id"]'
+        ).value = stockId;
+    }
+
 </script>
-
-
 
 </body>
 
 </html>
+

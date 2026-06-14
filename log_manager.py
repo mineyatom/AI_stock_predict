@@ -5,6 +5,80 @@ import yfinance as yf
 LOG_FILE = "prediction_log.csv"
 
 
+def save_prediction_log(
+        predict_date,
+        stock_code,
+        stock_name,
+        prediction_text,
+        confidence,
+        up_probability,
+        down_probability,
+        predict_close,
+        lower_price,
+        upper_price
+):
+    date = pd.to_datetime(predict_date)
+
+    predict_date = (
+        f"{date.year}/"
+        f"{date.month}/"
+        f"{date.day}"
+    )
+
+    new_record = pd.DataFrame([
+        {
+            "預測日期": predict_date,
+            "股票代號": stock_code,
+            "股票名稱": stock_name,
+            "預測結果": prediction_text,
+            "信心值": round(float(confidence), 2),
+            "上漲機率": round(float(up_probability), 2),
+            "下跌機率": round(float(down_probability), 2),
+            "隔日預測參考價": round(float(predict_close)),
+            "預測區間下緣": round(float(lower_price)),
+            "預測區間上緣": round(float(upper_price)),
+            "實際收盤價": None,
+            "實際漲跌": None,
+            "是否預測正確": None
+        }
+    ])
+
+    if os.path.exists(LOG_FILE):
+        old_log = pd.read_csv(LOG_FILE, encoding="utf-8-sig")
+
+        duplicated = (
+            (old_log["預測日期"] == predict_date)
+            &
+            (old_log["股票代號"] == stock_code)
+        )
+
+        if duplicated.any():
+            old_log.loc[
+                duplicated,
+                new_record.columns
+            ] = new_record.iloc[0].values
+
+            final_log = old_log
+
+        else:
+            final_log = pd.concat(
+                [old_log, new_record],
+                ignore_index=True
+            )
+
+    else:
+        final_log = new_record
+
+    final_log.to_csv(
+        LOG_FILE,
+        index=False,
+        encoding="utf-8-sig"
+    )
+
+    print("✅ 預測紀錄已存入 prediction_log.csv")
+
+
+
 
 def get_latest_prediction():
 
