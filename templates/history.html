@@ -3,108 +3,150 @@
 
 <head>
     <meta charset="UTF-8">
-
-    <title>
-        預測紀錄
-    </title>
-
-    <link
-        rel="stylesheet"
-        href="/static/style.css"
-    >
+    <title>預測紀錄</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
-<nav class="navbar">
 
-    <div class="logo">
-        AI 股票預測
-    </div>
+<nav class="navbar">
+    <div class="logo">AI 股票預測</div>
 
     <div class="nav-links">
-        
-        <a href="/">
-            首頁
-        </a>
-        
-        <a href="/predict">
-            預測
-        </a>
+        <a href="/">首頁</a>
+        <a href="/predict">預測</a>
+        <a href="/history">歷史紀錄</a>
+    </div>
+</nav>
 
-        <a href="/history">
-            歷史紀錄
-        </a>
+<section class="history-hero">
+    <h1>預測紀錄</h1>
+    <p>追蹤 AI 模型每次預測與實際驗證結果</p>
+</section>
+
+<section class="history-container">
+
+
+    <div class="history-search-box">
+
+        <input
+        type="text"
+        id="historySearch"
+        placeholder="🔍 搜尋股票名稱或代號..."
+        >
 
     </div>
+    <div class="search-result-count">
 
-</nav>    
-
-    <div class="hero">
-
-        <h1>
-            預測紀錄
-        </h1>
-
-        <p>
-            AI 股票預測歷史資料
-        </p>
-
-    </div>
-
-    <div class="history-container">
-
-
-        <div class="stats-grid">
-
-    <div class="stat-card">
-        <div class="stat-label">整體準確率</div>
-        <div class="stat-value">{{ accuracy }}%</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-label">已驗證筆數</div>
-        <div class="stat-value">{{ validated_count }}</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-label">預測總數</div>
-        <div class="stat-value">{{ total_count }}</div>
-    </div>
+         目前顯示
+        <span id="resultCount">
+          {{ history | length }}
+        </span>
+        筆預測資料
 
 </div>
-        
 
-        <table>
+    <div class="history-filters">
+
+        <button
+            class="filter-btn active"
+            data-filter="all"
+        >
+            全部
+        </button>
+
+         <button
+            class="filter-btn"
+            data-filter="上漲"
+        >
+            上漲
+        </button>
+
+        <button
+            class="filter-btn"
+            data-filter="下跌"
+        >
+            下跌
+        </button>
+
+        <button
+            class="filter-btn"
+            data-filter="正確"
+        >
+            正確
+        </button>
+
+        <button
+            class="filter-btn"
+            data-filter="錯誤"
+        >
+            錯誤
+        </button>
+
+        <button
+            class="filter-btn"
+            data-filter="待驗證"
+        >
+            待驗證
+        </button>
+
+    </div>
+
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">整體準確率</div>
+            <div class="stat-value">{{ accuracy }}%</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">已驗證筆數</div>
+            <div class="stat-value">{{ validated_count }}</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">預測總數</div>
+            <div class="stat-value">{{ total_count }}</div>
+        </div>
+    </div>
+
+    <div class="history-table-card">
+
+        <table class="history-table"
+               id="historyTable"
+        >
 
             <thead>
-
                 <tr>
-                    <th>日期</th>
+                    <th class="sortable" 
+                     data-sort="date"
+                     >
+                     日期 ↕
+                    </th>
+                    
                     <th>股票</th>
                     <th>預測</th>
-                    <th>信心值</th>
-                    <th>預測價格</th>
+                    <th class="sortable"
+                        data-sort="confidence"
+                    >
+                        信心值 ↕
+                    </th>
+                    <th>基準價</th>
                     <th>預測區間</th>
                     <th>實際收盤</th>
                     <th>實際漲跌</th>
                     <th>結果</th>
                 </tr>
-
             </thead>
 
-            <tbody>
-
+            <tbody id="historyTableBody">
                 {% for row in history %}
 
-                <tr>
+                <tr class="history-row">
+                    <td>{{ row["預測日期"] }}</td>
 
                     <td>
-                        {{ row["預測日期"] }}
-                    </td>
-
-                    <td>
-                        {{ row["股票名稱"] }}
-
+                        <strong>{{ row["股票名稱"] }}</strong>
                         <div class="stock-code-small">
                             {{ row["股票代號"] }}
                         </div>
@@ -112,82 +154,289 @@
 
                     <td>
                         {% if row["預測結果"] == "上漲" %}
-
-                           <span class="rise">
-                                ▲ 上漲
-                           </span>
-
+                            <span class="signal-badge rise">▲ 上漲</span>
                         {% else %}
-
-                             <span class="fall">
-                                ▼ 下跌
-                            </span>
-
+                            <span class="signal-badge fall">▼ 下跌</span>
                         {% endif %}
-
                     </td>
 
                     <td>
-                        {{ row["信心值"] }}%
+                        <span class="confidence-pill">
+                            {{ row["信心值"] }}%
+                        </span>
                     </td>
 
-                    <td>
-                         {{ row["隔日預測參考價"] }}
-                    </td>
+                    <td>{{ row["隔日預測參考價"] }}</td>
 
                     <td>
                         {{ row["預測區間下緣"] }}
-                            ~
+                        ~
                         {{ row["預測區間上緣"] }}
                     </td>
 
                     <td>
-                         {{ row["實際收盤價"] | replace(".0", "") }}
+
+                         {% set actual_close = row["實際收盤價"] | string %}
+
+                            {% if actual_close == "nan" or actual_close == "" %}
+
+                            <span class="result-badge pending">
+                                 待驗證
+                            </span>
+
+                        {% else %}
+                            {{ actual_close | replace(".0", "") }}
+
+                        {% endif %}
                     </td>
 
                     <td>
                         {% if row["實際漲跌"] == "上漲" %}
-                           <span class="rise">
-                              ▲ 上漲
-                           </span>
-  
+                            <span class="signal-badge rise">▲ 上漲</span>
                         {% elif row["實際漲跌"] == "下跌" %}
-                        
-                           <span class="fall">
-                                ▼ 下跌
-                            </span>
+                            <span class="signal-badge fall">▼ 下跌</span>
+                        {% else %}
+                            <span class="result-badge pending">待驗證</span>
                         {% endif %}
-    
                     </td>
 
                     <td>
-
                         {% if row["是否預測正確"] == "正確" %}
-
-                            <span class="correct">
-                                正確
-                            </span>
-
+                            <span class="result-badge correct">正確</span>
                         {% elif row["是否預測正確"] == "錯誤" %}
-
-                            <span class="wrong">
-                                錯誤
-                            </span>
-
+                            <span class="result-badge wrong">錯誤</span>
+                        {% else %}
+                            <span class="result-badge pending">待驗證</span>
                         {% endif %}
-
                     </td>
-
                 </tr>
 
                 {% endfor %}
-
             </tbody>
 
         </table>
 
     </div>
 
-</body>
+</section>
 
+<script>
+    const searchInput =
+        document.getElementById(
+            "historySearch"
+        );
+
+    const rows =
+        document.querySelectorAll(
+            ".history-row"
+        );
+
+    const resultCount =
+        document.getElementById(
+            "resultCount"
+        );
+
+    const filterButtons =
+        document.querySelectorAll(
+            ".filter-btn"
+        );
+
+    /* ===== 排序功能 ===== */
+
+    const sortableHeaders =
+        document.querySelectorAll(
+            ".sortable"
+        );
+
+    let sortDirection = "desc";
+
+    sortableHeaders.forEach(header => {
+
+        header.addEventListener(
+         "click",
+          function () {
+
+            const sortType =
+                this.dataset.sort;
+
+            const tbody =
+                document.getElementById(
+                    "historyTableBody"
+                );
+
+            const rowsArray =
+                Array.from(rows);
+
+            rowsArray.sort(
+                (a, b) => {
+
+                    if (
+                        sortType
+                        === "confidence"
+                    ) {
+
+                        const aValue =
+                            parseFloat(
+                                a.children[3]
+                                .innerText
+                                .replace("%","")
+                            );
+
+                        const bValue =
+                            parseFloat(
+                                b.children[3]
+                                .innerText
+                                .replace("%","")
+                            );
+
+                        return sortDirection === "desc"
+                            ? bValue - aValue
+                            : aValue - bValue;;
+                    }
+
+                    if (
+                        sortType
+                        === "date"
+                    ) {
+
+                        const aDate =
+                            new Date(
+                                a.children[0]
+                                .innerText
+                            );
+
+                        const bDate =
+                            new Date(
+                                b.children[0]
+                                .innerText
+                            );
+
+                        return sortDirection === "desc"
+                            ? bDate - aDate
+                            : aDate - bDate;
+                    }
+
+                }
+            );
+
+            rowsArray.forEach(
+                row =>
+                tbody.appendChild(
+                    row
+                )
+            );
+
+            sortDirection =
+                sortDirection
+                === "desc"
+                ?
+                "asc"
+                :
+                "desc";
+        }
+        );
+    });    
+
+    let currentFilter = "all";
+
+    function updateTable() {
+
+        const keyword =
+            searchInput.value
+            .toLowerCase()
+            .trim();
+
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+
+            const rowText =
+                row.innerText
+                .toLowerCase();
+
+            const predictionCell =
+                row.children[2]
+                .innerText
+                .trim();
+
+            const resultCell =
+                row.children[8]
+                .innerText
+                .trim();
+
+            const matchSearch =
+                rowText.includes(
+                    keyword
+                );
+
+            let matchFilter = true;
+
+            if (
+                currentFilter
+                !== "all"
+            ) {
+
+                matchFilter =
+                    predictionCell.includes(
+                        currentFilter
+                    )
+                    ||
+                    resultCell.includes(
+                        currentFilter
+                    );
+            }
+
+            if (
+                matchSearch
+                &&
+                matchFilter
+            ) {
+
+                row.style.display = "";
+
+                visibleCount++;
+
+            } else {
+
+                row.style.display =
+                    "none";
+            }
+
+        });
+
+        resultCount.textContent =
+            visibleCount;
+    }
+
+    searchInput.addEventListener(
+        "input",
+        updateTable
+    );
+
+    filterButtons.forEach(btn => {
+
+        btn.addEventListener(
+            "click",
+            function () {
+
+                filterButtons.forEach(
+                    b => b.classList.remove(
+                        "active"
+                    )
+                );
+
+                this.classList.add(
+                    "active"
+                );
+
+                currentFilter =
+                    this.dataset.filter;
+
+                updateTable();
+            }
+        );
+    });
+</script>
+
+</body>
 </html>

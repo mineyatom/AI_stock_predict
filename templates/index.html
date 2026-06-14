@@ -10,6 +10,7 @@
 <body>
 
 <nav class="navbar">
+
     <div class="logo">
         AI 股票預測
     </div>
@@ -19,7 +20,9 @@
         <a href="/predict">預測</a>
         <a href="/history">歷史紀錄</a>
     </div>
+
 </nav>
+
 
 <section class="hero">
 
@@ -99,19 +102,21 @@
         >
 
             <span class="prediction-arrow">
-              {% if latest_prediction.prediction == '上漲' %}
-                  ▲
-              {% else %}
-                  ▼
-              {% endif %}
+
+                {% if latest_prediction.prediction == '上漲' %}
+                    ▲
+                {% else %}
+                    ▼
+                {% endif %}
+
             </span>
 
             <span class="prediction-text">
-              {{ latest_prediction.prediction }}
+                {{ latest_prediction.prediction }}
             </span>
 
-
         </div>
+
 
         <div class="today-confidence">
 
@@ -134,44 +139,87 @@
         </div>
 
 
-         <div class="today-extra">
+        <div class="today-dashboard-row">
 
-            <div class="extra-row">
-                <span>
-                    預測日期
-                </span>
+            <div class="today-info">
 
-                <strong>
-                    {{ latest_prediction.predict_date }}
-                </strong>
+                <div class="extra-row">
+
+                    <span>
+                        預測日期
+                    </span>
+
+                    <strong>
+                        {{ latest_prediction.predict_date }}
+                    </strong>
+
+                </div>
+
+
+                <div class="extra-row">
+
+                    <span>
+                        模型
+                    </span>
+
+                    <strong>
+                        {{ latest_prediction.model }}
+                    </strong>
+
+                </div>
+
+
+                <div class="extra-row">
+
+                    <span>
+                        預測區間
+                    </span>
+
+                    <strong>
+                        {{ latest_prediction.lower_bound }}
+                        ~
+                        {{ latest_prediction.upper_bound }}
+                    </strong>
+
+                </div>
+
             </div>
 
-            <div class="extra-row">
-                 <span>
-                     模型
-                </span>
 
-                <strong>
-                    {{ latest_prediction.model }}
-                </strong>
+            {% if current_stock_price %}
+
+            <div class="today-price-card">
+
+                <div class="price-title">
+                    即時股價
+                </div>
+
+                <div class="price-number">
+                    {{ current_stock_price.price }}
+                </div>
+
+                <div
+                    class="
+                    price-change
+                    {{ current_stock_price.direction }}
+                    "
+                >
+
+                    {% if current_stock_price.direction == "rise" %}
+                        ▲
+                    {% else %}
+                        ▼
+                    {% endif %}
+
+                    {{ current_stock_price.change }}%
+
+                </div>
+
             </div>
 
-            <div class="extra-row">
-                <span>
-                    預測區間
-                </span>
+            {% endif %}
 
-                <strong>
-                   {{ latest_prediction.lower_bound }}
-                    ~
-                   {{ latest_prediction.upper_bound }}
-                </strong>
-            </div>
-
-    </div>   
-
-
-        
+        </div>
 
     </div>
 
@@ -187,6 +235,7 @@
     </h2>
 
     <div class="market-grid">
+
         {% for market in market_data %}
 
         <div class="market-card">
@@ -196,18 +245,19 @@
             </span>
 
             <div class="market-value {{ market.direction }}">
-                {{ market.price  }}
+                {{ market.price }}
             </div>
 
             <div class="market-change {{ market.direction }}">
-                {% if market.direction =="rise" %}
-                    ▲+{{ market.change }}%
+
+                {% if market.direction == "rise" %}
+                    ▲ +{{ market.change }}%
                 {% else %}
-                    ▼{{ market.change }}%
+                    ▼ {{ market.change }}%
                 {% endif %}
 
-                
             </div>
+
         </div>
 
         {% endfor %}
@@ -226,6 +276,7 @@
     <div class="stats-grid-home">
 
         <div class="stats-card-home">
+
             <div class="stats-number">
                 {{ accuracy }}%
             </div>
@@ -233,9 +284,12 @@
             <div class="stats-label">
                 歷史準確率
             </div>
+
         </div>
 
+
         <div class="stats-card-home">
+
             <div class="stats-number">
                 {{ validated_count }}
             </div>
@@ -243,9 +297,12 @@
             <div class="stats-label">
                 已驗證資料
             </div>
+
         </div>
 
+
         <div class="stats-card-home">
+
             <div class="stats-number">
                 {{ total_count }}
             </div>
@@ -253,9 +310,12 @@
             <div class="stats-label">
                 總預測次數
             </div>
+
         </div>
 
+
         <div class="stats-card-home">
+
             <div class="stats-number">
                 XGBoost
             </div>
@@ -263,11 +323,13 @@
             <div class="stats-label">
                 AI 模型
             </div>
+
         </div>
 
     </div>
 
 </section>
+
 
 <section class="chart-section">
 
@@ -276,9 +338,10 @@
         <h2>
             模型歷史勝率趨勢
         </h2>
+
         <div class="chart-wrapper">
-             <canvas id="accuracyChart"></canvas>
-        <div>
+            <canvas id="accuracyChart"></canvas>
+        </div>
 
     </div>
 
@@ -286,38 +349,60 @@
 
 
 <section class="feature-section">
- <div class="feature-grid">
-     <div class="feature-card">
-        <h3>即時預測</h3>
-        <p>輸入股票代號，產生隔日方向、信心值與預測價格區間。</p>
-     </div>
 
-     <div class="feature-card">
-        <h3>自動驗證</h3>
-        <p>記錄每日預測，隔日回填實際收盤價與預測是否正確。</p>
-     </div>
+    <div class="feature-grid">
 
-     <div class="feature-card">
-        <h3>模型分析</h3>
-        <p>結合技術指標、法人籌碼、大盤與美股領先資料進行判斷。</p>
-     </div>
+        <div class="feature-card">
+            <h3>即時預測</h3>
+            <p>
+                輸入股票代號，
+                產生隔日方向、
+                信心值與預測價格區間。
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h3>自動驗證</h3>
+            <p>
+                記錄每日預測，
+                隔日回填實際收盤價與預測是否正確。
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h3>模型分析</h3>
+            <p>
+                結合技術指標、
+                法人籌碼、
+                大盤與美股領先資料進行判斷。
+            </p>
+        </div>
+
     </div>
+
 </section>
 
+
 <script>
-    const confidenceFill = document.querySelector(
-        ".today-predict .confidence-fill"
-    );
+    const confidenceFill =
+        document.querySelector(
+            ".today-predict .confidence-fill"
+        );
 
     if (confidenceFill) {
+
         confidenceFill.style.width =
-            confidenceFill.dataset.confidence + "%";
+            confidenceFill.dataset.confidence
+            + "%";
     }
 </script>
 
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
 <script>
+
     const chartLabels = JSON.parse(
         '{{ accuracy_chart["labels"] | tojson | safe }}'
     );
@@ -326,9 +411,10 @@
         '{{ accuracy_chart["values"] | tojson | safe }}'
     );
 
-    const accuracyCanvas = document.getElementById(
-        "accuracyChart"
-    );
+    const accuracyCanvas =
+        document.getElementById(
+            "accuracyChart"
+        );
 
     if (accuracyCanvas) {
 
@@ -342,19 +428,24 @@
 
                     datasets: [
                         {
-                            label: "模型勝率 (%)",
+                            label:
+                                "模型勝率 (%)",
 
-                            data: chartValues,
+                            data:
+                                chartValues,
 
-                            borderColor: "#d4af37",
+                            borderColor:
+                                "#d4af37",
 
                             backgroundColor:
-                                "rgba(212, 175, 55, 0.15)",
+                                "rgba(212,175,55,0.15)",
 
                             tension: 0.3,
 
                             fill: true,
+
                             pointRadius: 6,
+
                             pointHoverRadius: 8,
 
                             showLine:
@@ -365,23 +456,27 @@
 
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
 
-                    plugins:{
-                        legend:{
-                            display:false
+                    maintainAspectRatio:
+                        false,
+
+                    plugins: {
+                        legend: {
+                            display: false
                         }
                     },
+
                     scales: {
+
                         y: {
                             min: 0,
                             max: 100
                         },
 
-                        x:{
-                            ticks:{
+                        x: {
+                            ticks: {
                                 color: "#999",
-                                maxTicksLimit:7
+                                maxTicksLimit: 7
                             }
                         }
                     }
@@ -389,9 +484,8 @@
             }
         );
     }
+
 </script>
 
-
 </body>
-
 </html>

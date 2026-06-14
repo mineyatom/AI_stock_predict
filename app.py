@@ -14,6 +14,10 @@ from log_manager import(
     get_accuracy_chart_data
     )
 
+from market_price import(
+    get_stock_price
+)
+
 app = FastAPI()
 
 
@@ -41,6 +45,18 @@ def home(request: Request):
     latest_prediction = get_latest_prediction()
 
     accuracy_chart = get_accuracy_chart_data()
+
+    current_stock_price = None
+
+    if latest_prediction:
+
+        current_stock_price = (
+          get_stock_price(
+             latest_prediction[
+                "stock_id"
+             ]
+         )
+       )
     
 
     return templates.TemplateResponse(
@@ -57,7 +73,9 @@ def home(request: Request):
 
             "latest_prediction":latest_prediction,
 
-            "accuracy_chart" : accuracy_chart
+            "accuracy_chart" : accuracy_chart,
+
+            "current_stock_price": current_stock_price
                        
         }
     )

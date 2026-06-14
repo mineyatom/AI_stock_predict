@@ -748,61 +748,37 @@ body {
 /* ===== 歷史紀錄頁 ===== */
 
 .history-container {
-    width: 90%;
-
+    width: min(92%, 1350px);
     margin: auto;
 }
 
-table {
-    width: 100%;
+/* ===== Hero ===== */
 
-    border-collapse: collapse;
+.history-hero {
+    width: min(92%, 1100px);
 
-    background: var(--card-bg);
-    border: var(--card-border);
-
-    border-radius: var(--card-radius);
-
-    overflow: hidden;
-
-    backdrop-filter: blur(12px);
-
-    box-shadow:
-        0 10px 40px
-        rgba(0, 0, 0, 0.18);
-}
-
-th {
-    background:
-        rgba(37, 99, 235, 0.15);
-
-    color: white;
-
-    padding: 20px;
-
-    border-bottom:
-        1px solid
-        rgba(255, 255, 255, 0.06);
-}
-
-td {
-    padding: 18px;
+    margin: 70px auto 35px;
 
     text-align: center;
-
-    border-bottom:
-        1px solid
-        rgba(255, 255, 255, 0.05);
 }
 
-tr:hover {
-    background:
-        rgba(255, 255, 255, 0.03);
+.history-hero h1 {
+    font-size: 52px;
+    font-weight: 900;
 
-    transition: 0.2s;
+    margin-bottom: 14px;
+
+    color: var(--gold-color);
 }
 
-/* 歷史頁統計卡 */
+.history-hero p {
+    color: var(--sub-text-color);
+    font-size: 18px;
+}
+
+
+/* ===== 統計卡 ===== */
+
 .stats-grid {
     display: grid;
 
@@ -842,7 +818,6 @@ tr:hover {
 
 .stat-label {
     color: var(--sub-text-color);
-
     margin-bottom: 10px;
 }
 
@@ -851,6 +826,130 @@ tr:hover {
     font-weight: bold;
 
     color: var(--gold-color);
+}
+
+
+/* ===== 歷史紀錄表格 ===== */
+
+.history-table-card {
+    background: var(--card-bg);
+    border: var(--card-border);
+
+    border-radius: var(--card-radius);
+
+    overflow-x: auto;
+
+    backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 10px 40px
+        rgba(0, 0, 0, 0.18);
+    
+    max-height: 720px;
+    overflow-y: auto;    
+}
+
+table {
+    width: 100%;
+    min-width: 1100px;
+
+    border-collapse: collapse;
+}
+
+th {
+     position: sticky;
+    top: 0;
+    z-index: 10;
+
+    background:
+        rgba(20, 35, 75, 0.98);
+
+    backdrop-filter: blur(12px);
+
+    padding: 20px;
+
+    white-space: nowrap;
+}
+
+td {
+    padding: 18px;
+
+    text-align: center;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    white-space: nowrap;
+}
+
+tr:hover {
+    background:
+        rgba(255, 255, 255, 0.03);
+
+    transition: 0.2s;
+}
+
+
+/* ===== Badge ===== */
+
+.signal-badge,
+.result-badge,
+.confidence-pill {
+    display: inline-block;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.signal-badge.rise {
+    background:
+        rgba(239, 68, 68, 0.12);
+
+    color: var(--up-color);
+}
+
+.signal-badge.fall {
+    background:
+        rgba(34, 197, 94, 0.12);
+
+    color: var(--down-color);
+}
+
+.result-badge.correct {
+    background:
+        rgba(34, 197, 94, 0.12);
+
+    color: var(--down-color);
+}
+
+.result-badge.wrong {
+    background:
+        rgba(239, 68, 68, 0.12);
+
+    color: var(--up-color);
+}
+
+.result-badge.pending {
+    background:
+        rgba(148, 163, 184, 0.12);
+
+    color: var(--sub-text-color);
+}
+
+.confidence-pill {
+    background:
+        rgba(212, 175, 55, 0.12);
+
+    color: var(--gold-color);
+}
+
+.pending-text {
+    color: var(--sub-text-color);
 }
 
 .stock-code-small {
@@ -890,8 +989,10 @@ tr:hover {
 }
 
 
+/* ===== 勝率圖表 ===== */
+
 .chart-section {
-      margin: 60px auto;
+    margin: 60px auto;
     max-width: 1200px;
     padding: 0 20px;
 }
@@ -901,8 +1002,6 @@ tr:hover {
     border-radius: 20px;
     padding: 30px;
     border: 1px solid rgba(255,255,255,0.08);
-
-    height: 380px;
 }
 
 .chart-card h2 {
@@ -919,29 +1018,249 @@ tr:hover {
 
 #accuracyChart {
     width: 100% !important;
-    height: 260px !important;
+    height: 100% !important;
 }
 
 
-.today-extra {
+/* ===== 今日預測補充資訊 ===== */
+
+.today-dashboard-row {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
     margin-top: 25px;
+}
+
+.today-info {
+    flex: 1;
+    min-width: 0;
 }
 
 .extra-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     padding: 8px 0;
-
     border-top:
         1px solid rgba(
             255,255,255,0.08
         );
-
     color: #cbd5e1;
 }
 
 .extra-row strong {
     color: #ffffff;
+}
+
+
+/* ===== 即時股價卡 ===== */
+
+.today-price-card {
+    background:
+        rgba(255,255,255,0.04);
+
+    border:
+        1px solid rgba(
+            255,255,255,0.08
+        );
+
+    border-radius: 16px;
+
+    padding: 16px 18px;
+
+    text-align: center;
+
+    width: 220px;
+    flex-shrink: 0;
+}
+
+.price-title {
+    color: #94a3b8;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.price-number {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.price-change {
+    margin-top: 8px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.price-change.rise {
+    color: #ef4444;
+}
+
+.price-change.fall {
+    color: #22c55e;
+}
+
+/* ===== History 搜尋 ===== */
+
+.history-search-box {
+    margin-bottom: 22px;
+}
+
+.history-search-box input {
+    width: 100%;
+    padding: 18px 22px;
+
+    border-radius: 16px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.08);
+
+    background:
+        rgba(255,255,255,0.04);
+
+    color: white;
+
+    font-size: 16px;
+
+    outline: none;
+
+    transition: 0.25s;
+}
+
+.history-search-box input:focus {
+    border-color:
+        var(--gold-color);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(212,175,55,0.12);
+}
+
+
+.history-table-card::-webkit-scrollbar {
+    width: 8px;
+}
+
+.history-table-card::-webkit-scrollbar-track {
+    background:
+        rgba(255,255,255,0.03);
+}
+
+.history-table-card::-webkit-scrollbar-thumb {
+    background:
+        rgba(212,175,55,0.35);
+
+    border-radius: 999px;
+}
+
+.history-table-card::-webkit-scrollbar-thumb:hover {
+    background:
+        rgba(212,175,55,0.55);
+}
+
+
+.search-result-count {
+
+    margin:
+        12px 0 24px;
+
+    color:
+        var(--sub-text-color);
+
+    font-size:
+        15px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+}
+
+.search-result-count span {
+
+    color:
+        var(--gold-color);
+
+    font-size:
+        18px;   
+        
+    font-weight:
+        700;
+}
+
+
+/* ===== History Filter ===== */
+
+.history-filters {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-bottom: 28px;
+}
+
+.filter-btn {
+
+    background:
+        rgba(255,255,255,0.05);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.08);
+
+    color:
+        #cbd5e1;
+
+    padding:
+        10px 18px;
+
+    border-radius:
+        999px;
+
+    cursor: pointer;
+
+    transition:
+        0.25s;
+
+    font-size:
+        14px;
+}
+
+.filter-btn:hover {
+
+    border-color:
+        var(--gold-color);
+
+    color:
+        white;
+}
+
+.filter-btn.active {
+
+    background:
+        rgba(212,175,55,0.18);
+
+    border-color:
+        var(--gold-color);
+
+    color:
+        var(--gold-color);
+
+    font-weight:
+        700;
+}
+
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+
+    transition: 0.2s;
+}
+
+.sortable:hover {
+    color: var(--gold-color);
 }
