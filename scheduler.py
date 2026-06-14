@@ -4,7 +4,8 @@ from apscheduler.schedulers.background import (
 
 from predictor import predict_stock
 from log_manager import (
-    save_prediction_log
+    save_prediction_log,
+    update_prediction_result
 )
 
 from datetime import (
@@ -140,6 +141,32 @@ def run_daily_prediction():
 # ==========================
 def start_scheduler():
 
+    # ==========================
+    # 啟動時先補驗證一次
+    # ==========================
+    print("啟動補驗證...")
+
+    update_prediction_result()
+
+    # ==========================
+    # 每日驗證（收盤後）
+    # ==========================
+    scheduler.add_job(
+        update_prediction_result,
+
+        trigger="cron",
+
+        hour=14,
+        minute=30,
+
+        id="daily_validation_job",
+
+        replace_existing=True,
+    )
+
+    # ==========================
+    # 每日預測（收盤後）
+    # ==========================
     scheduler.add_job(
         run_daily_prediction,
 
@@ -154,5 +181,6 @@ def start_scheduler():
     )
 
     scheduler.start()
-    print("⏰ 每日預測排程已建立")
+
+    print("⏰ 排程已建立")
     print("Scheduler 已啟動")

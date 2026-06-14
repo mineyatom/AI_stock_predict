@@ -191,7 +191,7 @@
             <div class="today-price-card">
 
                 <div class="price-title">
-                    即時股價
+                    最新股價
                 </div>
 
                 <div class="price-number">
@@ -214,8 +214,25 @@
                     {{ current_stock_price.change }}%
 
                 </div>
+                   <div class="price-time">
+                    <span>
+                        資料時間：
+                    </span>
+                        <strong>
+                        {{ current_stock_price.market_datetime }}
+                        </strong>
+                    </div>
 
-            </div>
+                    <div class="price-time">
+                        <span>
+                            更新時間：
+                        </span>
+                        <strong>
+                            {{ current_stock_price.updated_at }}
+                        </strong>
+                        
+                    </div> 
+                </div>
 
             {% endif %}
 
