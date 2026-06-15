@@ -13,6 +13,8 @@ from datetime import (
     timedelta
 )
 
+import os
+
 
 scheduler = BackgroundScheduler()
 
@@ -141,23 +143,98 @@ def run_daily_prediction():
 # ==========================
 def start_scheduler():
 
+    now = datetime.now()
+
     # ==========================
-    # 啟動時先補驗證一次
+    # 啟動補驗證
     # ==========================
-    print("啟動補驗證...")
+    print(
+        f"🕒 啟動補驗證："
+        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )
 
     update_prediction_result()
 
     # ==========================
-    # 每日驗證（收盤後）
+    # 啟動補預測
+    # 如果超過 21:00
+    # 且今天還沒預測
+    # 就補跑
+    # ==========================
+    if now.hour >= 21:
+
+        print(
+            f"🕒 檢查是否需要補預測："
+            f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        )
+
+        try:
+            import pandas as pd
+
+            LOG_FILE = (
+                "prediction_log.csv"
+            )
+
+            today = (
+                pd.Timestamp.today()
+                .strftime("%Y/%m/%d")
+            )
+
+            need_prediction = True
+
+            if os.path.exists(
+                LOG_FILE
+            ):
+
+                df = pd.read_csv(
+                    LOG_FILE,
+                    encoding="utf-8-sig"
+                )
+
+                if not df.empty:
+
+                    today_prediction = df[
+                        df["預測日期"]
+                        == today
+                    ]
+
+                    if (
+                        len(
+                            today_prediction
+                        ) > 0
+                    ):
+                        need_prediction = False
+
+            if need_prediction:
+
+                print(
+                    "🚀 啟動補預測..."
+                )
+
+                run_daily_prediction()
+
+            else:
+
+                print(
+                    "✅ 今日已預測，跳過補預測"
+                )
+
+        except Exception as e:
+
+            print(
+                f"⚠️ 補預測失敗：{e}"
+            )
+
+    # ==========================
+    # 每日驗證
     # ==========================
     scheduler.add_job(
         update_prediction_result,
 
         trigger="cron",
 
-        hour=14,
-        minute=30,
+        hour=15,
+        minute=0,
 
         id="daily_validation_job",
 
@@ -165,7 +242,7 @@ def start_scheduler():
     )
 
     # ==========================
-    # 每日預測（收盤後）
+    # 每日預測
     # ==========================
     scheduler.add_job(
         run_daily_prediction,
@@ -182,5 +259,12 @@ def start_scheduler():
 
     scheduler.start()
 
-    print("⏰ 排程已建立")
-    print("Scheduler 已啟動")
+    print(
+        f"⏰ 排程已建立："
+        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )
+
+    print(
+        f"✅ Scheduler 已啟動："
+        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )

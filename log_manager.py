@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import yfinance as yf
 
+from datetime import datetime
+
 LOG_FILE = "prediction_log.csv"
 
 
@@ -308,6 +310,16 @@ def update_prediction_result():
         .normalize()
     )
 
+    now = pd.Timestamp.now()
+
+    market_verify_time = (
+        today
+        + pd.Timedelta(
+            hours=15,
+            minutes=0
+        )
+    )
+
     for index, row in (
         df_log.iterrows()
     ):
@@ -317,9 +329,14 @@ def update_prediction_result():
             pd.notna(
                 row["是否預測正確"]
             )
-            and row[
-                "是否預測正確"
-            ] != ""
+            and str(
+                row["是否預測正確"]
+            ).strip()
+            != ""
+            and str(
+                row["是否預測正確"]
+            ).strip()
+            != "nan"
         ):
             continue
 
@@ -343,17 +360,40 @@ def update_prediction_result():
             .normalize()
         )
 
-        # 今天以前才驗證
-        if predict_date >= today:
-            continue
-
         stock_code = str(
             row["股票代號"]
         )
 
+        # ==========================
+        # 驗證時間控制
+        # ==========================
+
+        # 未來日期不驗證
+        if predict_date > today:
+            print(
+                f"⏳ 尚未到預測日期："
+                f"{stock_code} "
+                f"{predict_date.date()}"
+            )
+            continue
+
+        # 今天的預測，15:00 後才驗證
+        if (
+            predict_date == today
+            and now < market_verify_time
+        ):
+            print(
+                f"⏳ 尚未到驗證時間："
+                f"{stock_code} "
+                f"{predict_date.date()}"
+            )
+            continue
+
         # 自動補 .TW
         if (
             ".TW"
+            not in stock_code
+            and ".TWO"
             not in stock_code
         ):
             stock_code = (
@@ -367,25 +407,18 @@ def update_prediction_result():
                 stock_code
             )
 
-            history = (
-                ticker.history(
-                    start=(
-                        predict_date
-                        + pd.Timedelta(
-                            days=1
-                        )
-                    ).strftime(
-                        "%Y-%m-%d"
-                    ),
+            history = ticker.history(
+                start=predict_date.strftime(
+                    "%Y-%m-%d"
+                ),
 
-                    end=(
-                        predict_date
-                        + pd.Timedelta(
-                            days=7
-                        )
-                    ).strftime(
-                        "%Y-%m-%d"
+                end=(
+                    predict_date
+                    + pd.Timedelta(
+                        days=7
                     )
+                ).strftime(
+                    "%Y-%m-%d"
                 )
             )
 
@@ -446,9 +479,7 @@ def update_prediction_result():
             df_log.loc[
                 index,
                 "實際漲跌"
-            ] = (
-                actual_direction
-            )
+            ] = actual_direction
 
             df_log.loc[
                 index,
@@ -465,8 +496,8 @@ def update_prediction_result():
 
             print(
                 f"⚠️ 更新失敗："
-                f"{stock_code}"
-                f" 原因：{e}"
+                f"{stock_code} "
+                f"原因：{e}"
             )
 
     df_log.to_csv(
@@ -477,4 +508,5 @@ def update_prediction_result():
 
     print(
         "✅ 預測驗證更新完成"
+        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
