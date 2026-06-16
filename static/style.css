@@ -1009,3 +1009,30 @@ tr:hover {
         width: 100%;
     }
 }
+
+/* ==========================
+   AI 解讀
+========================== */
+
+.ai-analysis-card {
+    margin-top: 25px;
+    padding: 22px;
+    background: #111827;
+    border-radius: 18px;
+    border: 1px solid #2b3547;
+}
+
+.ai-analysis-title {
+    color: #d4af37;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.ai-analysis-content {
+    color: #d6d9df;
+    line-height: 1.9;
+    font-size: 15px;
+}
+
+

@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from ai_explainer import generate_ai_analysis
 from market_data import(
     get_market_data
 )
@@ -108,11 +109,16 @@ def run_predict(
 
     result = predict_stock(stock_id)
 
+    ai_analysis = generate_ai_analysis(
+        result
+    )
+
     return templates.TemplateResponse(
         request=request,
         name="predict.html",
         context={
-            "result": result
+            "result": result,
+            "ai_analysis": ai_analysis
         }
     )
 
