@@ -930,6 +930,8 @@ tr:hover {
     color: var(--up-color);
 }
 
+
+
 .result-badge.pending {
     background: rgba(148, 163, 184, 0.12);
     color: var(--sub-text-color);
@@ -970,6 +972,10 @@ tr:hover {
 .wrong {
     color: var(--up-color);
     font-weight: bold;
+}
+.signal-badge.neutral {
+    background: rgba(148, 163, 184, 0.15);
+    color: #cbd5e1;
 }
 
 /* ========================================

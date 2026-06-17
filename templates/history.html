@@ -195,12 +195,15 @@
                             <span class="signal-badge rise">▲ 上漲</span>
                         {% elif row["實際漲跌"] == "下跌" %}
                             <span class="signal-badge fall">▼ 下跌</span>
+                        {% elif row["實際漲跌"] == "持平" %}
+                        <span class="signal-badge neutral">▬ 持平</span>   
                         {% else %}
                             <span class="result-badge pending">待驗證</span>
                         {% endif %}
                     </td>
 
                     <td>
+                       
                         {% if row["是否預測正確"] == "正確" %}
                             <span class="result-badge correct">正確</span>
                         {% elif row["是否預測正確"] == "錯誤" %}

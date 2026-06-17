@@ -130,7 +130,7 @@ def history_page(
     data = (
     get_prediction_history()
     )   
-
+   
     return templates.TemplateResponse(
         request=request,
         name="history.html",
