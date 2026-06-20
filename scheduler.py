@@ -2,6 +2,8 @@ from apscheduler.schedulers.background import (
     BackgroundScheduler
 )
 
+from FinMind.data import DataLoader
+
 from predictor import predict_stock
 from log_manager import (
     save_prediction_log,
@@ -13,8 +15,11 @@ from datetime import (
     timedelta
 )
 
+from taiwan_holidays.taiwan_calendar import TaiwanCalendar
+
 import os
 
+import pandas as pd
 
 scheduler = BackgroundScheduler()
 
@@ -28,6 +33,9 @@ HOT_STOCKS = [
     "2317",
     "3661",
     "0050",
+    "2233",
+    "1303",
+    "2337"
 ]
 
 
@@ -36,23 +44,46 @@ HOT_STOCKS = [
 # ==========================
 def get_next_trade_date():
 
-    predict_date = datetime.now()
+    calendar = TaiwanCalendar()
 
-    # 下午 13:00 後
-    # 預測下一個交易日
-    if predict_date.hour >= 13:
+    today = pd.Timestamp.today().normalize()
+    now = pd.Timestamp.now()
 
-        predict_date = (
-            predict_date
-            + timedelta(days=1)
+    if now.hour >= 13:
+        predict_date = today + pd.Timedelta(days=1)
+    else:
+        predict_date = today
+
+    for _ in range(30):
+
+        date_text = predict_date.strftime(
+            "%Y-%m-%d"
         )
 
-    # 跳過六日
-    while predict_date.weekday() >= 5:
+        # 平日 + 台灣非休假日
+        if (
+            predict_date.weekday() < 5
+            and not calendar.is_holiday(date_text)
+        ):
+            
+            print(
+                f"📅 下一交易日：{date_text}"
+)
+            return date_text
 
         predict_date = (
             predict_date
-            + timedelta(days=1)
+            + pd.Timedelta(days=1)
+        )
+
+    print("⚠️ 找不到交易日，改用週末判斷")
+
+    predict_date = today + pd.Timedelta(days=1)
+
+    while predict_date.weekday() >= 5:
+        predict_date = (
+            predict_date
+            + pd.Timedelta(days=1)
         )
 
     return predict_date.strftime(
