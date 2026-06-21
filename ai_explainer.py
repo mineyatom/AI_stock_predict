@@ -1,4 +1,5 @@
 import os
+import time
 from google import genai
 
 
@@ -20,8 +21,16 @@ def generate_ai_analysis(result):
         direction = str(result["direction"]).strip()
         price_range = result["price_range"]
 
-        # 防止 0~1 機率格式誤傳
-        if confidence <= 1:
+        top_features = result.get(
+            "top_features",
+            []
+        )
+
+        feature_text = "、".join(
+            top_features
+        )
+
+        if 0 <= confidence <= 1:
             confidence = confidence * 100
 
         if confidence >= 70:
@@ -50,41 +59,78 @@ def generate_ai_analysis(result):
         else:
             model_view = "模型方向不明確，短線仍偏觀望"
 
+        fallback_text = (
+            f"{model_view}。"
+        )
+
+        if feature_text:
+            fallback_text += (
+                f"模型整體較重視 {feature_text} "
+                "等市場因素。"
+            )
+
+        fallback_text += (
+            f"預測區間為 {price_range}。"
+        )
+
         prompt = f"""
-你是金融平台的文字潤稿助手。
+你是一位金融 AI 助手。
 
-請根據已分類好的模型摘要，
-輸出一句自然、專業、保守的繁體中文解讀。
+方向：
+{direction}
 
-限制：
-1. 只能潤稿，不得重新判斷方向
-2. 不得提及法人、新聞、資金流向、市場情緒
-3. 不得重複百分比數字
-4. 使用「可能、偏向、顯示」等機率語氣
-5. 使用「預測區間」一詞
-6. 控制在 50 字以內
-7. 不要條列式
-8. 不要加入免責聲明
+信心等級：
+{confidence_level}
 
-模型摘要：
----
-方向：{direction}
-信心等級：{confidence_level}
-模型觀察：{model_view}
-預測區間：{price_range}
----
-請直接輸出一句解讀。
+模型觀點：
+{model_view}
+
+模型重要特徵：
+{feature_text}
+
+預測區間：
+{price_range}
+
+規則：
+
+1. 僅根據提供資料說明
+2. 不得推測新聞
+3. 不得推測法人動向
+4. 不得推測資金流向
+5. 不得新增模型未提供資訊
+6. 模型重要特徵代表模型整體較重視的市場因素
+7. 不得表示這些特徵一定是本次預測的直接原因
+8. 使用繁體中文
+9. 控制在 80 字內
+10. 不要加入免責聲明
 """
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt
-        )
+        response = None
+
+        for attempt in range(3):
+
+            try:
+                response = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt
+                )
+                break
+
+            except Exception as e:
+
+                if attempt == 2:
+                    raise e
+
+                print(
+                    f"Gemini 暫時忙碌，重試第 {attempt + 1} 次..."
+                )
+
+                time.sleep(2)
 
         ai_text = response.text.strip()
 
         if not ai_text:
-            ai_text = "模型已完成預測，但目前無法產生完整文字解讀。"
+            ai_text = fallback_text
 
         return f"{ai_text}\n\n{DISCLAIMER}"
 
@@ -92,6 +138,10 @@ def generate_ai_analysis(result):
         print(f"Gemini 解讀失敗：{e}")
 
         return (
-            "目前無法產生 AI 解讀。\n\n"
-            f"{DISCLAIMER}"
+            f"{fallback_text}\n\n{DISCLAIMER}"
+            if "fallback_text" in locals()
+            else (
+                "目前無法產生 AI 解讀。\n\n"
+                f"{DISCLAIMER}"
+            )
         )

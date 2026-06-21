@@ -236,6 +236,58 @@
 
     </div>
 
+    <div class="feature-card">
+        <h3>🧠 AI 模型觀察</h3>
+        <p class="feature-subtitle">
+            模型訓練過程中較重視的市場因素
+        </p>
+        <ul class="feature-list">
+            {% for feature in result["top_features"] %}
+            <li>
+                 🏆{{ feature }}
+            </li>
+
+            {% endfor %}
+
+        </ul>
+        <p class="feature-note">
+            ※ 顯示模型整體較重視的市場因素，
+            不代表本次預測完全由這些因素決定。。
+        </p>
+
+    </div>
+
+    <div class="shap-card">
+        <h3>🔍 本次預測影響因素</h3>
+        <p class="shap-subtitle">
+        本次預測中對模型影響最大的正負向因素
+        </p>
+        <div class="shap-columns">
+
+            <div class="shap-box positive">
+                <h4>正向因素</h4>
+                <ul>
+                    {% for factor in result.positive_factors %}
+                    <li>🟢 {{ factor }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="shap-box negative">
+                <h4>負向因素</h4>
+
+                <ul>
+                    {% for factor in result.negative_factors %}
+                    <li>🔴 {{ factor }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+         <p class="feature-note">
+            ※ 此為 SHAP 單筆解釋結果，表示本次預測中對模型輸出影響較大的特徵。
+        </p>
+    </div>
+
     <div class="ai-analysis-card">
         <div class="ai-analysis-title">
             AI 解讀

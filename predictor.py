@@ -5,6 +5,8 @@ import pandas as pd
 import ta
 import yfinance as yf
 
+import shap
+
 import os
 
 from FinMind.data import DataLoader
@@ -374,6 +376,26 @@ def run_xgboost_prediction(df):
         "QQQ_Return",
     ]
 
+    feature_mapping = {
+        "Volume_MA5": "成交量均線",
+        "Return": "當日報酬率",
+        "Return_1": "前一日報酬率",
+        "Return_2": "前二日報酬率",
+        "Return_3": "前三日報酬率",
+        "K": "KD-K值",
+        "D": "KD-D值",
+        "Foreign_Investor": "外資買賣超",
+        "Investment_Trust": "投信買賣超",
+        "Dealer_self": "自營商買賣超",
+        "Dealer_Hedging": "避險自營商",
+        "Market_Return": "大盤報酬率",
+        "Market_RSI": "大盤RSI",
+        "Market_Volatility": "大盤波動率",
+        "NVDA_Return": "NVIDIA漲跌幅",
+        "SOX_Return": "費半指數漲跌幅",
+        "QQQ_Return": "QQQ漲跌幅",
+    }
+
     feature_data = df[feature_columns].replace(
         [float("inf"), float("-inf")],
         pd.NA
@@ -387,9 +409,7 @@ def run_xgboost_prediction(df):
     valid_prediction_rows = feature_data.dropna()
 
     if valid_prediction_rows.empty:
-        raise ValueError(
-            "有效特徵資料不足，無法預測"
-        )
+        raise ValueError("有效特徵資料不足，無法預測")
 
     latest_data = valid_prediction_rows.iloc[[-1]]
 
@@ -400,13 +420,10 @@ def run_xgboost_prediction(df):
     ).copy()
 
     if len(model_df) < 60:
-        raise ValueError(
-            "訓練資料不足，無法建立模型"
-        )
+        raise ValueError("訓練資料不足，無法建立模型")
 
     model_df["Target"] = (
-        model_df["Tomorrow_Close"]
-        > model_df["Close"]
+        model_df["Tomorrow_Close"] > model_df["Close"]
     ).astype(int)
 
     X = model_df[feature_columns].apply(
@@ -425,13 +442,75 @@ def run_xgboost_prediction(df):
 
     model.fit(X, y)
 
-    prediction = model.predict(
-        latest_data
-    )[0]
+    # ===== 全域 Feature Importance =====
+    feature_importance = pd.DataFrame({
+        "feature": feature_columns,
+        "importance": model.feature_importances_
+    })
 
-    probability = model.predict_proba(
-        latest_data
-    )[0]
+    feature_importance = feature_importance.sort_values(
+        "importance",
+        ascending=False
+    )
+
+    top_features = (
+        feature_importance["feature"]
+        .head(5)
+        .tolist()
+    )
+
+    top_features = [
+        feature_mapping.get(feature, feature)
+        for feature in top_features
+    ]
+
+    # ===== SHAP 單筆解釋 =====
+    explainer = shap.TreeExplainer(model)
+
+    shap_values = explainer.shap_values(latest_data)
+
+    shap_result = pd.DataFrame({
+        "feature": feature_columns,
+        "shap_value": shap_values[0]
+    })
+
+    shap_result = shap_result.sort_values(
+        "shap_value",
+        ascending=False
+    )
+
+    positive_factors = (
+        shap_result[
+            shap_result["shap_value"] > 0
+        ]
+        .head(3)["feature"]
+        .tolist()
+    )
+
+    negative_factors = (
+        shap_result
+        .sort_values("shap_value")
+        .head(3)["feature"]
+        .tolist()
+    )
+
+    positive_factors = [
+        feature_mapping.get(feature, feature)
+        for feature in positive_factors
+    ]
+
+    negative_factors = [
+        feature_mapping.get(feature, feature)
+        for feature in negative_factors
+    ]
+
+    print("\n===== SHAP 解讀 =====")
+    print("正向因素：", positive_factors)
+    print("負向因素：", negative_factors)
+
+    prediction = model.predict(latest_data)[0]
+
+    probability = model.predict_proba(latest_data)[0]
 
     up_probability = probability[1] * 100
     down_probability = probability[0] * 100
@@ -448,8 +527,10 @@ def run_xgboost_prediction(df):
         "confidence": confidence,
         "up_probability": up_probability,
         "down_probability": down_probability,
+        "top_features": top_features,
+        "positive_factors": positive_factors,
+        "negative_factors": negative_factors,
     }
-
 
 # ===== AI 預測主函式 =====
 def predict_stock(stock_id):
@@ -479,12 +560,9 @@ def predict_stock(stock_id):
     )
 
     if model_result["direction"] == "上漲":
-
         lower_price = latest_close
         upper_price = latest_close + price_range_value
-
     else:
-
         lower_price = latest_close - price_range_value
         upper_price = latest_close
 
@@ -497,30 +575,15 @@ def predict_stock(stock_id):
     result = {
         "stock_id": stock_code,
         "stock_name": stock_name,
-
         "direction": model_result["direction"],
-
-        "confidence": round(
-            model_result["confidence"],
-            2
-        ),
-
-        "up_probability": round(
-            model_result["up_probability"],
-            2
-        ),
-
-        "down_probability": round(
-            model_result["down_probability"],
-            2
-        ),
-
-        "latest_close": round(
-            latest_close,
-            2
-        ),
-
-        "price_range": price_range
+        "confidence": round(model_result["confidence"], 2),
+        "up_probability": round(model_result["up_probability"], 2),
+        "down_probability": round(model_result["down_probability"], 2),
+        "latest_close": round(latest_close, 2),
+        "price_range": price_range,
+        "top_features": model_result["top_features"],
+        "positive_factors": model_result["positive_factors"],
+        "negative_factors": model_result["negative_factors"],
     }
 
     return result
