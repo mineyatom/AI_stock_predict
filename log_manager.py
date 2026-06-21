@@ -510,3 +510,71 @@ def update_prediction_result():
         "✅ 預測驗證更新完成"
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
+
+def get_confidence_stats():
+    """
+    計算各信心區間實際勝率
+    """
+
+    try:
+        df = pd.read_csv("prediction_log.csv")
+
+        df = df[
+            df["是否預測正確"].isin(
+                ["正確", "錯誤"]
+            )
+        ]
+
+        if len(df) == 0:
+            return []
+
+        bins = [0, 60, 70, 80, 100]
+
+        labels = [
+            "50~60%",
+            "60~70%",
+            "70~80%",
+            "80%以上"
+        ]
+
+        df["信心區間"] = pd.cut(
+            df["信心值"],
+            bins=bins,
+            labels=labels
+        )
+
+        result = []
+
+        for label in labels:
+
+            group = df[
+                df["信心區間"] == label
+            ]
+
+            if len(group) == 0:
+                continue
+
+            accuracy = (
+                (group["是否預測正確"] == "正確")
+                .mean()
+                * 100
+            )
+
+            result.append({
+                "range": label,
+                "count": len(group),
+                "accuracy": round(
+                    accuracy,
+                    2
+                )
+            })
+
+        return result
+
+    except Exception as e:
+
+        print(
+            f"信心區間分析失敗: {e}"
+        )
+
+        return []

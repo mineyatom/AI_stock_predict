@@ -284,6 +284,7 @@
 </section>
 
 
+
 <section class="stats-section">
 
     <h2>
@@ -359,6 +360,39 @@
         <div class="chart-wrapper">
             <canvas id="accuracyChart"></canvas>
         </div>
+
+    </div>
+
+</section>
+
+
+<section class="stats-section">
+
+    <h2>
+        信心值驗證
+    </h2>
+
+    <div class="stats-grid-home">
+
+        {% for item in confidence_stats %}
+
+        <div class="stats-card-home">
+
+            <div class="stats-number">
+                {{ item.accuracy }}%
+            </div>
+
+            <div class="stats-label">
+                {{ item.range }}
+            </div>
+
+            <div class="stats-label">
+                {{ item.count }}筆
+            </div>
+
+        </div>
+
+        {% endfor %}
 
     </div>
 
