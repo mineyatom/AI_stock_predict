@@ -30,6 +30,24 @@ def generate_ai_analysis(result):
             top_features
         )
 
+        positive_factors = result.get(
+            "positive_factors",
+            []
+        )
+
+        negative_factors = result.get(
+            "negative_factors",
+            []
+        )
+
+        positive_text = "、".join(
+            positive_factors
+        )   
+
+        negative_text = "、".join(
+            negative_factors
+        )
+
         if 0 <= confidence <= 1:
             confidence = confidence * 100
 
@@ -91,6 +109,12 @@ def generate_ai_analysis(result):
 預測區間：
 {price_range}
 
+本次正向因素：
+{positive_text}
+
+本次負向因素：
+{negative_text}
+
 規則：
 
 1. 僅根據提供資料說明
@@ -103,6 +127,11 @@ def generate_ai_analysis(result):
 8. 使用繁體中文
 9. 控制在 80 字內
 10. 不要加入免責聲明
+11. 本次正向因素與負向因素來自 SHAP 單筆解釋
+12. 可說明正負向因素形成支撐或壓力，但不得說成絕對因果
+13. 最多 2 句
+14. 不要同時列出太多特徵，正向與負向各最多提 1~2 個
+15. 不要重複「模型整體較重視」與「本次預測」兩種解釋太多次
 """
 
         response = None
