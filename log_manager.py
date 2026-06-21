@@ -578,3 +578,97 @@ def get_confidence_stats():
         )
 
         return []
+    
+
+def get_recent_accuracy_stats():
+    """
+    計算最近 10 / 20 / 30 筆已驗證預測的勝率
+    用來監控模型近期是否退化
+    """
+
+    try:
+        df = pd.read_csv("prediction_log.csv")
+
+        df = df[
+            df["是否預測正確"].isin(["正確", "錯誤"])
+        ]
+
+        if len(df) == 0:
+            return []
+
+        recent_settings = [10, 20, 30]
+
+        result = []
+
+        for n in recent_settings:
+
+            recent_df = df.tail(n)
+
+            if len(recent_df) == 0:
+                continue
+
+            accuracy = (
+                (recent_df["是否預測正確"] == "正確")
+                .mean()
+                * 100
+            )
+
+            result.append({
+                "label": f"最近{n}筆",
+                "accuracy": round(accuracy, 2),
+                "count": len(recent_df)
+            })
+
+        return result
+
+    except Exception as e:
+
+        print(f"近期勝率分析失敗: {e}")
+
+        return []
+    
+
+def get_high_confidence_accuracy(threshold=70):
+    """
+    計算高信心預測的實際勝率
+    預設信心值 >= 70%
+    """
+
+    try:
+        df = pd.read_csv("prediction_log.csv")
+
+        df = df[
+            df["是否預測正確"].isin(["正確", "錯誤"])
+        ]
+
+        high_confidence_df = df[
+            df["信心值"] >= threshold
+        ]
+
+        if len(high_confidence_df) == 0:
+            return {
+                "accuracy": 0,
+                "count": 0,
+                "label": f"信心≥{threshold}%"
+            }
+
+        accuracy = (
+            (high_confidence_df["是否預測正確"] == "正確")
+            .mean()
+            * 100
+        )
+
+        return {
+            "accuracy": round(accuracy, 2),
+            "count": len(high_confidence_df),
+            "label": f"信心≥{threshold}%"
+        }
+
+    except Exception as e:
+        print(f"高信心勝率分析失敗: {e}")
+
+        return {
+            "accuracy": 0,
+            "count": 0,
+            "label": f"信心≥{threshold}%"
+        }    

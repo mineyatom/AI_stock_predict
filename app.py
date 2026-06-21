@@ -13,7 +13,9 @@ from log_manager import(
     get_prediction_history,
     update_prediction_result,
     get_accuracy_chart_data,
-    get_confidence_stats
+    get_confidence_stats,
+    get_recent_accuracy_stats,
+    get_high_confidence_accuracy
     )
 
 from market_price import(
@@ -57,6 +59,10 @@ def home(request: Request):
 
     confidence_stats =  get_confidence_stats()
 
+    recent_accuracy_stats = get_recent_accuracy_stats()
+
+    high_confidence_accuracy = get_high_confidence_accuracy()
+
     current_stock_price = None
 
     if latest_prediction:
@@ -87,8 +93,14 @@ def home(request: Request):
             "accuracy_chart" : accuracy_chart,
 
             "current_stock_price": current_stock_price,
-            
+
             "confidence_stats": confidence_stats,
+
+            "recent_accuracy_stats": recent_accuracy_stats,
+
+            "high_confidence_accuracy": high_confidence_accuracy,
+
+             
                        
         }
     )
