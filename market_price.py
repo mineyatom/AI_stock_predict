@@ -1,29 +1,56 @@
-import yfinance as yf
-from datetime import datetime
+from datetime import datetime, timedelta
+
+from FinMind.data import DataLoader
+
+
+api = DataLoader()
 
 
 def get_stock_price(stock_id):
+    """
+    使用 FinMind 取得台股最新收盤價
+    避免 yfinance 台股資料延遲或價格尺度不一致
+    """
 
     try:
-        ticker = yf.Ticker(stock_id)
+        finmind_stock_id = (
+            stock_id
+            .replace(".TW", "")
+            .replace(".TWO", "")
+        )
 
-        history = ticker.history(period="10d")
+        start_date = (
+            datetime.now()
+            - timedelta(days=14)
+        ).strftime("%Y-%m-%d")
 
-        if history.empty or "Close" not in history.columns:
+        df = api.taiwan_stock_daily(
+            stock_id=finmind_stock_id,
+            start_date=start_date
+        )
+
+        if df.empty:
             return None
 
-        close_data = history["Close"].dropna()
+        df = df.dropna(
+            subset=["close"]
+        )
 
-        if len(close_data) < 2:
+        if len(df) < 2:
             return None
+
+        df = df.sort_values("date")
+
+        current_row = df.iloc[-1]
+        previous_row = df.iloc[-2]
 
         current_price = round(
-            float(close_data.iloc[-1]),
+            float(current_row["close"]),
             2
         )
 
         previous_close = float(
-            close_data.iloc[-2]
+            previous_row["close"]
         )
 
         if previous_close == 0:
@@ -44,8 +71,8 @@ def get_stock_price(stock_id):
         )
 
         latest_market_date = (
-            close_data.index[-1]
-            .strftime("%Y/%m/%d")
+            current_row["date"]
+            .replace("-", "/")
         )
 
         return {
@@ -59,5 +86,5 @@ def get_stock_price(stock_id):
         }
 
     except Exception as e:
-        print(f"股價取得失敗：{e}")
+        print(f"FinMind 股價取得失敗：{e}")
         return None
