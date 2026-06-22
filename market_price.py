@@ -7,19 +7,27 @@ def get_stock_price(stock_id):
     try:
         ticker = yf.Ticker(stock_id)
 
-        history = ticker.history(period="5d")
+        history = ticker.history(period="10d")
 
-        if history.empty or len(history) < 2:
+        if history.empty or "Close" not in history.columns:
+            return None
+
+        close_data = history["Close"].dropna()
+
+        if len(close_data) < 2:
             return None
 
         current_price = round(
-            float(history["Close"].iloc[-1]),
+            float(close_data.iloc[-1]),
             2
         )
 
         previous_close = float(
-            history["Close"].iloc[-2]
+            close_data.iloc[-2]
         )
+
+        if previous_close == 0:
+            return None
 
         change_percent = round(
             (
@@ -36,7 +44,7 @@ def get_stock_price(stock_id):
         )
 
         latest_market_date = (
-            history.index[-1]
+            close_data.index[-1]
             .strftime("%Y/%m/%d")
         )
 
@@ -44,13 +52,7 @@ def get_stock_price(stock_id):
             "price": current_price,
             "change": abs(change_percent),
             "direction": direction,
-
-            # 股價資料本身的時間
-            "market_datetime": (
-                f"{latest_market_date} 13:30"
-            ),
-
-            # 你的系統抓資料的時間
+            "market_datetime": f"{latest_market_date} 13:30",
             "updated_at": datetime.now().strftime(
                 "%Y/%m/%d %H:%M"
             )

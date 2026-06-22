@@ -2,22 +2,22 @@ from apscheduler.schedulers.background import (
     BackgroundScheduler
 )
 
-from FinMind.data import DataLoader
+
 
 from predictor import predict_stock
 from log_manager import (
     save_prediction_log,
-    update_prediction_result
+    update_prediction_result,
+    prediction_exists_for_date
 )
 
-from datetime import (
-    datetime,
-    timedelta
-)
+from datetime import datetime
+    
+
 
 from taiwan_holidays.taiwan_calendar import TaiwanCalendar
 
-import os
+
 
 import pandas as pd
 
@@ -35,7 +35,12 @@ HOT_STOCKS = [
     "0050",
     "2233",
     "1303",
-    "2337"
+    "2337",
+    "2308",
+    "2382",
+    "3231",
+    "3017",
+    "6669"
 ]
 
 
@@ -168,17 +173,38 @@ def run_daily_prediction():
 
     print("本輪自動預測完成")
 
+# ==========================
+# 補跑遺漏預測
+# ==========================
+def recover_missing_prediction():
+
+    target_date = get_next_trade_date()
+
+    print(
+        f"🔍 檢查是否需要補預測：{target_date}"
+    )
+
+    if prediction_exists_for_date(
+        target_date
+    ):
+        print(
+            f"✅ {target_date} 已有預測紀錄，不需補跑"
+        )
+        return
+
+    print(
+        f"⚠️ {target_date} 尚無預測紀錄，開始補跑"
+    )
+
+    run_daily_prediction() 
+
+
 
 # ==========================
 # 啟動 Scheduler
 # ==========================
 def start_scheduler():
 
-    now = datetime.now()
-
-    # ==========================
-    # 啟動補驗證
-    # ==========================
     print(
         f"🕒 啟動補驗證："
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
@@ -186,105 +212,28 @@ def start_scheduler():
 
     update_prediction_result()
 
-    # ==========================
-    # 啟動補預測
-    # 如果超過 21:00
-    # 且今天還沒預測
-    # 就補跑
-    # ==========================
-    if now.hour >= 21:
+    print(
+        f"🧩 啟動補預測檢查："
+        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )
 
-        print(
-            f"🕒 檢查是否需要補預測："
-            f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        )
+    recover_missing_prediction()
 
-        try:
-            import pandas as pd
-
-            LOG_FILE = (
-                "prediction_log.csv"
-            )
-
-            today = (
-                pd.Timestamp.today()
-                .strftime("%Y/%m/%d")
-            )
-
-            need_prediction = True
-
-            if os.path.exists(
-                LOG_FILE
-            ):
-
-                df = pd.read_csv(
-                    LOG_FILE,
-                    encoding="utf-8-sig"
-                )
-
-                if not df.empty:
-
-                    today_prediction = df[
-                        df["預測日期"]
-                        == today
-                    ]
-
-                    if (
-                        len(
-                            today_prediction
-                        ) > 0
-                    ):
-                        need_prediction = False
-
-            if need_prediction:
-
-                print(
-                    "🚀 啟動補預測..."
-                )
-
-                run_daily_prediction()
-
-            else:
-
-                print(
-                    "✅ 今日已預測，跳過補預測"
-                )
-
-        except Exception as e:
-
-            print(
-                f"⚠️ 補預測失敗：{e}"
-            )
-
-    # ==========================
-    # 每日驗證
-    # ==========================
     scheduler.add_job(
         update_prediction_result,
-
         trigger="cron",
-
         hour=15,
         minute=0,
-
         id="daily_validation_job",
-
         replace_existing=True,
     )
 
-    # ==========================
-    # 每日預測
-    # ==========================
     scheduler.add_job(
         run_daily_prediction,
-
         trigger="cron",
-
         hour=21,
         minute=0,
-
         id="daily_prediction_job",
-
         replace_existing=True,
     )
 
@@ -299,3 +248,5 @@ def start_scheduler():
         f"✅ Scheduler 已啟動："
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
+
+    

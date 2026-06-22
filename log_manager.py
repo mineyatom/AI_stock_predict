@@ -671,4 +671,34 @@ def get_high_confidence_accuracy(threshold=70):
             "accuracy": 0,
             "count": 0,
             "label": f"信心≥{threshold}%"
-        }    
+        }  
+    
+      
+def prediction_exists_for_date(predict_date):
+    """
+    檢查指定預測日期是否已經有預測紀錄
+    """
+
+    try:
+        df = pd.read_csv("prediction_log.csv")
+
+        if df.empty:
+            return False
+
+        df["預測日期"] = pd.to_datetime(
+            df["預測日期"]
+        ).dt.strftime("%Y-%m-%d")
+
+        predict_date = pd.to_datetime(
+            predict_date
+        ).strftime("%Y-%m-%d")
+
+        exists = (
+            df["預測日期"] == predict_date
+        ).any()
+
+        return exists
+
+    except Exception as e:
+        print(f"檢查預測紀錄失敗：{e}")
+        return False    
