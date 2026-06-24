@@ -461,6 +461,8 @@ def update_prediction_result():
             else:
                 actual_direction = "持平"
 
+            prediction = str(prediction).strip()
+            actual_direction = str(actual_direction).strip()
             result_text = (
                 "正確"
                 if prediction
