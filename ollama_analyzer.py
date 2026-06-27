@@ -1,5 +1,7 @@
 import requests
 
+from feature_description import explain_feature_list
+
 
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "qwen3:8b"
@@ -12,28 +14,56 @@ def analyze_prediction_with_ollama(prediction_data):
     """
 
     try:
+        positive_factors = explain_feature_list(
+        prediction_data.get("positive_factors")
+        )
+
+        negative_factors = explain_feature_list(
+        prediction_data.get("negative_factors")
+        )
+
+        positive_factors_text = "、".join(positive_factors)
+
+        negative_factors_text = "、".join(negative_factors)
+
         prompt = f"""
 你是台股 AI 模型分析助手。
 
-請根據以下 XGBoost 模型預測結果，產生一段繁體中文分析。
+你的任務是解釋 XGBoost 模型輸出的預測結果。
+你不是投資顧問，也不能自行預測股價。
 
-重要規則：
-1. 不要自己預測股價。
-2. 不要給買進、賣出、持有建議。
-3. 只能解釋模型結果。
-4. 最後一定要加上：本內容僅供模型分析參考，不構成投資建議。
+請根據以下資料，用繁體中文產生一段專業但容易理解的分析。
 
-資料如下：
+輸出規則：
+1. 只能解釋模型結果，不要新增資料。
+2. 不要使用「建議買進、賣出、持有」等投資建議。
+3. 不要保證結果會發生。
+4. 文字控制在 120 到 180 字。
+5. 語氣要像金融 Dashboard 的 AI 分析說明。
+6. 最後一定要加上：
+「本內容僅供模型分析參考，不構成投資建議。」
+
+模型資料：
 股票：{prediction_data.get("stock_name")}（{prediction_data.get("stock_id")}）
 預測方向：{prediction_data.get("direction")}
 信心值：{prediction_data.get("confidence")}%
 上漲機率：{prediction_data.get("up_probability")}%
 下跌機率：{prediction_data.get("down_probability")}%
 預測區間：{prediction_data.get("price_range")}
-正向因素：{prediction_data.get("positive_factors")}
-負向因素：{prediction_data.get("negative_factors")}
 
-請用 3 到 5 句話說明。
+
+SHAP 正向因素：
+{positive_factors_text}
+
+SHAP 負向因素：
+{negative_factors_text}
+
+請按照以下格式輸出：
+
+本次模型預測股票名稱偏向預測方向，信心值為信心值%。
+主要支撐因素包含「正向因素」，代表模型認為這些變數對預測方向形成支撐。
+不過「負向因素」仍對結果造成壓力，顯示短線仍存在不確定性。
+本內容僅供模型分析參考，不構成投資建議。
 """
 
         response = requests.post(
