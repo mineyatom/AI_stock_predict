@@ -29,6 +29,8 @@ from ollama_analyzer import analyze_prediction_with_ollama
 
 from feature_description import explain_feature_list
 
+from confidence_manager import get_confidence_level
+
 
 app = FastAPI()
 
@@ -135,19 +137,15 @@ def run_predict(
 
     result = predict_stock(stock_id)
 
-    ai_analysis = analyze_prediction_with_ollama(result)
+    confidence_level = get_confidence_level(
+        result.get("confidence", 0)
+    )
 
+    result["confidence_level"] = confidence_level
 
-    confidence = float(result.get("confidence", 0))
-
-    if confidence >= 75:
-        confidence_level = "高可信度"
-    elif confidence >= 65:
-        confidence_level = "偏高可信度"
-    elif confidence >= 55:
-        confidence_level = "中等可信度"
-    else:
-        confidence_level = "低可信度"
+    ai_analysis = analyze_prediction_with_ollama(
+        result
+    )
 
     positive_factors = explain_feature_list(
         result.get("positive_factors", [])
@@ -165,7 +163,7 @@ def run_predict(
             "ai_analysis": ai_analysis,
             "positive_factors": positive_factors,
             "negative_factors": negative_factors,
-            "confidence_level": confidence_level,   
+            "confidence_level": confidence_level,
         }
     )
 

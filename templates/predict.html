@@ -236,67 +236,101 @@
 
     </div>
 
-    <div class="feature-card">
-        <h3>🧠 AI 模型觀察</h3>
-        <p class="feature-subtitle">
-            模型訓練過程中較重視的市場因素
-        </p>
-        <ul class="feature-list">
-            {% for feature in result["top_features"] %}
-            <li>
-                 🏆{{ feature }}
-            </li>
+    <div class="ai-report-card">
 
-            {% endfor %}
+    <div class="ai-report-header">
+        🤖 AI 分析師
 
-        </ul>
-        <p class="feature-note">
-            ※ 顯示模型整體較重視的市場因素，
-            不代表本次預測完全由這些因素決定。。
-        </p>
+        <span class="ai-powered">
+            Powered by Ollama
+        </span>
 
     </div>
 
-    <div class="shap-card">
-        <h3>🔍 本次預測影響因素</h3>
-        <p class="shap-subtitle">
-        本次預測中對模型影響最大的正負向因素
-        </p>
-        <div class="shap-columns">
+    <div class="ai-confidence-box">
 
-            <div class="shap-box positive">
-                <h4>正向因素</h4>
-                <ul>
-                    {% for factor in result.positive_factors %}
-                    <li>🟢 {{ factor }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div class="shap-box negative">
-                <h4>負向因素</h4>
-
-                <ul>
-                    {% for factor in result.negative_factors %}
-                    <li>🔴 {{ factor }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+        <div class="ai-section-title">
+            模型可信度
         </div>
-         <p class="feature-note">
-            ※ 此為 SHAP 單筆解釋結果，表示本次預測中對模型輸出影響較大的特徵。
-        </p>
+
+        <div class="ai-confidence-value">
+            {{ confidence_level }}
+        </div>
+
+        <div class="ai-confidence-percent">
+            {{ result.confidence }}%
+        </div>
+
     </div>
 
-    <div class="ai-analysis-card">
-        <div class="ai-analysis-title">
-            AI 解讀
+    <div class="ai-summary-box">
+
+        <div class="ai-section-title">
+            AI 模型摘要
         </div>
 
-        <div class="ai-analysis-content">
+        <p>
             {{ ai_analysis }}
-        </div>
+        </p>
+
     </div>
+
+    <div class="ai-factor-grid">
+
+        <div class="ai-factor-box positive-factor">
+
+            <div class="ai-section-title">
+                提高模型信心
+            </div>
+
+            <ul>
+
+                {% for factor in positive_factors %}
+
+                    <li>{{ factor }}</li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <div class="ai-factor-box negative-factor">
+
+            <div class="ai-section-title">
+                降低模型信心
+            </div>
+
+            <ul>
+
+                {% for factor in negative_factors %}
+
+                    <li>{{ factor }}</li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <div class="ai-conclusion-box">
+
+        <div class="ai-section-title">
+            模型提醒
+        </div>
+
+        <p>
+            本系統使用 XGBoost 模型進行機率判斷，
+            結果代表模型根據目前資料計算出的方向傾向，
+            不代表未來股價一定會朝相同方向發展。
+            本內容僅供模型分析參考，不構成任何投資建議。
+        </p>
+
+    </div>
+
+</div>
 
 </div>
 
