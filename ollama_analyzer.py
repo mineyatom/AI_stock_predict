@@ -22,48 +22,89 @@ def analyze_prediction_with_ollama(prediction_data):
         prediction_data.get("negative_factors")
         )
 
-        positive_factors_text = "、".join(positive_factors)
+        positive_factors_text = "\n".join(
+            f"• {item}" for item in positive_factors
+        )
 
-        negative_factors_text = "、".join(negative_factors)
+        negative_factors_text = "\n".join(
+            f"• {item}" for item in negative_factors
+        )
 
         prompt = f"""
-你是台股 AI 模型分析助手。
+你是一位 AI 股票模型分析師。
 
-你的任務是解釋 XGBoost 模型輸出的預測結果。
-你不是投資顧問，也不能自行預測股價。
+你的工作只有一個：
+解釋 XGBoost 模型輸出的結果。
 
-請根據以下資料，用繁體中文產生一段專業但容易理解的分析。
+請務必遵守：
 
-輸出規則：
-1. 只能解釋模型結果，不要新增資料。
-2. 不要使用「建議買進、賣出、持有」等投資建議。
-3. 不要保證結果會發生。
-4. 文字控制在 120 到 180 字。
-5. 語氣要像金融 Dashboard 的 AI 分析說明。
-6. 最後一定要加上：
+1. 不要自行預測股價。
+2. 不要提供買進、賣出或持有建議。
+3. 不要使用：
+   - 支撐上漲
+   - 支撐下跌
+   - 看多
+   - 看空
+   - 利多
+   - 利空
+4. 只能描述模型判斷依據。
+5. 使用繁體中文。
+6. 回答控制在 180 字內。
+7. 最後一定加入：
 「本內容僅供模型分析參考，不構成投資建議。」
 
-模型資料：
-股票：{prediction_data.get("stock_name")}（{prediction_data.get("stock_id")}）
-預測方向：{prediction_data.get("direction")}
-信心值：{prediction_data.get("confidence")}%
-上漲機率：{prediction_data.get("up_probability")}%
-下跌機率：{prediction_data.get("down_probability")}%
-預測區間：{prediction_data.get("price_range")}
+模型資料
 
+股票：
+{prediction_data.get("stock_name")}（{prediction_data.get("stock_id")}）
 
-SHAP 正向因素：
+模型預測方向：
+{prediction_data.get("direction")}
+
+模型信心值：
+{prediction_data.get("confidence")}%
+
+上漲機率：
+{prediction_data.get("up_probability")}%
+
+下跌機率：
+{prediction_data.get("down_probability")}%
+
+預測區間：
+{prediction_data.get("price_range")}
+
+提高模型信心的因素：
+
 {positive_factors_text}
 
-SHAP 負向因素：
+降低模型信心的因素：
+
 {negative_factors_text}
 
-請按照以下格式輸出：
+請只輸出一段自然流暢的模型摘要。
 
-本次模型預測股票名稱偏向預測方向，信心值為信心值%。
-主要支撐因素包含「正向因素」，代表模型認為這些變數對預測方向形成支撐。
-不過「負向因素」仍對結果造成壓力，顯示短線仍存在不確定性。
+摘要需包含：
+
+1. 模型預測方向。
+2. 信心值高低。
+3. 哪些因素提高模型信心。
+4. 哪些因素降低模型信心。
+
+不要使用：
+
+- 標題
+- 條列
+- Markdown
+- 【模型預測】
+- 【主要影響因素】
+- 【模型說明】
+
+請以一般文章方式回答，控制在 3~4 句。
+
+最後一定加上：
+
 本內容僅供模型分析參考，不構成投資建議。
+
 """
 
         response = requests.post(

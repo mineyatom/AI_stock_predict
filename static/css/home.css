@@ -1,0 +1,337 @@
+.today-predict {
+    width: 90%;
+    max-width: 1100px;
+    margin: 35px auto 60px;
+}
+
+.today-card {
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: 28px;
+    padding: 48px 60px;
+    max-width: 100%;
+    margin: auto;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+    transition: 0.25s ease;
+}
+
+.today-card:hover {
+    border: 1px solid rgba(212, 175, 55, 0.18);
+    box-shadow: var(--card-hover-shadow);
+}
+
+.today-label {
+    color: var(--gold-color);
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.today-stock {
+    font-size: 34px;
+    font-weight: 800;
+    margin-bottom: 24px;
+}
+
+.prediction-big {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 26px 0;
+}
+
+.prediction-arrow {
+    font-size: 44px;
+    margin-right: 14px;
+}
+
+.prediction-text {
+    font-size: 76px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.today-confidence {
+    color: var(--sub-text-color);
+    margin-bottom: 14px;
+}
+
+.today-confidence strong {
+    color: white;
+}
+
+.today-dashboard-row {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    margin-top: 25px;
+}
+
+.today-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.extra-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    transition: 0.2s ease;
+}
+
+.extra-row:hover {
+    background: rgba(255, 255, 255, 0.025);
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.extra-row strong {
+    color: #ffffff;
+}
+
+.today-price-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    width: 220px;
+    min-height: 210px;
+    padding: 22px 20px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: 0.25s ease;
+}
+
+.today-price-card:hover {
+    transform: translateY(-4px);
+    border: 1px solid rgba(212, 175, 55, 0.22);
+}
+
+.price-title {
+    color: #94a3b8;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.price-number {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.price-change {
+    margin-top: 8px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.price-change.rise {
+    color: var(--up-color);
+}
+
+.price-change.fall {
+    color: var(--down-color);
+}
+
+.price-time {
+    margin-top: 14px;
+    text-align: center;
+}
+
+.price-time span {
+    display: block;
+    font-size: 11px;
+    color: #7f92b8;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.price-time strong {
+    display: block;
+    font-size: 14px;
+    color: #f8fafc;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.market-section {
+    width: min(92%, 1450px);
+    margin: 70px auto;
+}
+
+.market-section h2 {
+    text-align: center;
+    font-size: 36px;
+    color: var(--gold-color);
+    margin-bottom: 22px;
+}
+
+.market-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+.market-card {
+    position: relative;
+    overflow: hidden;
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: var(--card-radius);
+    padding: 28px;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+    transition: 0.25s;
+}
+
+.market-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.market-card:hover::before {
+    opacity: 1;
+}
+
+.market-card:hover {
+    transform: translateY(-8px);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    box-shadow: var(--card-hover-shadow);
+}
+
+.market-name {
+    display: block;
+    color: var(--sub-text-color);
+    margin-bottom: 12px;
+}
+
+.market-value {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.market-change {
+    font-size: 15px;
+}
+
+.feature-grid {
+    width: min(92%, 1100px);
+    margin: 40px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 22px;
+}
+
+.feature-card {
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: var(--card-radius);
+    padding: 34px;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+    transition: 0.25s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border: 1px solid rgba(212, 175, 55, 0.18);
+    box-shadow: var(--card-hover-shadow);
+}
+
+.feature-card h3 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.feature-card p {
+    color: var(--sub-text-color);
+    line-height: 1.7;
+}
+
+.monitor-section {
+    width: min(92%, 1450px);
+    margin: 80px auto;
+    padding: 0;
+}
+
+.monitor-section h2 {
+    text-align: center;
+    color: #d4af37;
+    font-size: 36px;
+    font-weight: 900;
+    margin-bottom: 50px;
+}
+
+.monitor-subtitle {
+    color: var(--gold-color);
+    font-size: 20px;
+    font-weight: 800;
+    margin: 42px 0 20px;
+    text-align: center;
+}
+
+.monitor-section .stats-grid-home {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.monitor-section .stats-card-home {
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.monitor-chart {
+    width: 90%;
+    margin: 48px auto 0;
+}
+
+.monitor-chart .chart-wrapper {
+    height: 260px;
+}
+
+@media (max-width: 1000px) {
+    .monitor-section .stats-grid-home {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .monitor-chart {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .prediction-text {
+        font-size: 52px;
+    }
+
+    .today-card {
+        padding: 34px 24px;
+    }
+
+    .today-dashboard-row {
+        flex-direction: column;
+    }
+
+    .today-price-card {
+        width: 100%;
+    }
+}
+
+@media (max-width: 560px) {
+    .monitor-section .stats-grid-home {
+        grid-template-columns: 1fr;
+    }
+}

@@ -27,6 +27,8 @@ from scheduler import start_scheduler
 
 from ollama_analyzer import analyze_prediction_with_ollama
 
+from feature_description import explain_feature_list
+
 
 app = FastAPI()
 
@@ -104,9 +106,10 @@ def home(request: Request):
             "recent_accuracy_stats": recent_accuracy_stats,
 
             "high_confidence_accuracy": high_confidence_accuracy,
+
             "stock_accuracy_stats":stock_accuracy_stats,
 
-             
+                     
                        
         }
     )
@@ -126,24 +129,45 @@ def predict_page(request: Request):
 
 @app.post("/predict")
 def run_predict(
-        request: Request,
-        stock_id: str = Form(...)
+    request: Request,
+    stock_id: str = Form(...)
 ):
 
     result = predict_stock(stock_id)
 
     ai_analysis = analyze_prediction_with_ollama(result)
 
- 
+
+    confidence = float(result.get("confidence", 0))
+
+    if confidence >= 75:
+        confidence_level = "高可信度"
+    elif confidence >= 65:
+        confidence_level = "偏高可信度"
+    elif confidence >= 55:
+        confidence_level = "中等可信度"
+    else:
+        confidence_level = "低可信度"
+
+    positive_factors = explain_feature_list(
+        result.get("positive_factors", [])
+    )
+
+    negative_factors = explain_feature_list(
+        result.get("negative_factors", [])
+    )
 
     return templates.TemplateResponse(
         request=request,
         name="predict.html",
         context={
-        "result": result,
-        "ai_analysis": ai_analysis
-    }
-)
+            "result": result,
+            "ai_analysis": ai_analysis,
+            "positive_factors": positive_factors,
+            "negative_factors": negative_factors,
+            "confidence_level": confidence_level,   
+        }
+    )
 
 @app.get("/history")
 def history_page(
