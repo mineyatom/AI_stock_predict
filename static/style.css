@@ -94,7 +94,7 @@ a {
 .history-hero {
     position: relative;
     width: min(92%, 1100px);
-    margin: 70px auto 45px;
+    margin: 45px auto 30px;
     text-align: center;
     overflow: visible;
 }
@@ -140,12 +140,12 @@ a {
 .predict-hero h1,
 .history-hero h1 {
 
-    font-size: 64px;
+    font-size: 52px;
     font-weight: 900;
 
     line-height: 1.1;
 
-    margin: 0 0 20px;
+    margin: 0 0 16px;
 
     letter-spacing: -0.8px;
 
@@ -183,7 +183,7 @@ a {
 }
 
 .home-actions {
-    margin-top: 35px;
+    margin-top: 26px;
     display: flex;
     justify-content: center;
     gap: 18px;
@@ -411,8 +411,8 @@ a {
 }
 
 .market-section h2 {
-    text-align: left;
-    font-size: 26px;
+    text-align: center;
+    font-size: 36px;
     color: var(--gold-color);
     margin-bottom: 22px;
 }
@@ -1207,6 +1207,47 @@ tr:hover {
 }
 
 
+/* ==========================
+   個股模型表現
+========================== */
+
+.stock-ranking-table {
+
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+
+}
+
+.stock-ranking-table th {
+
+    background: #1f2937;
+    color: white;
+    padding: 12px;
+
+}
+
+.stock-ranking-table td {
+
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+
+}
+
+.stock-ranking-table tr:hover {
+
+    background: #f5f5f5;
+
+}
+
+.stock-ranking-table small {
+
+    color: #888;
+
+}
+
+
 /* =========================================
    Model Monitoring Dashboard
 ========================================= */
@@ -1219,7 +1260,7 @@ tr:hover {
 
 .monitor-section h2 {
     text-align: center;
-    color: #ffffff;
+    color: #d4af37;
     font-size: 36px;
     font-weight: 900;
     margin-bottom: 50px;

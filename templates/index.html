@@ -39,9 +39,7 @@
             </h2>
 
             <p>
-                結合 AI 模型、
-                法人籌碼與全球市場訊號，
-                預測台股隔日漲跌方向。
+                整合技術指標、法人籌碼與全球市場資訊，透過 AI 模型預測台股下一交易日漲跌方向。
             </p>
 
             <div class="home-actions">
@@ -288,12 +286,10 @@
 <section class="monitor-section">
 
     <h2>
-        模型監控中心
+        📊 AI 模型概況
     </h2>
 
-    <h3 class="monitor-subtitle">
-        📊 整體模型表現
-    </h3>
+   
 
     <div class="stats-grid-home">
 
@@ -334,7 +330,27 @@
         </div>
 
     </div>
+</section>
 
+
+<section class="monitor-section">
+
+    <div class="chart-card monitor-chart">
+
+        <h3 class="monitor-subtitle">
+            模型歷史勝率趨勢
+        </h3>
+
+        <div class="chart-wrapper">
+            <canvas id="accuracyChart"></canvas>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="monitor-section">
 
     <h3 class="monitor-subtitle">
         ⚡ 近期模型表現
@@ -378,7 +394,10 @@
     </div>
 
     </div>
+</section>
 
+
+<section class="monitor-section">
 
     <h3 class="monitor-subtitle">
         🎯 信心值驗證
@@ -403,56 +422,11 @@
         {% endfor %}
 
     </div>
-
-
-    <div class="chart-card monitor-chart">
-
-        <h3 class="monitor-subtitle">
-            模型歷史勝率趨勢
-        </h3>
-
-        <div class="chart-wrapper">
-            <canvas id="accuracyChart"></canvas>
-        </div>
-
-    </div>
-
 </section>
 
 
-<section class="feature-section">
 
-    <div class="feature-grid">
 
-        <div class="feature-card">
-            <h3>即時預測</h3>
-            <p>
-                輸入股票代號，
-                產生隔日方向、
-                信心值與預測價格區間。
-            </p>
-        </div>
-
-        <div class="feature-card">
-            <h3>自動驗證</h3>
-            <p>
-                記錄每日預測，
-                隔日回填實際收盤價與預測是否正確。
-            </p>
-        </div>
-
-        <div class="feature-card">
-            <h3>模型分析</h3>
-            <p>
-                結合技術指標、
-                法人籌碼、
-                大盤與美股領先資料進行判斷。
-            </p>
-        </div>
-
-    </div>
-
-</section>
 
 
 <script>

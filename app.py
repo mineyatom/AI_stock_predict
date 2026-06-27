@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from ai_explainer import generate_ai_analysis
+
 from market_data import(
     get_market_data
 )
@@ -15,7 +15,8 @@ from log_manager import(
     get_accuracy_chart_data,
     get_confidence_stats,
     get_recent_accuracy_stats,
-    get_high_confidence_accuracy
+    get_high_confidence_accuracy,
+    get_stock_accuracy_stats
     )
 
 from market_price import(
@@ -23,6 +24,8 @@ from market_price import(
 )
 
 from scheduler import start_scheduler
+
+from ollama_analyzer import analyze_prediction_with_ollama
 
 
 app = FastAPI()
@@ -63,6 +66,8 @@ def home(request: Request):
 
     high_confidence_accuracy = get_high_confidence_accuracy()
 
+    stock_accuracy_stats = (get_stock_accuracy_stats())
+
     current_stock_price = None
 
     if latest_prediction:
@@ -99,6 +104,7 @@ def home(request: Request):
             "recent_accuracy_stats": recent_accuracy_stats,
 
             "high_confidence_accuracy": high_confidence_accuracy,
+            "stock_accuracy_stats":stock_accuracy_stats,
 
              
                        
@@ -126,18 +132,18 @@ def run_predict(
 
     result = predict_stock(stock_id)
 
-    ai_analysis = generate_ai_analysis(
-        result
-    )
+    ai_analysis = analyze_prediction_with_ollama(result)
+
+ 
 
     return templates.TemplateResponse(
         request=request,
         name="predict.html",
         context={
-            "result": result,
-            "ai_analysis": ai_analysis
-        }
-    )
+        "result": result,
+        "ai_analysis": ai_analysis
+    }
+)
 
 @app.get("/history")
 def history_page(

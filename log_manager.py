@@ -275,6 +275,66 @@ def get_accuracy_chart_data():
         "values": values
     }
 
+def get_stock_accuracy_stats():
+
+    if not os.path.exists(LOG_FILE):
+        return []
+
+    df = pd.read_csv(
+        LOG_FILE,
+        encoding="utf-8-sig"
+    )
+
+    if df.empty:
+        return []
+
+    # 只統計已驗證資料
+    df = df[
+        df["是否預測正確"].isin(
+            ["正確", "錯誤"]
+        )
+    ]
+
+    if df.empty:
+        return []
+
+    result = []
+
+    for stock_code, group in df.groupby("股票代號"):
+
+        stock_name = group.iloc[0]["股票名稱"]
+
+        total = len(group)
+
+        correct = (
+            group["是否預測正確"] == "正確"
+        ).sum()
+
+        accuracy = round(
+            correct / total * 100,
+            2
+        )
+
+        result.append({
+
+            "stock_code": stock_code,
+            "stock_name": stock_name,
+            "accuracy": accuracy,
+            "correct": int(correct),
+            "total": int(total)
+
+        })
+
+    result.sort(
+        key=lambda x: (
+            x["accuracy"],
+            x["total"]
+        ),
+        reverse=True
+    )
+
+    return result
+
 
 def update_prediction_result():
 
