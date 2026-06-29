@@ -243,6 +243,9 @@
 {% endif %}
 
 
+
+
+
 <section class="market-section">
 
     <h2>
@@ -281,7 +284,67 @@
 
 </section>
 
+<section class="summary-section">
 
+    <div class="summary-card">
+
+        <div class="summary-header">
+
+            <div>
+
+                <h2>📈 AI 市場分析</h2>
+
+                <p class="summary-subtitle">
+                    依據市場數據、AI 模型與可解釋 AI 分析自動生成
+                </p>
+
+            </div>
+
+            <span class="summary-badge">
+                每日更新
+            </span>
+
+        </div>
+
+        <div class="signal-row">
+
+            <div class="signal-item">
+
+                <span class="signal-label">
+                    市場訊號
+                </span>
+
+                <span class="signal-badge signal-neutral">
+
+                    🟡 中性
+
+                </span>
+
+            </div>
+
+            <div class="signal-item">
+
+                <span class="signal-label">
+                    模型可信度
+                </span>
+
+               <span class="signal-badge {{ market_signal_class }}">
+                         {{ market_signal }}
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="summary-body">
+
+            {{ market_summary }}
+
+        </div>
+
+    </div>
+
+</section>
 
 <section class="monitor-section">
 
