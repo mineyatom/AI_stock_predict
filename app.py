@@ -33,6 +33,12 @@ from feature_description import explain_feature_list
 from confidence_manager import get_confidence_level
 from market_summary import generate_market_summary
 
+from summary_manager import (
+    get_today_prediction_summary,
+    get_market_signal,
+    get_model_confidence
+)
+
 
 app = FastAPI()
 
@@ -78,54 +84,27 @@ def home(request: Request):
 
     market_summary = None
 
+    prediction_summary = get_today_prediction_summary()
+
+    market_signal, market_signal_class = get_market_signal(
+        prediction_summary
+    )
+
+    model_confidence, model_confidence_class = get_model_confidence(
+        prediction_summary
+    )
+
     try:
-       
-
-        prediction_summary = {
-            "total_stocks": 0,
-            "up_count": 0,
-            "down_count": 0,
-            "high_confidence_count": 0,
-            "medium_confidence_count": 0,
-            "low_confidence_count": 0,
-            "stocks": []
-        }
-
-        for item in confidence_stats:
-            range_name = item.get("range", "")
-            count = item.get("count", 0)
-
-            if range_name == "80%以上":
-                prediction_summary["high_confidence_count"] += count
-
-            elif range_name == "70~80%":
-                prediction_summary["medium_confidence_count"] += count
-
-            else:
-                prediction_summary["low_confidence_count"] += count
-
-            prediction_summary["total_stocks"] += count
-
-        if latest_prediction:
-            prediction_summary["stocks"].append({
-                "stock_id": latest_prediction.get("stock_id", ""),
-                "stock_name": latest_prediction.get("stock_name", ""),
-                "prediction": latest_prediction.get("prediction", ""),
-                "confidence": latest_prediction.get("confidence", ""),
-                "confidence_level": latest_prediction.get(
-                    "confidence_level",
-                    ""
-                )
-            })
-
         market_summary = generate_market_summary(
             market_data=market_data,
             prediction_summary=prediction_summary
         )
 
     except Exception as e:
-        print("AI 每日市場摘要產生失敗：", e)
-        market_summary = "AI 每日市場摘要暫時無法產生。"
+        print("AI 市場分析產生失敗：", e)
+        market_summary = "AI 市場分析暫時無法產生。"
+
+   
 
     if latest_prediction:
         current_stock_price = get_stock_price(
@@ -148,6 +127,10 @@ def home(request: Request):
             "recent_accuracy_stats": recent_accuracy_stats,
             "high_confidence_accuracy": high_confidence_accuracy,
             "stock_accuracy_stats": stock_accuracy_stats,
+            "market_signal": market_signal,
+            "market_signal_class": market_signal_class,
+            "model_confidence": model_confidence,
+            "model_confidence_class": model_confidence_class,
         }
     )
 

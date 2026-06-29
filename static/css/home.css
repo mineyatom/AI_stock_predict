@@ -454,9 +454,11 @@
 }
 
 .signal-bear {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.12);
-    border: 1px solid rgba(239, 68, 68, 0.35);
+    color:#f87171;
+
+    background:rgba(239,68,68,.10);
+
+    border:1px solid rgba(239,68,68,.22);
 }
 
 /* ==========================
