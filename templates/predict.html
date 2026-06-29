@@ -239,7 +239,7 @@
     <div class="ai-report-card">
 
     <div class="ai-report-header">
-        🤖 AI 分析師
+        📊 AI 模型分析
 
         <span class="ai-powered">
             Powered by Ollama
@@ -274,6 +274,49 @@
         </p>
 
     </div>
+
+    <div class="chat-card">
+
+    <h2>🤖 AI 模型助手</h2>
+
+    <form id="chatForm">
+
+        <input
+            type="hidden"
+            id="stock_id"
+            value="{{ result.stock_id }}"
+        >
+
+        <textarea
+            id="question"
+            placeholder="請輸入想詢問模型的問題，例如：為什麼今天偏空？"
+        ></textarea>
+
+        <button type="submit">
+
+            詢問 AI
+
+        </button>
+
+    </form>
+
+   <div class="chat-answer">
+
+    <div class="chat-answer-title">
+
+        🤖 AI 回答
+
+    </div>
+
+    <div id="chatAnswer">
+
+        請輸入想詢問模型的問題。
+
+    </div>
+
+</div>
+
+</div>
 
     <div class="ai-factor-grid">
 
@@ -356,6 +399,65 @@
         document.querySelector(
             'input[name="stock_id"]'
         ).value = stockId;
+    }
+
+    const chatForm = document.getElementById("chatForm");
+
+    if (chatForm) {
+
+        chatForm.addEventListener("submit", async function(e){
+
+            e.preventDefault();
+
+            const chatAnswer = document.getElementById("chatAnswer");
+
+            const question =
+                document.getElementById("question").value.trim();
+
+            if (!question) {
+
+                chatAnswer.innerText =
+                    "請先輸入想詢問模型的問題。";
+
+                return;
+            }
+
+            chatAnswer.innerText = "🤖 AI 模型助手思考中...";
+
+            const formData = new FormData();
+
+            formData.append(
+                "stock_id",
+                document.getElementById("stock_id").value
+            );
+
+            formData.append(
+                "question",
+                question
+            );
+
+            try {
+
+                const response = await fetch(
+                    "/chat",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+                const data = await response.json();
+
+                chatAnswer.innerText = data.answer;
+
+            } catch (error) {
+
+                chatAnswer.innerText =
+                    "AI 模型助手暫時無法使用，請稍後再試。";
+
+            }
+
+        });
     }
 
 </script>

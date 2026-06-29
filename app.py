@@ -39,8 +39,11 @@ from summary_manager import (
     get_model_confidence
 )
 
+from stock_chat import chat_with_model
+
 
 app = FastAPI()
+latest_prediction_result = None
 
 
 @app.on_event("startup")
@@ -151,6 +154,7 @@ def run_predict(
     request: Request,
     stock_id: str = Form(...)
 ):
+    global latest_prediction_result
 
     result = predict_stock(stock_id)
 
@@ -159,6 +163,8 @@ def run_predict(
     )
 
     result["confidence_level"] = confidence_level
+
+    latest_prediction_result = result
 
     ai_analysis = analyze_prediction_with_ollama(
         result
@@ -183,6 +189,37 @@ def run_predict(
             "confidence_level": confidence_level,
         }
     )
+
+
+@app.post("/chat")
+def chat_model(
+    stock_id: str = Form(...),
+    question: str = Form(...)
+):
+    global latest_prediction_result
+
+    if latest_prediction_result is None:
+        return {
+            "answer": "請先完成股票預測後，再使用 AI 模型助手。"
+        }
+
+    result = latest_prediction_result
+
+    if result.get("stock_id") != stock_id:
+        return {
+            "answer": "目前 AI 模型助手只能解釋剛剛完成的股票預測結果。"
+        }
+
+    answer = chat_with_model(
+        question=question,
+        prediction_data=result
+    )
+
+    return {
+        "answer": answer
+    }
+    
+
 
 @app.get("/history")
 def history_page(
