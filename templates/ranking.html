@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>AI 模型排行榜</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/static/css/ranking.css"
+    >
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        AI 股票預測
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">首頁</a>
+
+        <a href="/predict">預測</a>
+
+        <a href="/history">歷史紀錄</a>
+
+        <a href="/ranking">模型排行</a>
+
+        <a href="/evaluation">模型評估</a>
+
+    </div>
+
+</nav>
+
+
+<section class="hero">
+
+    <h1>
+
+        AI 模型排行榜
+
+    </h1>
+
+    <p>
+
+        依歷史預測結果統計模型準確率，
+        僅納入完成至少 5 次驗證之股票。
+
+    </p>
+
+</section>
+
+
+
+
+
+<div class="ranking-table-container">
+
+    <table class="ranking-table">
+
+        <thead>
+
+            <tr>
+
+                <th>排名</th>
+
+                <th>股票名稱</th>
+
+                <th>股票代號</th>
+
+                <th>模型準確率</th>
+
+                <th>驗證次數</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for stock in stock_accuracy %}
+
+            <tr>
+
+                <td class="rank-cell">
+
+                    {% if loop.index == 1 %}
+
+                        🥇
+
+                    {% elif loop.index == 2 %}
+
+                        🥈
+
+                    {% elif loop.index == 3 %}
+
+                        🥉
+
+                    {% else %}
+
+                        #{{ loop.index }}
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    {{ stock.stock_name }}
+
+                </td>
+
+                <td class="stock-code-cell">
+
+                    {{ stock.stock_id }}
+
+                </td>
+
+                <td class="
+                    accuracy-value
+                    {% if stock.accuracy >= 80 %}
+                        accuracy-excellent
+                    {% elif stock.accuracy >= 60 %}
+                        accuracy-good
+                    {% elif stock.accuracy >= 50 %}
+                        accuracy-normal
+                    {% else %}
+                        accuracy-poor
+                    {% endif %}
+                ">
+
+                    {{ stock.accuracy }}%
+
+                </td>
+
+                <td>
+
+                    {{ stock.total }}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<div class="ranking-note">
+
+    ※ 排行榜依模型歷史準確率排序，至少完成 5 次驗證才納入統計。
+
+</div>
+
+
+</body>
+
+</html>

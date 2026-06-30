@@ -1,0 +1,309 @@
+/* ==========================
+   Evaluation Page
+========================== */
+
+.evaluation-section{
+
+    width:min(92%,1100px);
+
+    margin:50px auto;
+
+}
+
+.metric-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:24px;
+
+}
+
+.metric-card{
+
+    background:var(--card-bg);
+
+    border:var(--card-border);
+
+    border-radius:20px;
+
+    padding:28px;
+
+    text-align:center;
+
+    box-shadow:var(--card-shadow);
+
+    transition:.25s;
+
+}
+
+.metric-card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:var(--card-hover-shadow);
+
+}
+
+.metric-card span{
+
+    display:block;
+
+    color:#94a3b8;
+
+    font-size:15px;
+
+    margin-bottom:14px;
+
+}
+
+.metric-card strong{
+
+    display:block;
+
+    color:var(--gold-color);
+
+    font-size:42px;
+
+    font-weight:900;
+
+    margin-bottom:14px;
+
+}
+
+.metric-card p{
+
+    color:#cbd5e1;
+
+    font-size:14px;
+
+    line-height:1.8;
+
+}
+
+
+/* ==========================
+   Confusion Matrix
+========================== */
+
+.confusion-box{
+
+    margin-top:30px;
+
+    background:var(--card-bg);
+
+    border:var(--card-border);
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    box-shadow:var(--card-shadow);
+
+}
+
+.confusion-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.confusion-table th{
+
+    background:rgba(212,175,55,.08);
+
+    color:var(--gold-color);
+
+    padding:18px;
+
+    font-size:15px;
+
+}
+
+.confusion-table td{
+
+    padding:24px;
+
+    text-align:center;
+
+    color:#f8fafc;
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+    font-size:22px;
+
+    font-weight:700;
+
+}
+
+.confusion-table tbody tr:hover{
+
+    background:rgba(255,255,255,.04);
+
+}
+
+
+/* ==========================
+   Confidence
+========================== */
+
+.confidence-bin-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:24px;
+
+    margin-top:30px;
+
+}
+
+.confidence-bin-card{
+
+    background:var(--card-bg);
+
+    border:var(--card-border);
+
+    border-radius:20px;
+
+    padding:28px;
+
+    text-align:center;
+
+    box-shadow:var(--card-shadow);
+
+    transition:.25s;
+
+}
+
+.confidence-bin-card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:var(--card-hover-shadow);
+
+}
+
+.confidence-bin-card span{
+
+    display:block;
+
+    color:#94a3b8;
+
+    margin-bottom:12px;
+
+}
+
+.confidence-bin-card strong{
+
+    display:block;
+
+    font-size:38px;
+
+    color:var(--gold-color);
+
+    font-weight:900;
+
+    margin-bottom:12px;
+
+}
+
+.confidence-bin-card p{
+
+    color:#cbd5e1;
+
+    font-size:14px;
+
+}
+
+
+/* ==========================
+   Section Title
+========================== */
+
+.evaluation-section h2{
+
+    color:#ffffff;
+
+    font-size:28px;
+
+    margin-bottom:24px;
+
+}
+
+
+/* ==========================
+   Responsive
+========================== */
+
+@media(max-width:768px){
+
+    .metric-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .confidence-bin-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+/* ==========================
+   Evaluation Summary
+========================== */
+
+.summary-subtitle{
+
+    margin:10px 0 24px;
+
+    color:#94a3b8;
+
+    font-size:14px;
+
+}
+
+.evaluation-summary{
+
+    background:var(--card-bg);
+
+    border:var(--card-border);
+
+    border-left:3px solid var(--gold-color);
+
+    border-radius:20px;
+
+    padding:34px 40px;
+
+    color:#f8fafc;
+
+    font-size:16px;
+
+    line-height:1.8;
+
+    white-space:pre-line;
+
+    box-shadow:var(--card-shadow);
+
+}
+
+.evaluation-summary:hover{
+
+    box-shadow:var(--card-hover-shadow);
+
+}
+
+.evaluation-summary::first-line{
+
+    color:var(--gold-color);
+
+    font-weight:900;
+
+}

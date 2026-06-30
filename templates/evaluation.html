@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>模型評估</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <link rel="stylesheet" href="/static/css/evaluation.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">
+        AI 股票預測
+    </div>
+
+    <div class="nav-links">
+        <a href="/">首頁</a>
+        <a href="/predict">預測</a>
+        <a href="/history">歷史紀錄</a>
+        <a href="/ranking">模型排行</a>
+        <a href="/evaluation">模型評估</a>
+    </div>
+</nav>
+
+<section class="hero">
+
+    <h1>
+        AI 模型評估
+    </h1>
+
+    <p>
+        透過 Accuracy、Precision、Recall、F1 與信心區間分析，
+        檢視模型歷史預測表現。
+    </p>
+
+</section>
+
+
+<section class="evaluation-section">
+
+    <div class="metric-grid">
+
+        <div class="metric-card">
+            <span>Accuracy</span>
+            <strong>{{ model_metrics.accuracy }}%</strong>
+            <p>整體預測正確率</p>
+        </div>
+
+        <div class="metric-card">
+            <span>Precision</span>
+            <strong>{{ model_metrics.precision }}%</strong>
+            <p>預測上漲時實際上漲比例</p>
+        </div>
+
+        <div class="metric-card">
+            <span>Recall</span>
+            <strong>{{ model_metrics.recall }}%</strong>
+            <p>實際上漲中被模型抓到比例</p>
+        </div>
+
+        <div class="metric-card">
+            <span>F1 Score</span>
+            <strong>{{ model_metrics.f1 }}%</strong>
+            <p>Precision 與 Recall 的綜合指標</p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="evaluation-section">
+
+    <h2>
+        混淆矩陣
+    </h2>
+
+    <div class="confusion-box">
+
+        <table class="confusion-table">
+
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>實際下跌</th>
+                    <th>實際上漲</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <th>預測下跌</th>
+                    <td>{{ model_metrics.confusion_matrix[0][0] }}</td>
+                    <td>{{ model_metrics.confusion_matrix[1][0] }}</td>
+                </tr>
+
+                <tr>
+                    <th>預測上漲</th>
+                    <td>{{ model_metrics.confusion_matrix[0][1] }}</td>
+                    <td>{{ model_metrics.confusion_matrix[1][1] }}</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<section class="evaluation-section">
+
+    <h2>
+        信心區間準確率
+    </h2>
+
+    <div class="confidence-bin-grid">
+
+        {% for item in confidence_bins %}
+
+        <div class="confidence-bin-card">
+
+            <span>
+                {{ item.range }}
+            </span>
+
+            <strong>
+                {{ item.accuracy }}%
+            </strong>
+
+            <p>
+                {{ item.correct }} / {{ item.total }} 筆正確
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+<section class="evaluation-section">
+
+    <h2>
+
+        🤖 AI 模型評估摘要
+
+    </h2>
+
+    <p class="summary-subtitle">
+
+        根據目前歷史驗證資料，自動產生模型整體分析結果。
+
+    </p>
+
+    <div class="evaluation-summary">
+
+        {{ evaluation_summary }}
+
+    </div>
+
+</section>
+
+
+</body>
+
+</html>

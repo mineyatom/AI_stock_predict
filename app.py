@@ -17,7 +17,7 @@ from log_manager import(
     get_confidence_stats,
     get_recent_accuracy_stats,
     get_high_confidence_accuracy,
-    get_stock_accuracy_stats
+    
     )
 
 from market_price import(
@@ -40,6 +40,14 @@ from summary_manager import (
 )
 
 from stock_chat import chat_with_model
+
+from model_evaluator import (
+    evaluate_model,
+    evaluate_confidence_bins,
+    evaluate_stock_accuracy
+)
+
+from evaluation_summary import generate_evaluation_summary
 
 
 app = FastAPI()
@@ -81,7 +89,8 @@ def home(request: Request):
 
     high_confidence_accuracy = get_high_confidence_accuracy()
 
-    stock_accuracy_stats = get_stock_accuracy_stats()
+
+    
 
     current_stock_price = None
 
@@ -129,11 +138,12 @@ def home(request: Request):
             "confidence_stats": confidence_stats,
             "recent_accuracy_stats": recent_accuracy_stats,
             "high_confidence_accuracy": high_confidence_accuracy,
-            "stock_accuracy_stats": stock_accuracy_stats,
+            
             "market_signal": market_signal,
             "market_signal_class": market_signal_class,
             "model_confidence": model_confidence,
             "model_confidence_class": model_confidence_class,
+            
         }
     )
 
@@ -243,3 +253,36 @@ def history_page(
         }
     )
 
+
+@app.get("/ranking")
+def ranking_page(request: Request):
+
+    stock_accuracy = evaluate_stock_accuracy()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="ranking.html",
+        context={
+            "stock_accuracy": stock_accuracy
+        }
+    )
+
+
+@app.get("/evaluation")
+def evaluation_page(request: Request):
+
+    model_metrics = evaluate_model()
+
+    confidence_bins = evaluate_confidence_bins()
+
+    summary = generate_evaluation_summary(model_metrics,confidence_bins)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="evaluation.html",
+        context={
+            "model_metrics": model_metrics,
+            "confidence_bins": confidence_bins,
+            "evaluation_summary": summary,
+        }
+    )
