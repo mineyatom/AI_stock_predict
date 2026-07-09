@@ -3,6 +3,7 @@ import pandas as pd
 import yfinance as yf
 
 from datetime import datetime
+from market_calendar import has_market_data
 
 LOG_FILE = "prediction_log.csv"
 
@@ -446,6 +447,20 @@ def update_prediction_result():
                 f"⏳ 尚未到驗證時間："
                 f"{stock_code} "
                 f"{predict_date.date()}"
+            )
+            continue
+
+        
+        # ==========================
+        # 確認是否真的有市場資料
+        # ==========================
+        if not has_market_data(
+            predict_date.strftime("%Y-%m-%d")
+        ):
+            print(
+                    f"🌀 無實際交易資料，略過驗證："
+                    f"{stock_code} "
+                    f"{predict_date.date()}"
             )
             continue
 
