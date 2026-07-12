@@ -295,4 +295,233 @@ def update_prediction_date(
         return False
 
     finally:
-        db.close()        
+        db.close()     
+
+def get_prediction_history_from_db() -> dict:
+    """
+    從 SQLite 取得完整預測歷史與整體勝率。
+    """
+
+    db = SessionLocal()
+
+    try:
+        predictions = (
+            db.query(Prediction)
+            .order_by(
+                Prediction.predict_date.asc(),
+                Prediction.id.asc(),
+            )
+            .all()
+        )
+
+        if not predictions:
+            return {
+                "history": [],
+                "accuracy": 0,
+                "validated_count": 0,
+                "total_count": 0,
+            }
+
+        history = []
+
+        correct_count = 0
+        validated_count = 0
+
+        for prediction in predictions:
+
+            if prediction.is_correct in (
+                "正確",
+                "錯誤",
+            ):
+                validated_count += 1
+
+                if prediction.is_correct == "正確":
+                    correct_count += 1
+
+            history.append({
+                "預測日期": prediction.predict_date,
+                "股票代號": prediction.stock_code,
+                "股票名稱": prediction.stock_name,
+                "預測結果": prediction.prediction_text,
+                "信心值": prediction.confidence,
+                "上漲機率": prediction.up_probability,
+                "下跌機率": prediction.down_probability,
+                "隔日預測參考價": prediction.predict_close,
+                "預測區間下緣": prediction.lower_price,
+                "預測區間上緣": prediction.upper_price,
+                "實際收盤價": prediction.actual_close,
+                "實際漲跌": prediction.actual_change,
+                "是否預測正確": prediction.is_correct,
+            })
+
+        total_count = len(predictions)
+
+        if validated_count > 0:
+            accuracy = round(
+                correct_count
+                / validated_count
+                * 100,
+                2
+            )
+        else:
+            accuracy = 0
+
+        return {
+            "history": history,
+            "accuracy": accuracy,
+            "validated_count": validated_count,
+            "total_count": total_count,
+        }
+
+    except Exception as e:
+        print(
+            f"❌ SQLite 歷史紀錄讀取失敗：{e}"
+        )
+
+        return {
+            "history": [],
+            "accuracy": 0,
+            "validated_count": 0,
+            "total_count": 0,
+        }
+
+    finally:
+        db.close() 
+
+
+def get_stock_accuracy_stats_from_db() -> list:
+    """
+    從 SQLite 計算各股票的模型準確率。
+
+    只統計：
+    is_correct = 正確 / 錯誤
+    """
+
+    db = SessionLocal()
+
+    try:
+        predictions = (
+            db.query(Prediction)
+            .filter(
+                Prediction.is_correct.in_(
+                    ["正確", "錯誤"]
+                )
+            )
+            .all()
+        )
+
+        if not predictions:
+            return []
+
+        stock_stats = {}
+
+        for prediction in predictions:
+
+            stock_code = prediction.stock_code
+
+            if stock_code not in stock_stats:
+                stock_stats[stock_code] = {
+                    "stock_code": stock_code,
+                    "stock_name": prediction.stock_name,
+                    "correct": 0,
+                    "total": 0,
+                }
+
+            stock_stats[
+                stock_code
+            ]["total"] += 1
+
+            if prediction.is_correct == "正確":
+                stock_stats[
+                    stock_code
+                ]["correct"] += 1
+
+        result = []
+
+        for stats in stock_stats.values():
+
+            accuracy = round(
+                stats["correct"]
+                / stats["total"]
+                * 100,
+                2
+            )
+
+            result.append({
+                "stock_code": stats["stock_code"],
+                "stock_name": stats["stock_name"],
+                "accuracy": accuracy,
+                "correct": stats["correct"],
+                "total": stats["total"],
+            })
+
+        # Accuracy 高的排前面
+        # Accuracy 相同時，驗證筆數多的排前面
+        result.sort(
+            key=lambda item: (
+                item["accuracy"],
+                item["total"],
+            ),
+            reverse=True,
+        )
+
+        return result
+
+    except Exception as e:
+        print(
+            f"❌ SQLite 股票準確率統計失敗：{e}"
+        )
+
+        return []
+
+    finally:
+        db.close()       
+
+
+def get_validated_predictions_from_db() -> list:
+    """
+    取得所有已完成驗證的預測資料。
+
+    只回傳：
+    is_correct = 正確 / 錯誤
+    """
+
+    db = SessionLocal()
+
+    try:
+        predictions = (
+            db.query(Prediction)
+            .filter(
+                Prediction.is_correct.in_(
+                    ["正確", "錯誤"]
+                )
+            )
+            .order_by(
+                Prediction.predict_date.asc(),
+                Prediction.id.asc(),
+            )
+            .all()
+        )
+
+        result = []
+
+        for prediction in predictions:
+            result.append({
+                "predict_date": prediction.predict_date,
+                "stock_code": prediction.stock_code,
+                "stock_name": prediction.stock_name,
+                "confidence": prediction.confidence,
+                "is_correct": prediction.is_correct,
+            })
+
+        return result
+
+    except Exception as e:
+        print(
+            f"❌ SQLite 已驗證資料讀取失敗：{e}"
+        )
+
+        return []
+
+    finally:
+        db.close()                  

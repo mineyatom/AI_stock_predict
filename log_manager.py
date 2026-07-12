@@ -12,10 +12,12 @@ from market_calendar import (
 
 from prediction_repository import (
     create_prediction,
+    get_prediction_history_from_db,
+    get_stock_accuracy_stats_from_db,
+    get_validated_predictions_from_db,
     update_prediction_date,
     update_prediction_validation,
 )
-
 LOG_FILE = "prediction_log.csv"
 
 
@@ -157,73 +159,11 @@ def get_latest_prediction():
 
 
 def get_prediction_history():
+    """
+    從 SQLite 取得歷史預測資料。
+    """
 
-    if not os.path.exists(LOG_FILE):
-        return {
-            "history": [],
-            "accuracy": 0,
-            "validated_count": 0,
-            "total_count": 0
-        }
-
-    df = pd.read_csv(
-        LOG_FILE,
-        encoding="utf-8-sig"
-    )
-
-    if df.empty:
-        return {
-            "history": [],
-            "accuracy": 0,
-            "validated_count": 0,
-            "total_count": 0
-        }
-
-    total_count = len(df)
-
-    validated_df = df[
-        df["是否預測正確"].notna()
-        & (
-            df["是否預測正確"] != ""
-        )
-    ]
-
-    validated_count = len(
-        validated_df
-    )
-
-    if validated_count > 0:
-
-        correct_count = len(
-            validated_df[
-                validated_df[
-                    "是否預測正確"
-                ] == "正確"
-            ]
-        )
-
-        accuracy = round(
-            (
-                correct_count
-                / validated_count
-            ) * 100,
-            2
-        )
-
-    else:
-        accuracy = 0
-
-    history = df.to_dict(
-        orient="records"
-    )
-
-    return {
-        "history": history,
-        "accuracy": accuracy,
-        "validated_count": validated_count,
-        "total_count": total_count
-    }
-
+    return get_prediction_history_from_db()
 
 def get_accuracy_chart_data():
 
@@ -310,64 +250,11 @@ def get_accuracy_chart_data():
     }
 
 def get_stock_accuracy_stats():
+    """
+    從 SQLite 取得各股票模型準確率。
+    """
 
-    if not os.path.exists(LOG_FILE):
-        return []
-
-    df = pd.read_csv(
-        LOG_FILE,
-        encoding="utf-8-sig"
-    )
-
-    if df.empty:
-        return []
-
-    # 只統計已驗證資料
-    df = df[
-        df["是否預測正確"].isin(
-            ["正確", "錯誤"]
-        )
-    ]
-
-    if df.empty:
-        return []
-
-    result = []
-
-    for stock_code, group in df.groupby("股票代號"):
-
-        stock_name = group.iloc[0]["股票名稱"]
-
-        total = len(group)
-
-        correct = (
-            group["是否預測正確"] == "正確"
-        ).sum()
-
-        accuracy = round(
-            correct / total * 100,
-            2
-        )
-
-        result.append({
-
-            "stock_code": stock_code,
-            "stock_name": stock_name,
-            "accuracy": accuracy,
-            "correct": int(correct),
-            "total": int(total)
-
-        })
-
-    result.sort(
-        key=lambda x: (
-            x["accuracy"],
-            x["total"]
-        ),
-        reverse=True
-    )
-
-    return result
+    return get_stock_accuracy_stats_from_db()
 
 # ==========================
 # 休市預測日期自動順延
@@ -755,49 +642,63 @@ def update_prediction_result():
 
 def get_confidence_stats():
     """
-    計算各信心區間實際勝率
+    從 SQLite 計算各信心區間實際勝率。
     """
 
     try:
-        df = pd.read_csv("prediction_log.csv")
+        data = get_validated_predictions_from_db()
 
-        df = df[
-            df["是否預測正確"].isin(
-                ["正確", "錯誤"]
-            )
-        ]
-
-        if len(df) == 0:
+        if not data:
             return []
 
-        bins = [0, 60, 70, 80, 100]
+        df = pd.DataFrame(data)
+
+        df["confidence"] = pd.to_numeric(
+            df["confidence"],
+            errors="coerce"
+        )
+
+        df = df.dropna(
+            subset=["confidence"]
+        )
+
+        bins = [
+            0,
+            60,
+            70,
+            80,
+            100,
+        ]
 
         labels = [
             "50~60%",
             "60~70%",
             "70~80%",
-            "80%以上"
+            "80%以上",
         ]
 
-        df["信心區間"] = pd.cut(
-            df["信心值"],
+        df["confidence_range"] = pd.cut(
+            df["confidence"],
             bins=bins,
-            labels=labels
+            labels=labels,
+            include_lowest=True
         )
 
         result = []
 
         for label in labels:
-
             group = df[
-                df["信心區間"] == label
+                df["confidence_range"] == label
             ]
 
-            if len(group) == 0:
+            if group.empty:
                 continue
 
             accuracy = (
-                (group["是否預測正確"] == "正確")
+                (
+                    group["is_correct"]
+                    == "正確"
+                )
                 .mean()
                 * 100
             )
@@ -808,13 +709,12 @@ def get_confidence_stats():
                 "accuracy": round(
                     accuracy,
                     2
-                )
+                ),
             })
 
         return result
 
     except Exception as e:
-
         print(
             f"信心區間分析失敗: {e}"
         )
@@ -824,95 +724,131 @@ def get_confidence_stats():
 
 def get_recent_accuracy_stats():
     """
-    計算最近 10 / 20 / 30 筆已驗證預測的勝率
-    用來監控模型近期是否退化
+    從 SQLite 計算最近 10 / 20 / 30 筆
+    已驗證預測的勝率。
     """
 
     try:
-        df = pd.read_csv("prediction_log.csv")
+        data = get_validated_predictions_from_db()
 
-        df = df[
-            df["是否預測正確"].isin(["正確", "錯誤"])
-        ]
-
-        if len(df) == 0:
+        if not data:
             return []
 
-        recent_settings = [10, 20, 30]
+        df = pd.DataFrame(data)
+
+        recent_settings = [
+            10,
+            20,
+            30,
+        ]
 
         result = []
 
         for n in recent_settings:
-
             recent_df = df.tail(n)
 
-            if len(recent_df) == 0:
+            if recent_df.empty:
                 continue
 
             accuracy = (
-                (recent_df["是否預測正確"] == "正確")
+                (
+                    recent_df["is_correct"]
+                    == "正確"
+                )
                 .mean()
                 * 100
             )
 
             result.append({
                 "label": f"最近{n}筆",
-                "accuracy": round(accuracy, 2),
-                "count": len(recent_df)
+                "accuracy": round(
+                    accuracy,
+                    2
+                ),
+                "count": len(recent_df),
             })
 
         return result
 
     except Exception as e:
-
-        print(f"近期勝率分析失敗: {e}")
+        print(
+            f"近期勝率分析失敗: {e}"
+        )
 
         return []
     
 
-def get_high_confidence_accuracy(threshold=70):
+def get_high_confidence_accuracy(
+    threshold=70
+):
     """
-    計算高信心預測的實際勝率
-    預設信心值 >= 70%
+    從 SQLite 計算高信心預測的實際勝率。
+    預設信心值 >= 70%。
     """
 
     try:
-        df = pd.read_csv("prediction_log.csv")
+        data = get_validated_predictions_from_db()
 
-        df = df[
-            df["是否預測正確"].isin(["正確", "錯誤"])
-        ]
-
-        high_confidence_df = df[
-            df["信心值"] >= threshold
-        ]
-
-        if len(high_confidence_df) == 0:
+        if not data:
             return {
                 "accuracy": 0,
                 "count": 0,
-                "label": f"信心≥{threshold}%"
+                "label": f"信心≥{threshold}%",
+            }
+
+        df = pd.DataFrame(data)
+
+        df["confidence"] = pd.to_numeric(
+            df["confidence"],
+            errors="coerce"
+        )
+
+        df = df.dropna(
+            subset=["confidence"]
+        )
+
+        high_confidence_df = df[
+            df["confidence"] >= threshold
+        ]
+
+        if high_confidence_df.empty:
+            return {
+                "accuracy": 0,
+                "count": 0,
+                "label": f"信心≥{threshold}%",
             }
 
         accuracy = (
-            (high_confidence_df["是否預測正確"] == "正確")
+            (
+                high_confidence_df[
+                    "is_correct"
+                ]
+                == "正確"
+            )
             .mean()
             * 100
         )
 
         return {
-            "accuracy": round(accuracy, 2),
-            "count": len(high_confidence_df),
-            "label": f"信心≥{threshold}%"
+            "accuracy": round(
+                accuracy,
+                2
+            ),
+            "count": len(
+                high_confidence_df
+            ),
+            "label": f"信心≥{threshold}%",
         }
 
     except Exception as e:
-        print(f"高信心勝率分析失敗: {e}")
+        print(
+            f"高信心勝率分析失敗: {e}"
+        )
 
         return {
             "accuracy": 0,
             "count": 0,
-            "label": f"信心≥{threshold}%"
+            "label": f"信心≥{threshold}%",
         }  
     
       
