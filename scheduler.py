@@ -5,10 +5,13 @@ from apscheduler.schedulers.background import (
 
 
 from predictor import predict_stock
+
+
 from log_manager import (
     save_prediction_log,
     update_prediction_result,
-    prediction_exists_for_date
+    prediction_exists_for_date,
+    shift_untraded_prediction_dates,
 )
 
 from datetime import datetime, timedelta
@@ -177,19 +180,41 @@ def recover_missing_prediction():
     run_daily_prediction() 
 
 
+# ==========================
+# 每日驗證流程
+# ==========================
+def run_daily_validation():
+
+    print(
+        f"📅 開始每日休市檢查："
+        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )
+
+    shift_untraded_prediction_dates()
+
+    print(
+        f"🕒 開始每日預測驗證："
+        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )
+
+    update_prediction_result()
+
+    print("✅ 每日驗證流程完成")
+
 
 # ==========================
 # 啟動 Scheduler
 # ==========================
 def start_scheduler():
 
-    print(
-        f"🕒 啟動補驗證："
-        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-    )
+    # ==========================
+    # 啟動時：休市檢查 + 補驗證
+    # ==========================
+    run_daily_validation()
 
-    update_prediction_result()
-
+    # ==========================
+    # 啟動時：補預測
+    # ==========================
     print(
         f"🧩 啟動補預測檢查："
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
@@ -197,8 +222,11 @@ def start_scheduler():
 
     recover_missing_prediction()
 
+    # ==========================
+    # 每日 15:00：休市檢查 + 驗證預測
+    # ==========================
     scheduler.add_job(
-        update_prediction_result,
+        run_daily_validation,
         trigger="cron",
         hour=15,
         minute=0,
@@ -206,6 +234,9 @@ def start_scheduler():
         replace_existing=True,
     )
 
+    # ==========================
+    # 每日 21:00：產生預測
+    # ==========================
     scheduler.add_job(
         run_daily_prediction,
         trigger="cron",
@@ -226,5 +257,3 @@ def start_scheduler():
         f"✅ Scheduler 已啟動："
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
-
-    

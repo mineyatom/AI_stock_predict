@@ -1,9 +1,20 @@
-import os
+﻿import os
 import pandas as pd
 import yfinance as yf
 
-from datetime import datetime
-from market_calendar import has_market_data
+from datetime import datetime, timedelta
+
+from market_calendar import (
+    get_market_data_status,
+    get_next_trade_day,
+    has_market_data,
+)
+
+from prediction_repository import (
+    create_prediction,
+    update_prediction_date,
+    update_prediction_validation,
+)
 
 LOG_FILE = "prediction_log.csv"
 
@@ -47,7 +58,13 @@ def save_prediction_log(
     ])
 
     if os.path.exists(LOG_FILE):
-        old_log = pd.read_csv(LOG_FILE, encoding="utf-8-sig")
+        old_log = pd.read_csv(
+        LOG_FILE,
+        encoding="utf-8-sig",
+        dtype={
+            "股票代號": str
+            }
+        )
 
         duplicated = (
             (old_log["預測日期"] == predict_date)
@@ -79,6 +96,22 @@ def save_prediction_log(
     )
 
     print("✅ 預測紀錄已存入 prediction_log.csv")
+
+    # ==========================
+    # 同步寫入 SQLite
+    # ==========================
+    create_prediction(
+        predict_date=str(predict_date),
+        stock_code=str(stock_code),
+        stock_name=str(stock_name),
+        prediction_text=str(prediction_text),
+        confidence=float(confidence),
+        up_probability=float(up_probability),
+        down_probability=float(down_probability),
+        predict_close=float(predict_close),
+        lower_price=float(lower_price),
+        upper_price=float(upper_price)
+    )
 
 
 
@@ -336,6 +369,126 @@ def get_stock_accuracy_stats():
 
     return result
 
+# ==========================
+# 休市預測日期自動順延
+# ==========================
+def shift_untraded_prediction_dates():
+    """
+    將因颱風假或臨時休市而沒有交易的預測日期，
+    自動順延到下一個預期交易日。
+    """
+
+    print("🔄 開始檢查休市預測日期")
+
+    if not os.path.exists(LOG_FILE):
+        print("❌ 找不到 prediction_log.csv")
+        return
+
+    df_log = pd.read_csv(
+        LOG_FILE,
+        encoding="utf-8-sig",
+        dtype={
+            "實際漲跌": "object",
+            "是否預測正確": "object"
+        }
+    )
+
+    if df_log.empty:
+        print("❌ prediction_log.csv 沒有資料")
+        return
+
+    today = pd.Timestamp.today().normalize()
+    updated = False
+
+    for index, row in df_log.iterrows():
+
+        # 已驗證完成，不處理
+        if (
+            pd.notna(row["是否預測正確"])
+            and str(row["是否預測正確"]).strip()
+            not in ("", "nan")
+        ):
+            continue
+
+        predict_date = pd.to_datetime(
+            row["預測日期"],
+            errors="coerce"
+        )
+
+        if pd.isna(predict_date):
+            continue
+
+        predict_date = predict_date.normalize()
+
+        # 未來日期暫時不處理
+        if predict_date > today:
+            continue
+
+        market_status = get_market_data_status(
+            predict_date.strftime("%Y-%m-%d")
+        )
+
+        # FinMind 查詢失敗，不修改日期
+        if market_status is None:
+            print(
+                f"⚠️ 無法確認市場狀態，保留原日期："
+                f"{predict_date.date()}"
+            )
+            continue
+
+        # 有交易資料，不需順延
+        if market_status is True:
+            continue
+
+        # 沒有交易資料，尋找下一個預期交易日
+        next_date = get_next_trade_day(
+            predict_date.to_pydatetime()
+            + timedelta(days=1)
+        )
+
+        next_date_str = next_date.strftime("%Y-%m-%d")
+        old_date_str = predict_date.strftime("%Y-%m-%d")
+
+
+        # ==========================
+        # 同步更新 SQLite
+        # ==========================
+        sqlite_updated = update_prediction_date(
+            old_predict_date=old_date_str,
+            new_predict_date=next_date_str,
+            stock_code=str(row["股票代號"]),
+        )
+
+
+        # ==========================
+        #更新 CSV
+        # ==========================
+        df_log.loc[
+            index,
+            "預測日期"
+        ] = next_date_str
+
+        updated = True
+
+        print(
+            f"📅 預測日期已順延："
+            f"{row['股票代號']} "
+            f"{predict_date.date()} → {next_date_str}"
+        )
+
+    if updated:
+        df_log.to_csv(
+            LOG_FILE,
+            index=False,
+            encoding="utf-8-sig"
+        )
+
+        print("✅ 休市預測日期順延完成")
+
+    else:
+        print("✅ 沒有需要順延的預測日期")
+
+
 
 def update_prediction_result():
 
@@ -562,6 +715,18 @@ def update_prediction_result():
                 index,
                 "是否預測正確"
             ] = result_text
+
+
+            # ==========================
+            # 同步更新 SQLite
+            # ==========================
+            update_prediction_validation(
+                predict_date=str(row["預測日期"]),
+                stock_code=str(row["股票代號"]),
+                actual_close=round(actual_close, 2),
+                actual_change=actual_direction,
+                is_correct=result_text,
+            )
 
             print(
                 f"✅ 已更新："

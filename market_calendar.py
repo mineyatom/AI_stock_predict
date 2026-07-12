@@ -8,19 +8,23 @@ from taiwan_holidays.taiwan_calendar import TaiwanCalendar
 calendar = TaiwanCalendar()
 
 
-def has_market_data(
+def get_market_data_status(
     date_value: datetime | str,
     stock_id: str = "2330"
-) -> bool:
+) -> bool | None:
     """
-    使用 FinMind 確認指定日期是否真的有台股成交資料。
-    適合用在驗證，不適合拿來判斷未來交易日。
+    查詢指定日期是否有台股成交資料。
+
+    回傳：
+    True  = 有交易資料
+    False = 沒有交易資料
+    None  = FinMind 查詢失敗
     """
 
     if isinstance(date_value, datetime):
         date_str = date_value.strftime("%Y-%m-%d")
     else:
-        date_str = date_value
+        date_str = str(date_value)
 
     api = DataLoader()
 
@@ -34,8 +38,27 @@ def has_market_data(
         return not df.empty
 
     except Exception as e:
-        print(f"[market_calendar] FinMind 查詢失敗：{date_str}, error={e}")
-        return False
+        print(
+            f"[market_calendar] FinMind 查詢失敗："
+            f"{date_str}，原因：{e}"
+        )
+        return None
+
+
+def has_market_data(
+    date_value: datetime | str,
+    stock_id: str = "2330"
+) -> bool:
+    """
+    提供原本的市場資料判斷功能。
+    """
+
+    status = get_market_data_status(
+        date_value=date_value,
+        stock_id=stock_id
+    )
+
+    return status is True
 
 
 def is_scheduled_trade_day(date_value: datetime | str) -> bool:
