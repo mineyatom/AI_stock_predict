@@ -72,12 +72,12 @@ def create_prediction(
             stock_code=stock_code,
             stock_name=stock_name,
             prediction_text=prediction_text,
-            confidence=float(confidence),
-            up_probability=float(up_probability),
-            down_probability=float(down_probability),
-            predict_close=float(predict_close),
-            lower_price=float(lower_price),
-            upper_price=float(upper_price),
+            confidence=round(float(confidence), 2),
+            up_probability=round(float(up_probability), 2),
+            down_probability=round(float(down_probability), 2),
+            predict_close=round(float(predict_close), 2),
+            lower_price=round(float(lower_price), 2),
+            upper_price=round(float(upper_price), 2),
         )
 
         db.add(prediction)
