@@ -8,6 +8,7 @@ from market_calendar import (
     get_market_data_status,
     get_next_trade_day,
     has_market_data,
+    can_verify_market_data,
 )
 
 from prediction_repository import (
@@ -309,6 +310,18 @@ def shift_untraded_prediction_dates():
 
         # 未來日期暫時不處理
         if predict_date > today:
+            continue
+
+        # ==========================
+        # 尚未到市場確認時間，不可判定休市
+        # ==========================
+        if not can_verify_market_data(
+            predict_date.to_pydatetime()
+        ):
+            print(
+                f"⏳ 尚未到市場確認時間，保留原日期："
+                f"{predict_date.date()}"
+            )
             continue
 
         market_status = get_market_data_status(
@@ -854,29 +867,51 @@ def get_high_confidence_accuracy(
       
 def prediction_exists_for_date(predict_date):
     """
-    檢查指定預測日期是否已經有預測紀錄
+    檢查指定預測日期是否已經有預測紀錄。
+    支援 YYYY/MM/DD 與 YYYY-MM-DD 混合格式。
     """
 
     try:
-        df = pd.read_csv("prediction_log.csv")
+        df = pd.read_csv(
+            LOG_FILE,
+            encoding="utf-8-sig",
+            dtype={
+                "股票代號": str
+            }
+        )
 
         if df.empty:
             return False
 
         df["預測日期"] = pd.to_datetime(
-            df["預測日期"]
+            df["預測日期"],
+            format="mixed",
+            errors="coerce"
         ).dt.strftime("%Y-%m-%d")
 
-        predict_date = pd.to_datetime(
-            predict_date
-        ).strftime("%Y-%m-%d")
+        normalized_predict_date = pd.to_datetime(
+            predict_date,
+            errors="coerce"
+        )
 
-        exists = (
-            df["預測日期"] == predict_date
+        if pd.isna(normalized_predict_date):
+            print(
+                f"⚠️ 無效的預測日期：{predict_date}"
+            )
+            return False
+
+        normalized_predict_date = (
+            normalized_predict_date
+            .strftime("%Y-%m-%d")
+        )
+
+        return (
+            df["預測日期"]
+            == normalized_predict_date
         ).any()
 
-        return exists
-
     except Exception as e:
-        print(f"檢查預測紀錄失敗：{e}")
-        return False    
+        print(
+            f"檢查預測紀錄失敗：{e}"
+        )
+        return False

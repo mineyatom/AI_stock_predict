@@ -60,7 +60,8 @@ def get_next_trade_date(now: datetime | None = None) -> str:
     規則：
     1. 13:30 前，先嘗試今天
     2. 13:30 後，從明天開始找
-    3. 最後交給 FinMind 確認是否真的有交易資料
+    3. 排除週末與國定假日
+    4. 臨時休市由 15:00 驗證流程使用 FinMind 處理   
     """
     if now is None:
         now = datetime.now()

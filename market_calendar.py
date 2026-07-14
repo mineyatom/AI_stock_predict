@@ -83,16 +83,19 @@ def is_scheduled_trade_day(date_value: datetime | str) -> bool:
     return True
 
 
-def get_next_trade_day(start_date: datetime | str) -> datetime:
+def get_next_trade_day(
+    start_date: datetime | str
+) -> datetime:
     """
     取得下一個預期交易日。
 
-    用於 Scheduler 的預測日期。
+    用於預測日期判斷：
+    - 排除週末
+    - 排除國定假日
+    - 不使用 FinMind 判斷今天，因為開盤前本來就沒有成交資料
 
-    規則：
-    1. 未來日期：用 TaiwanCalendar 判斷
-    2. 今天或過去日期：若沒有 FinMind 交易資料，視為非交易日
-    3. 最多往後找 30 天
+    颱風假與臨時休市由每日 15:00 的
+    shift_untraded_prediction_dates() 負責處理。
     """
 
     if isinstance(start_date, str):
@@ -103,41 +106,61 @@ def get_next_trade_day(start_date: datetime | str) -> datetime:
     else:
         current_date = start_date
 
-    today = datetime.now().replace(
-        hour=0,
+    for _ in range(30):
+
+        if is_scheduled_trade_day(
+            current_date
+        ):
+            return current_date
+
+        current_date += timedelta(days=1)
+
+    raise ValueError(
+        "30 天內找不到下一個預期交易日"
+    )
+
+def can_verify_market_data(
+    date_value: datetime | str,
+    now: datetime | None = None
+) -> bool:
+    """
+    判斷指定日期是否已經可以用 FinMind
+    確認實際交易狀態。
+
+    規則：
+    - 過去日期：可以確認
+    - 今天：15:00 後可以確認
+    - 未來日期：不能確認
+    """
+
+    if now is None:
+        now = datetime.now()
+
+    if isinstance(date_value, str):
+        date_obj = datetime.strptime(
+            date_value,
+            "%Y-%m-%d"
+        )
+    else:
+        date_obj = date_value
+
+    target_date = date_obj.date()
+    today = now.date()
+
+    if target_date < today:
+        return True
+
+    if target_date > today:
+        return False
+
+    verify_time = now.replace(
+        hour=15,
         minute=0,
         second=0,
         microsecond=0
     )
 
-    for _ in range(30):
-
-        current_day = current_date.replace(
-            hour=0,
-            minute=0,
-            second=0,
-            microsecond=0
-        )
-
-        if not is_scheduled_trade_day(
-            current_day
-        ):
-            current_date += timedelta(days=1)
-            continue
-
-        # 今天或過去日期，要確認真的有市場資料
-        if current_day <= today:
-            if not has_market_data(
-                current_day
-            ):
-                current_date += timedelta(days=1)
-                continue
-
-        return current_day
-
-    raise ValueError(
-        "30 天內找不到下一個可用交易日"
-    )
+    return now >= verify_time
 
 
 def is_real_trade_day(date_value: datetime | str) -> bool:
