@@ -36,11 +36,7 @@ def save_prediction_log(
 ):
     date = pd.to_datetime(predict_date)
 
-    predict_date = (
-        f"{date.year}/"
-        f"{date.month}/"
-        f"{date.day}"
-    )
+    predict_date = date.strftime("%Y-%m-%d")
 
     new_record = pd.DataFrame([
         {
@@ -621,7 +617,7 @@ def update_prediction_result():
             # 同步更新 SQLite
             # ==========================
             update_prediction_validation(
-                predict_date=str(row["預測日期"]),
+                predict_date=predict_date.strftime("%Y-%m-%d"),
                 stock_code=str(row["股票代號"]),
                 actual_close=round(actual_close, 2),
                 actual_change=actual_direction,

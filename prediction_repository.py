@@ -168,51 +168,11 @@ def update_prediction_validation(
     更新一筆預測的實際驗證結果。
     """
 
+    predict_date = normalize_date(
+        predict_date
+    )
+
     db = SessionLocal()
-
-    try:
-        prediction = (
-            db.query(Prediction)
-            .filter(
-                Prediction.predict_date == predict_date,
-                Prediction.stock_code == stock_code,
-            )
-            .first()
-        )
-
-        if prediction is None:
-            print(
-                f"⚠️ SQLite 找不到預測資料："
-                f"{predict_date} {stock_code}"
-            )
-            return False
-
-        prediction.actual_close = float(actual_close)
-        prediction.actual_change = actual_change
-        prediction.is_correct = is_correct
-
-        db.commit()
-
-        print(
-            f"✅ SQLite 驗證已更新："
-            f"{predict_date} {stock_code}"
-        )
-
-        return True
-
-    except Exception as e:
-        db.rollback()
-
-        print(
-            f"❌ SQLite 驗證更新失敗："
-            f"{predict_date} {stock_code} "
-            f"原因：{e}"
-        )
-
-        return False
-
-    finally:
-        db.close()
 
 def update_prediction_date(
     old_predict_date: str,
