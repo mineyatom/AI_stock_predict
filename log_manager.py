@@ -18,6 +18,7 @@ from prediction_repository import (
     get_validated_predictions_from_db,
     update_prediction_date,
     update_prediction_validation,
+    get_unvalidated_predictions_from_db,
 )
 LOG_FILE = "prediction_log.csv"
 
@@ -385,41 +386,23 @@ def shift_untraded_prediction_dates():
         print("✅ 沒有需要順延的預測日期")
 
 
-
 def update_prediction_result():
+    """
+    從 SQLite 讀取尚未驗證的預測，
+    取得實際收盤價後直接更新 SQLite。
 
-    print(
-        "🔥 update_prediction_result 啟動"
-    )
+    CSV 不再作為驗證流程的主資料來源。
+    """
 
-    if not os.path.exists(
-        LOG_FILE
-    ):
-        print(
-            "❌ 找不到 prediction_log.csv"
-        )
+    print("🔥 update_prediction_result 啟動")
+
+    predictions = get_unvalidated_predictions_from_db()
+
+    if not predictions:
+        print("✅ SQLite 沒有待驗證的預測")
         return
 
-    df_log = pd.read_csv(
-        LOG_FILE,
-        encoding="utf-8-sig",
-        dtype={
-            "實際漲跌": "object",
-            "是否預測正確": "object"
-        }
-    )
-
-    if df_log.empty:
-        print(
-            "❌ prediction_log.csv 沒有資料"
-        )
-        return
-
-    today = (
-        pd.Timestamp.today()
-        .normalize()
-    )
-
+    today = pd.Timestamp.today().normalize()
     now = pd.Timestamp.now()
 
     market_verify_time = (
@@ -430,64 +413,44 @@ def update_prediction_result():
         )
     )
 
-    for index, row in (
-        df_log.iterrows()
-    ):
+    updated_count = 0
+    skipped_count = 0
+    failed_count = 0
 
-        # 已驗證過跳過
-        if (
-            pd.notna(
-                row["是否預測正確"]
-            )
-            and str(
-                row["是否預測正確"]
-            ).strip()
-            != ""
-            and str(
-                row["是否預測正確"]
-            ).strip()
-            != "nan"
-        ):
-            continue
+    for prediction_data in predictions:
 
-        predict_date = (
-            pd.to_datetime(
-                row["預測日期"],
-                errors="coerce"
-            )
+        predict_date = pd.to_datetime(
+            prediction_data["predict_date"],
+            errors="coerce"
         )
 
-        if pd.isna(
-            predict_date
-        ):
+        if pd.isna(predict_date):
             print(
-                f"⚠️ 日期格式錯誤：第 {index + 2} 列"
+                f"⚠️ SQLite 日期格式錯誤："
+                f"{prediction_data['predict_date']}"
             )
+            failed_count += 1
             continue
 
-        predict_date = (
-            predict_date
-            .normalize()
-        )
+        predict_date = predict_date.normalize()
 
         stock_code = str(
-            row["股票代號"]
-        )
+            prediction_data["stock_code"]
+        ).strip()
 
         # ==========================
         # 驗證時間控制
         # ==========================
 
-        # 未來日期不驗證
         if predict_date > today:
             print(
                 f"⏳ 尚未到預測日期："
                 f"{stock_code} "
                 f"{predict_date.date()}"
             )
+            skipped_count += 1
             continue
 
-        # 今天的預測，15:00 後才驗證
         if (
             predict_date == today
             and now < market_verify_time
@@ -497,50 +460,61 @@ def update_prediction_result():
                 f"{stock_code} "
                 f"{predict_date.date()}"
             )
+            skipped_count += 1
             continue
 
-        
         # ==========================
-        # 確認是否真的有市場資料
+        # FinMind 確認是否有交易
         # ==========================
-        if not has_market_data(
+
+        market_status = get_market_data_status(
             predict_date.strftime("%Y-%m-%d")
-        ):
+        )
+
+        if market_status is None:
             print(
-                    f"🌀 無實際交易資料，略過驗證："
-                    f"{stock_code} "
-                    f"{predict_date.date()}"
+                f"⚠️ 無法確認市場狀態："
+                f"{predict_date.date()}"
             )
+            failed_count += 1
             continue
 
-        # 自動補 .TW
+        if market_status is False:
+            print(
+                f"🌀 無實際交易資料，略過驗證："
+                f"{stock_code} "
+                f"{predict_date.date()}"
+            )
+            skipped_count += 1
+            continue
+
+        # ==========================
+        # Yahoo Finance 股票代號
+        # ==========================
+
+        yahoo_stock_code = stock_code
+
         if (
-            ".TW"
-            not in stock_code
-            and ".TWO"
-            not in stock_code
+            ".TW" not in yahoo_stock_code
+            and ".TWO" not in yahoo_stock_code
         ):
-            stock_code = (
-                stock_code
+            yahoo_stock_code = (
+                yahoo_stock_code
                 + ".TW"
             )
 
         try:
-
             ticker = yf.Ticker(
-                stock_code
+                yahoo_stock_code
             )
 
             history = ticker.history(
                 start=predict_date.strftime(
                     "%Y-%m-%d"
                 ),
-
                 end=(
                     predict_date
-                    + pd.Timedelta(
-                        days=7
-                    )
+                    + pd.Timedelta(days=7)
                 ).strftime(
                     "%Y-%m-%d"
                 )
@@ -548,106 +522,99 @@ def update_prediction_result():
 
             if history.empty:
                 print(
-                    f"⚠️ 無交易資料：{stock_code}"
+                    f"⚠️ Yahoo 無交易資料："
+                    f"{yahoo_stock_code}"
                 )
+                failed_count += 1
+                continue
+
+            close_series = (
+                history["Close"]
+                .dropna()
+            )
+
+            if close_series.empty:
+                print(
+                    f"⚠️ Yahoo 收盤價為空："
+                    f"{yahoo_stock_code}"
+                )
+                failed_count += 1
                 continue
 
             actual_close = float(
-                history[
-                    "Close"
-                ]
-                .dropna()
-                .iloc[0]
+                close_series.iloc[0]
             )
 
             reference_close = float(
-                row[
-                    "隔日預測參考價"
-                ]
+                prediction_data["predict_close"]
             )
 
-            prediction = row[
-                "預測結果"
-            ]
+            prediction_text = str(
+                prediction_data["prediction_text"]
+            ).strip()
 
-            if (
-                actual_close
-                > reference_close
-            ):
+            if actual_close > reference_close:
                 actual_direction = "上漲"
 
-            elif (
-                actual_close
-                < reference_close
-            ):
+            elif actual_close < reference_close:
                 actual_direction = "下跌"
 
             else:
                 actual_direction = "持平"
 
-            prediction = str(prediction).strip()
-            actual_direction = str(actual_direction).strip()
             result_text = (
                 "正確"
-                if prediction
-                == actual_direction
+                if prediction_text == actual_direction
                 else "錯誤"
             )
 
-            df_log.loc[
-                index,
-                "實際收盤價"
-            ] = round(
-                actual_close,
-                2
-            )
-
-            df_log.loc[
-                index,
-                "實際漲跌"
-            ] = actual_direction
-
-            df_log.loc[
-                index,
-                "是否預測正確"
-            ] = result_text
-
-
-            # ==========================
-            # 同步更新 SQLite
-            # ==========================
-            update_prediction_validation(
-                predict_date=predict_date.strftime("%Y-%m-%d"),
-                stock_code=str(row["股票代號"]),
-                actual_close=round(actual_close, 2),
+            sqlite_updated = update_prediction_validation(
+                predict_date=predict_date.strftime(
+                    "%Y-%m-%d"
+                ),
+                stock_code=stock_code,
+                actual_close=round(
+                    actual_close,
+                    2
+                ),
                 actual_change=actual_direction,
                 is_correct=result_text,
             )
 
+            if not sqlite_updated:
+                print(
+                    f"⚠️ SQLite 驗證更新失敗："
+                    f"{stock_code} "
+                    f"{predict_date.date()}"
+                )
+                failed_count += 1
+                continue
+
+            updated_count += 1
+
             print(
-                f"✅ 已更新："
+                f"✅ SQLite 已驗證："
                 f"{stock_code} "
-                f"{predict_date.date()}"
+                f"{predict_date.date()} "
+                f"{result_text}"
             )
 
         except Exception as e:
+            failed_count += 1
 
             print(
-                f"⚠️ 更新失敗："
+                f"⚠️ 驗證失敗："
                 f"{stock_code} "
                 f"原因：{e}"
             )
 
-    df_log.to_csv(
-        LOG_FILE,
-        index=False,
-        encoding="utf-8-sig"
-    )
-
-    print(
-        "✅ 預測驗證更新完成"
-        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-    )
+    print()
+    print("=" * 50)
+    print("SQLite 預測驗證完成")
+    print("=" * 50)
+    print(f"成功：{updated_count}")
+    print(f"略過：{skipped_count}")
+    print(f"失敗：{failed_count}")
 
 def get_confidence_stats():
     """
