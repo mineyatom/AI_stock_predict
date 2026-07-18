@@ -158,86 +158,97 @@ def prediction_exists(
 
 
 def update_prediction_validation(
-    predict_date: str,
-    stock_code: str,
-    actual_close: float,
-    actual_change: str,
-    is_correct: str,
-) -> bool:
+    predict_date,
+    stock_code,
+    actual_close,
+    actual_change,
+    is_correct,
+):
     """
-    更新一筆預測的實際驗證結果。
+    更新指定預測的實際結果。
+
+    以 predict_date + stock_code 尋找紀錄，
+    並兼容股票代號有無 .TW / .TWO。
     """
 
-    predict_date = normalize_date(
+    normalized_date = normalize_date(
         predict_date
     )
 
-    db = SessionLocal()
-
-def update_prediction_date(
-    old_predict_date: str,
-    new_predict_date: str,
-    stock_code: str,
-) -> bool:
-    """
-    更新預測日期。
-
-    用於颱風假、臨時休市等情況，
-    將原本的預測日期順延到下一個交易日。
-    """
-
-    old_predict_date = normalize_date(
-        old_predict_date
-    )
-
-    new_predict_date = normalize_date(
-        new_predict_date
-    )
+    normalized_stock_code = str(
+        stock_code
+    ).strip()
 
     db = SessionLocal()
 
     try:
+        # 先用原始股票代號尋找
         prediction = (
             db.query(Prediction)
             .filter(
-                Prediction.predict_date == old_predict_date,
-                Prediction.stock_code == stock_code,
+                Prediction.predict_date
+                == normalized_date,
+                Prediction.stock_code
+                == normalized_stock_code,
             )
             .first()
         )
+
+        # 若找不到，嘗試不同股票代號格式
+        if prediction is None:
+            stock_code_without_suffix = (
+                normalized_stock_code
+                .replace(".TW", "")
+                .replace(".TWO", "")
+            )
+
+            possible_codes = [
+                stock_code_without_suffix,
+                stock_code_without_suffix + ".TW",
+                stock_code_without_suffix + ".TWO",
+            ]
+
+            prediction = (
+                db.query(Prediction)
+                .filter(
+                    Prediction.predict_date
+                    == normalized_date,
+                    Prediction.stock_code.in_(
+                        possible_codes
+                    ),
+                )
+                .first()
+            )
 
         if prediction is None:
             print(
-                f"⚠️ SQLite 找不到預測資料："
-                f"{old_predict_date} {stock_code}"
+                "❌ 找不到待更新的 SQLite 紀錄："
+                f"日期={normalized_date}，"
+                f"股票={normalized_stock_code}"
             )
             return False
 
-        # 檢查新日期是否已經有相同股票
-        existing = (
-            db.query(Prediction)
-            .filter(
-                Prediction.predict_date == new_predict_date,
-                Prediction.stock_code == stock_code,
-            )
-            .first()
+        prediction.actual_close = round(
+            float(actual_close),
+            2,
         )
 
-        if existing is not None:
-            print(
-                f"⚠️ SQLite 新日期已有預測："
-                f"{new_predict_date} {stock_code}"
-            )
-            return False
+        prediction.actual_change = str(
+            actual_change
+        )
 
-        prediction.predict_date = new_predict_date
+        prediction.is_correct = str(
+            is_correct
+        )
 
         db.commit()
+        db.refresh(prediction)
 
         print(
-            f"📅 SQLite 預測日期已順延："
-            f"{stock_code} "
-            f"{old_predict_date} → {new_predict_date}"
+            "💾 SQLite 驗證結果已更新："
+            f"{normalized_date} "
+            f"{prediction.stock_code} "
+            f"{is_correct}"
         )
 
         return True
@@ -246,16 +257,109 @@ def update_prediction_date(
         db.rollback()
 
         print(
-            f"❌ SQLite 日期更新失敗："
-            f"{old_predict_date} → {new_predict_date} "
-            f"{stock_code} "
-            f"原因：{e}"
+            "❌ SQLite 驗證更新異常："
+            f"日期={normalized_date}，"
+            f"股票={normalized_stock_code}，"
+            f"原因={e}"
         )
 
         return False
 
     finally:
-        db.close()     
+        db.close()   
+
+
+def update_prediction_date(
+    old_predict_date,
+    new_predict_date,
+    stock_code,
+):
+    """
+    將指定股票的預測日期順延。
+
+    用於颱風假、臨時休市或無交易資料時，
+    更新 SQLite 中尚未驗證的預測日期。
+    """
+
+    normalized_old_date = normalize_date(
+        old_predict_date
+    )
+
+    normalized_new_date = normalize_date(
+        new_predict_date
+    )
+
+    normalized_stock_code = str(
+        stock_code
+    ).strip()
+
+    stock_code_without_suffix = (
+        normalized_stock_code
+        .replace(".TW", "")
+        .replace(".TWO", "")
+    )
+
+    possible_codes = [
+        stock_code_without_suffix,
+        stock_code_without_suffix + ".TW",
+        stock_code_without_suffix + ".TWO",
+    ]
+
+    db = SessionLocal()
+
+    try:
+        prediction = (
+            db.query(Prediction)
+            .filter(
+                Prediction.predict_date
+                == normalized_old_date,
+                Prediction.stock_code.in_(
+                    possible_codes
+                ),
+                Prediction.is_correct.is_(None),
+            )
+            .first()
+        )
+
+        if prediction is None:
+            print(
+                "❌ 找不到要順延的 SQLite 紀錄："
+                f"日期={normalized_old_date}，"
+                f"股票={normalized_stock_code}"
+            )
+            return False
+
+        prediction.predict_date = (
+            normalized_new_date
+        )
+
+        db.commit()
+        db.refresh(prediction)
+
+        print(
+            "💾 SQLite 預測日期已更新："
+            f"{prediction.stock_code} "
+            f"{normalized_old_date} "
+            f"→ {normalized_new_date}"
+        )
+
+        return True
+
+    except Exception as e:
+        db.rollback()
+
+        print(
+            "❌ SQLite 預測日期更新失敗："
+            f"股票={normalized_stock_code}，"
+            f"日期={normalized_old_date}，"
+            f"原因={e}"
+        )
+
+        return False
+
+    finally:
+        db.close()
+
 
 def get_prediction_history_from_db() -> dict:
     """
@@ -525,3 +629,210 @@ def get_unvalidated_predictions_from_db() -> list:
 
     finally:
         db.close()
+
+def get_latest_prediction_from_db() -> dict | None:
+    """
+    取得最新一筆預測資料。
+    """
+
+    db = SessionLocal()
+
+    try:
+        prediction = (
+            db.query(Prediction)
+            .order_by(
+                Prediction.predict_date.desc(),
+                Prediction.id.desc(),
+            )
+            .first()
+        )
+
+        if prediction is None:
+            return None
+
+        return {
+            "predict_date": prediction.predict_date,
+            "stock_id": prediction.stock_code,
+            "stock_name": prediction.stock_name,
+            "prediction": prediction.prediction_text,
+            "confidence": prediction.confidence,
+            "lower_bound": prediction.lower_price,
+            "upper_bound": prediction.upper_price,
+            "model": "XGBoost",
+        }
+
+    except Exception as e:
+        print(
+            f"❌ SQLite 最新預測讀取失敗：{e}"
+        )
+        return None
+
+    finally:
+        db.close()
+
+
+def prediction_exists_for_date_from_db(
+    predict_date: str
+) -> bool:
+    """
+    檢查指定日期是否已有任何預測紀錄。
+    """
+
+    predict_date = normalize_date(
+        predict_date
+    )
+
+    db = SessionLocal()
+
+    try:
+        return (
+            db.query(Prediction)
+            .filter(
+                Prediction.predict_date == predict_date
+            )
+            .first()
+            is not None
+        )
+
+    except Exception as e:
+        print(
+            f"❌ SQLite 預測日期檢查失敗：{e}"
+        )
+        return False
+
+    finally:
+        db.close()
+
+
+def get_accuracy_chart_data_from_db() -> dict:
+    """
+    從 SQLite 計算最近 30 個交易日的每日準確率。
+    """
+
+    db = SessionLocal()
+
+    try:
+        predictions = (
+            db.query(Prediction)
+            .filter(
+                Prediction.is_correct.in_(
+                    ["正確", "錯誤"]
+                )
+            )
+            .order_by(
+                Prediction.predict_date.asc(),
+                Prediction.id.asc(),
+            )
+            .all()
+        )
+
+        if not predictions:
+            return {
+                "labels": [],
+                "values": [],
+            }
+
+        daily_stats = {}
+
+        for prediction in predictions:
+            predict_date = normalize_date(
+                prediction.predict_date
+            )
+
+            if predict_date not in daily_stats:
+                daily_stats[predict_date] = {
+                    "total": 0,
+                    "correct": 0,
+                }
+
+            daily_stats[
+                predict_date
+            ]["total"] += 1
+
+            if prediction.is_correct == "正確":
+                daily_stats[
+                    predict_date
+                ]["correct"] += 1
+
+        daily_result = []
+
+        for predict_date, stats in daily_stats.items():
+            accuracy = round(
+                stats["correct"]
+                / stats["total"]
+                * 100,
+                2
+            )
+
+            daily_result.append({
+                "date": predict_date,
+                "accuracy": accuracy,
+            })
+
+        daily_result = daily_result[-30:]
+
+        return {
+            "labels": [
+                item["date"]
+                for item in daily_result
+            ],
+            "values": [
+                item["accuracy"]
+                for item in daily_result
+            ],
+        }
+
+    except Exception as e:
+        print(
+            f"❌ SQLite 勝率圖表讀取失敗：{e}"
+        )
+
+        return {
+            "labels": [],
+            "values": [],
+        }
+
+    finally:
+        db.close()
+
+
+def get_unvalidated_predictions_from_db() -> list:
+    """
+    取得尚未完成驗證的預測資料。
+    """
+
+    db = SessionLocal()
+
+    try:
+        predictions = (
+            db.query(Prediction)
+            .filter(
+                Prediction.is_correct.is_(None)
+            )
+            .order_by(
+                Prediction.predict_date.asc(),
+                Prediction.id.asc(),
+            )
+            .all()
+        )
+
+        return [
+            {
+                "id": prediction.id,
+                "predict_date": prediction.predict_date,
+                "stock_code": prediction.stock_code,
+                "stock_name": prediction.stock_name,
+                "prediction_text": prediction.prediction_text,
+                "predict_close": prediction.predict_close,
+            }
+            for prediction in predictions
+        ]
+
+    except Exception as e:
+        print(
+            f"❌ SQLite 未驗證預測讀取失敗：{e}"
+        )
+        return []
+
+    finally:
+        db.close()        

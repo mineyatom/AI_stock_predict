@@ -2,12 +2,11 @@
 import pandas as pd
 import yfinance as yf
 
-from datetime import datetime, timedelta
+from datetime import  timedelta
 
 from market_calendar import (
     get_market_data_status,
     get_next_trade_day,
-    has_market_data,
     can_verify_market_data,
 )
 
@@ -19,140 +18,117 @@ from prediction_repository import (
     update_prediction_date,
     update_prediction_validation,
     get_unvalidated_predictions_from_db,
+    get_latest_prediction_from_db,
+    prediction_exists_for_date_from_db,
+    get_accuracy_chart_data_from_db,
 )
 LOG_FILE = "prediction_log.csv"
 
 
 def save_prediction_log(
-        predict_date,
-        stock_code,
-        stock_name,
-        prediction_text,
-        confidence,
-        up_probability,
-        down_probability,
-        predict_close,
-        lower_price,
-        upper_price
+    predict_date,
+    stock_code,
+    stock_name,
+    prediction_text,
+    confidence,
+    up_probability,
+    down_probability,
+    predict_close,
+    lower_price,
+    upper_price,
 ):
-    date = pd.to_datetime(predict_date)
+    """
+    將預測結果寫入 SQLite。
 
-    predict_date = date.strftime("%Y-%m-%d")
+    SQLite 是唯一正式資料來源，
+    不再同步寫入 prediction_log.csv。
+    """
 
-    new_record = pd.DataFrame([
-        {
-            "預測日期": predict_date,
-            "股票代號": stock_code,
-            "股票名稱": stock_name,
-            "預測結果": prediction_text,
-            "信心值": round(float(confidence), 2),
-            "上漲機率": round(float(up_probability), 2),
-            "下跌機率": round(float(down_probability), 2),
-            "隔日預測參考價": round(float(predict_close)),
-            "預測區間下緣": round(float(lower_price)),
-            "預測區間上緣": round(float(upper_price)),
-            "實際收盤價": None,
-            "實際漲跌": None,
-            "是否預測正確": None
-        }
-    ])
+    normalized_predict_date = (
+        pd.to_datetime(
+            predict_date,
+            errors="coerce",
+        )
+    )
 
-    if os.path.exists(LOG_FILE):
-        old_log = pd.read_csv(
-        LOG_FILE,
-        encoding="utf-8-sig",
-        dtype={
-            "股票代號": str
-            }
+    if pd.isna(normalized_predict_date):
+        print(
+            f"❌ 無效的預測日期：{predict_date}"
+        )
+        return False
+
+    normalized_predict_date = (
+        normalized_predict_date
+        .strftime("%Y-%m-%d")
+    )
+
+    try:
+        success = create_prediction(
+            predict_date=normalized_predict_date,
+            stock_code=str(stock_code).strip(),
+            stock_name=str(stock_name).strip(),
+            prediction_text=str(
+                prediction_text
+            ).strip(),
+            confidence=round(
+                float(confidence),
+                2,
+            ),
+            up_probability=round(
+                float(up_probability),
+                2,
+            ),
+            down_probability=round(
+                float(down_probability),
+                2,
+            ),
+            predict_close=round(
+                float(predict_close),
+                2,
+            ),
+            lower_price=round(
+                float(lower_price),
+                2,
+            ),
+            upper_price=round(
+                float(upper_price),
+                2,
+            ),
         )
 
-        duplicated = (
-            (old_log["預測日期"] == predict_date)
-            &
-            (old_log["股票代號"] == stock_code)
-        )
-
-        if duplicated.any():
-            old_log.loc[
-                duplicated,
-                new_record.columns
-            ] = new_record.iloc[0].values
-
-            final_log = old_log
-
-        else:
-            final_log = pd.concat(
-                [old_log, new_record],
-                ignore_index=True
+        if success:
+            print(
+                "✅ 預測紀錄已存入 SQLite："
+                f"{stock_code} "
+                f"{normalized_predict_date}"
             )
+            return True
 
-    else:
-        final_log = new_record
+        print(
+            "ℹ️ 預測紀錄已存在或未新增："
+            f"{stock_code} "
+            f"{normalized_predict_date}"
+        )
+        return False
 
-    final_log.to_csv(
-        LOG_FILE,
-        index=False,
-        encoding="utf-8-sig"
-    )
-
-    print("✅ 預測紀錄已存入 prediction_log.csv")
-
-    # ==========================
-    # 同步寫入 SQLite
-    # ==========================
-    create_prediction(
-        predict_date=str(predict_date),
-        stock_code=str(stock_code),
-        stock_name=str(stock_name),
-        prediction_text=str(prediction_text),
-        confidence=float(confidence),
-        up_probability=float(up_probability),
-        down_probability=float(down_probability),
-        predict_close=float(predict_close),
-        lower_price=float(lower_price),
-        upper_price=float(upper_price)
-    )
+    except Exception as e:
+        print(
+            "❌ SQLite 預測紀錄寫入失敗："
+            f"{stock_code} "
+            f"{normalized_predict_date}，"
+            f"原因：{e}"
+        )
+        return False
 
 
 
 
 def get_latest_prediction():
+    """
+    從 SQLite 取得最新預測。
+    """
 
-    if not os.path.exists(LOG_FILE):
-        return None
-
-    df = pd.read_csv(LOG_FILE)
-
-    if df.empty:
-        return None
-
-    latest = df.iloc[-1]
-
-    return {
-         "predict_date":
-        latest["預測日期"],
-
-    "stock_id":
-        latest["股票代號"],
-
-    "stock_name":
-        latest["股票名稱"],
-
-    "prediction":
-        latest["預測結果"],
-
-    "confidence":
-        latest["信心值"],
-
-    "lower_bound":
-        latest["預測區間下緣"],
-
-    "upper_bound":
-        latest["預測區間上緣"],
-
-    "model":
-        "XGBoost"
-    }
+    return get_latest_prediction_from_db()
 
 
 
@@ -164,88 +140,12 @@ def get_prediction_history():
     return get_prediction_history_from_db()
 
 def get_accuracy_chart_data():
+    """
+    從 SQLite 取得每日勝率圖表。
+    """
 
-    if not os.path.exists(LOG_FILE):
-        return {
-            "labels": [],
-            "values": []
-        }
+    return get_accuracy_chart_data_from_db()
 
-    df = pd.read_csv(
-        LOG_FILE,
-        encoding="utf-8-sig"
-    )
-
-    if df.empty:
-        return {
-            "labels": [],
-            "values": []
-        }
-
-    df = df[
-        df["是否預測正確"].notna()
-        & (df["是否預測正確"] != "")
-    ]
-
-    if df.empty:
-        return {
-            "labels": [],
-            "values": []
-        }
-
-    # 日期轉換
-    df["預測日期"] = pd.to_datetime(
-        df["預測日期"],
-        errors="coerce"
-    )
-
-    df = df.dropna(
-        subset=["預測日期"]
-    )
-
-    # 每日統計
-    daily_result = []
-
-    grouped = df.groupby(
-        df["預測日期"].dt.strftime("%Y/%m/%d")
-    )
-
-    for date, group in grouped:
-
-        total_count = len(group)
-
-        correct_count = len(
-            group[
-                group["是否預測正確"] == "正確"
-            ]
-        )
-
-        accuracy = round(
-            correct_count / total_count * 100,
-            2
-        )
-
-        daily_result.append({
-            "date": date,
-            "accuracy": accuracy
-        })
-
-    daily_result = daily_result[-30:]
-
-    labels = [
-        item["date"]
-        for item in daily_result
-    ]
-
-    values = [
-        item["accuracy"]
-        for item in daily_result
-    ]
-
-    return {
-        "labels": labels,
-        "values": values
-    }
 
 def get_stock_accuracy_stats():
     """
@@ -384,6 +284,163 @@ def shift_untraded_prediction_dates():
 
     else:
         print("✅ 沒有需要順延的預測日期")
+
+
+def shift_untraded_prediction_dates():
+    """
+    檢查 SQLite 中尚未驗證的預測。
+
+    若預測日期遇到颱風假、臨時休市或無成交資料，
+    將預測日期順延至下一個預定交易日。
+    """
+
+    print("🔄 開始檢查 SQLite 休市預測日期")
+
+    predictions = (
+        get_unvalidated_predictions_from_db()
+    )
+
+    if not predictions:
+        print("✅ SQLite 沒有待檢查的預測")
+        return
+
+    today = pd.Timestamp.today().normalize()
+    now = pd.Timestamp.now()
+
+    market_verify_time = (
+        today
+        + pd.Timedelta(
+            hours=15,
+            minutes=0,
+        )
+    )
+
+    updated_count = 0
+    skipped_count = 0
+    failed_count = 0
+
+    for prediction_data in predictions:
+        predict_date = pd.to_datetime(
+            prediction_data["predict_date"],
+            errors="coerce",
+        )
+
+        if pd.isna(predict_date):
+            print(
+                "⚠️ SQLite 日期格式錯誤："
+                f"{prediction_data['predict_date']}"
+            )
+            failed_count += 1
+            continue
+
+        predict_date = predict_date.normalize()
+
+        stock_code = str(
+            prediction_data["stock_code"]
+        ).strip()
+
+        # 未來日期不能判斷是否真正休市
+        if predict_date > today:
+            skipped_count += 1
+            continue
+
+        # 當天 15:00 前不判斷休市
+        if (
+            predict_date == today
+            and now < market_verify_time
+        ):
+            print(
+                "⏳ 尚未到休市確認時間："
+                f"{stock_code} "
+                f"{predict_date.date()}"
+            )
+            skipped_count += 1
+            continue
+
+        try:
+            market_status = (
+                get_market_data_status(
+                    predict_date.strftime(
+                        "%Y-%m-%d"
+                    )
+                )
+            )
+
+            if market_status is None:
+                print(
+                    "⚠️ 無法確認市場狀態："
+                    f"{stock_code} "
+                    f"{predict_date.date()}"
+                )
+                failed_count += 1
+                continue
+
+            # 有交易，不需順延
+            if market_status is True:
+                skipped_count += 1
+                continue
+
+            next_trade_date = (
+                get_next_trade_day(
+                    (
+                        predict_date
+                        + pd.Timedelta(days=1)
+                    ).to_pydatetime()
+                )
+            )
+
+            next_trade_date_str = (
+                pd.to_datetime(
+                    next_trade_date
+                ).strftime("%Y-%m-%d")
+            )
+
+            success = update_prediction_date(
+                old_predict_date=(
+                    predict_date.strftime(
+                        "%Y-%m-%d"
+                    )
+                ),
+                new_predict_date=(
+                    next_trade_date_str
+                ),
+                stock_code=stock_code,
+            )
+
+            if not success:
+                print(
+                    "⚠️ SQLite 日期順延失敗："
+                    f"{stock_code} "
+                    f"{predict_date.date()}"
+                )
+                failed_count += 1
+                continue
+
+            updated_count += 1
+
+            print(
+                "📅 SQLite 預測日期已順延："
+                f"{stock_code} "
+                f"{predict_date.date()} "
+                f"→ {next_trade_date_str}"
+            )
+
+        except Exception as e:
+            failed_count += 1
+
+            print(
+                "⚠️ 休市日期檢查失敗："
+                f"{stock_code}，"
+                f"原因：{e}"
+            )
+
+    print()
+    print("=" * 50)
+    print("SQLite 休市日期檢查完成")
+    print("=" * 50)
+    print(f"更新：{updated_count}")
+    print(f"略過：{skipped_count}")
+    print(f"失敗：{failed_count}")        
 
 
 def update_prediction_result():
@@ -828,53 +885,14 @@ def get_high_confidence_accuracy(
         }  
     
       
-def prediction_exists_for_date(predict_date):
+def prediction_exists_for_date(
+    predict_date
+):
     """
-    檢查指定預測日期是否已經有預測紀錄。
-    支援 YYYY/MM/DD 與 YYYY-MM-DD 混合格式。
+    檢查指定日期是否已有預測。
     """
 
-    try:
-        df = pd.read_csv(
-            LOG_FILE,
-            encoding="utf-8-sig",
-            dtype={
-                "股票代號": str
-            }
-        )
-
-        if df.empty:
-            return False
-
-        df["預測日期"] = pd.to_datetime(
-            df["預測日期"],
-            format="mixed",
-            errors="coerce"
-        ).dt.strftime("%Y-%m-%d")
-
-        normalized_predict_date = pd.to_datetime(
-            predict_date,
-            errors="coerce"
-        )
-
-        if pd.isna(normalized_predict_date):
-            print(
-                f"⚠️ 無效的預測日期：{predict_date}"
-            )
-            return False
-
-        normalized_predict_date = (
-            normalized_predict_date
-            .strftime("%Y-%m-%d")
-        )
-
-        return (
-            df["預測日期"]
-            == normalized_predict_date
-        ).any()
-
-    except Exception as e:
-        print(
-            f"檢查預測紀錄失敗：{e}"
-        )
-        return False
+    return prediction_exists_for_date_from_db(
+        predict_date
+    )
+       
