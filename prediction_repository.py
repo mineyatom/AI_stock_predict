@@ -590,45 +590,7 @@ def get_validated_predictions_from_db() -> list:
     finally:
         db.close()                  
 
-def get_unvalidated_predictions_from_db() -> list:
-    """
-    取得 SQLite 中尚未驗證的預測資料。
-    """
 
-    db = SessionLocal()
-
-    try:
-        predictions = (
-            db.query(Prediction)
-            .filter(
-                Prediction.is_correct.is_(None)
-            )
-            .order_by(
-                Prediction.predict_date.asc(),
-                Prediction.id.asc(),
-            )
-            .all()
-        )
-
-        return [
-            {
-                "id": prediction.id,
-                "predict_date": prediction.predict_date,
-                "stock_code": prediction.stock_code,
-                "prediction_text": prediction.prediction_text,
-                "predict_close": prediction.predict_close,
-            }
-            for prediction in predictions
-        ]
-
-    except Exception as e:
-        print(
-            f"❌ SQLite 未驗證資料讀取失敗：{e}"
-        )
-        return []
-
-    finally:
-        db.close()
 
 def get_latest_prediction_from_db() -> dict | None:
     """

@@ -147,6 +147,173 @@
 
 <section class="evaluation-section">
 
+    <h2>🩺 模型健康狀態</h2>
+
+    <div class="health-panel">
+
+        <div class="health-header">
+
+            <h3>{{ monitor.status }}</h3>
+        <div class="health-score">
+
+            <span>Health Score</span>
+
+            <strong>{{ monitor.health_score }}</strong>
+
+        </div>
+
+            <p>{{ monitor.advice }}</p>
+
+        </div>
+
+        <div class="health-grid">
+
+            <div class="health-item">
+                <span>近 7 日勝率</span>
+                <strong>{{ monitor.recent7 }}%</strong>
+            </div>
+
+            <div class="health-item">
+                <span>近 30 日勝率</span>
+                <strong>{{ monitor.recent30 }}%</strong>
+            </div>
+
+            <div class="health-item">
+                <span>整體勝率</span>
+                <strong>{{ monitor.overall }}%</strong>
+            </div>
+
+            <div class="health-item">
+                <span>已驗證資料</span>
+                <strong>{{ monitor.validated }}</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="evaluation-section">
+
+    <div class="monitor-grid">
+
+        <!-- Trend -->
+
+        <div class="monitor-card">
+
+            <h2>
+                {{ monitor.trend.icon }}
+                趨勢分析
+            </h2>
+
+            <div class="monitor-main">
+
+                <span class="monitor-value">
+
+                    {{ monitor.trend.direction }}
+
+                </span>
+
+                <span class="monitor-status">
+
+                    {{ monitor.trend.status }}
+
+                </span>
+
+            </div>
+
+            <div class="monitor-detail">
+
+                <p>
+
+                    近7日：
+                    <strong>{{ monitor.trend.recent7 }}%</strong>
+
+                </p>
+
+                <p>
+
+                    近30日：
+                    <strong>{{ monitor.trend.recent30 }}%</strong>
+
+                </p>
+
+                <p>
+
+                    差異：
+                    <strong>{{ monitor.trend.trend }}%</strong>
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- Drift -->
+
+        <div class="monitor-card">
+
+            <h2>
+
+                {{ monitor.drift.icon }}
+                模型穩定度
+
+            </h2>
+
+            <div class="monitor-main">
+
+                <span class="monitor-value">
+
+                    {{ monitor.drift.level }}
+
+                </span>
+
+               
+
+            </div>
+
+            <div class="monitor-detail">
+
+                <p>
+
+                    Drift：
+                    <strong>{{ monitor.drift.drift }}%</strong>
+
+                </p>
+
+                <p>
+
+                    絕對差：
+                    <strong>{{ monitor.drift.abs_drift }}%</strong>
+
+                </p>
+
+                <p>
+
+                    整體：
+                    <strong>{{ monitor.drift.overall }}%</strong>
+
+                </p>
+
+                <p>
+
+                    近7日：
+                    <strong>{{ monitor.drift.recent7 }}%</strong>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="evaluation-section">
+
     <h2>
 
         🤖 AI 模型評估摘要
@@ -161,7 +328,7 @@
 
     <div class="evaluation-summary">
 
-        {{ evaluation_summary }}
+        {{ monitor.summary }}
 
     </div>
 

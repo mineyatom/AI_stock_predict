@@ -307,3 +307,273 @@
     font-weight:900;
 
 }
+
+
+/* ==========================
+   Model Health
+========================== */
+
+.health-panel{
+
+    background:var(--card-bg);
+
+    border:var(--card-border);
+
+    border-radius:20px;
+
+    padding:32px;
+
+    box-shadow:var(--card-shadow);
+
+}
+
+.health-header{
+
+    margin-bottom:28px;
+
+    padding-bottom:18px;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.health-header h3{
+
+    color:var(--gold-color);
+
+    font-size:34px;
+
+    font-weight:900;
+
+    margin-bottom:10px;
+
+}
+
+.health-header p{
+
+    color:#cbd5e1;
+
+    font-size:15px;
+
+}
+
+.health-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+
+    gap:24px;
+
+}
+
+.health-item{
+
+    background:rgba(255,255,255,.03);
+
+    border:1px solid rgba(255,255,255,.05);
+
+    border-radius:18px;
+
+    padding:24px;
+
+    text-align:center;
+
+    transition:.25s;
+
+}
+
+.health-item:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:var(--card-hover-shadow);
+
+}
+
+.health-item span{
+
+    display:block;
+
+    color:#94a3b8;
+
+    font-size:15px;
+
+    margin-bottom:12px;
+
+}
+
+.health-item strong{
+
+    display:block;
+
+    color:var(--gold-color);
+
+    font-size:34px;
+
+    font-weight:900;
+
+}
+
+.health-score{
+
+    margin-top:18px;
+
+    margin-bottom:8px;
+
+}
+
+.health-score span{
+
+    display:block;
+
+    color:#94a3b8;
+
+    font-size:14px;
+
+}
+
+.health-score strong{
+
+    display:block;
+
+    font-size:56px;
+
+    font-weight:900;
+
+    color:var(--gold-color);
+
+}
+
+/* ==========================
+   Trend & Drift
+========================== */
+
+.monitor-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+
+    gap:24px;
+
+}
+
+.monitor-card{
+
+    background:var(--card-bg);
+
+    border:var(--card-border);
+
+    border-radius:20px;
+
+    padding:30px;
+
+    box-shadow:var(--card-shadow);
+
+    transition:.25s;
+
+}
+
+.monitor-card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:var(--card-hover-shadow);
+
+}
+
+.monitor-card h2{
+
+    margin:0 0 24px;
+
+    color:var(--gold-color);
+
+    font-size:24px;
+
+}
+
+.monitor-main{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:24px;
+
+}
+
+.monitor-value{
+
+    font-size:38px;
+
+    font-weight:900;
+
+    color:var(--gold-color);
+
+}
+
+.monitor-status{
+
+    padding:6px 14px;
+
+    border-radius:999px;
+
+    background:rgba(212,175,55,.12);
+
+    color:var(--gold-color);
+
+    font-size:14px;
+
+    font-weight:700;
+
+}
+
+.monitor-detail{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+}
+
+.monitor-detail p{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin:0;
+
+    color:#cbd5e1;
+
+    font-size:15px;
+
+}
+
+.monitor-detail strong{
+
+    color:#ffffff;
+
+    font-weight:700;
+
+}
+
+
+/* ==========================
+   Responsive
+========================== */
+
+@media(max-width:768px){
+
+    .monitor-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
