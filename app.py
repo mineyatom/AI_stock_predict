@@ -48,7 +48,7 @@ from model_evaluator import (
     evaluate_stock_accuracy
 )
 
-from evaluation_summary import generate_evaluation_summary
+
 
 
 
@@ -278,12 +278,6 @@ def evaluation_page(request: Request):
 
     confidence_bins = evaluate_confidence_bins()
 
-    summary = generate_evaluation_summary(
-        model_metrics,
-        confidence_bins
-    )
-
-    # 新增這行
     monitor = get_model_monitor()
 
     return templates.TemplateResponse(
@@ -292,9 +286,6 @@ def evaluation_page(request: Request):
         context={
             "model_metrics": model_metrics,
             "confidence_bins": confidence_bins,
-            "evaluation_summary": summary,
-
-            # 新增這行
             "monitor": monitor,
         }
     )
