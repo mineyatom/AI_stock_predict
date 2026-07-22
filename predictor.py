@@ -338,6 +338,19 @@ def build_feature_data(stock_code):
         .mean()
     )
 
+
+    df["ROC"] = (
+
+    df["Close"]
+
+    .pct_change(
+
+        periods=10
+
+        )
+
+    )
+
     df["Tomorrow_Close"] = (
         df["Close"]
         .shift(-1)
