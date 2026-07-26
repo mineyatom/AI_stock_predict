@@ -12,6 +12,7 @@ from market_calendar import (
 
 from prediction_repository import (
     create_prediction,
+    update_prediction_ai_summary,
     get_prediction_history_from_db,
     get_stock_accuracy_stats_from_db,
     get_validated_predictions_from_db,
@@ -36,6 +37,7 @@ def save_prediction_log(
     predict_close,
     lower_price,
     upper_price,
+    ai_summary=None,
 ):
     """
     將預測結果寫入 SQLite。
@@ -57,67 +59,126 @@ def save_prediction_log(
         )
         return False
 
+
     normalized_predict_date = (
         normalized_predict_date
         .strftime("%Y-%m-%d")
     )
 
+
     try:
+
         success = create_prediction(
+
             predict_date=normalized_predict_date,
+
             stock_code=str(stock_code).strip(),
+
             stock_name=str(stock_name).strip(),
+
             prediction_text=str(
                 prediction_text
             ).strip(),
+
             confidence=round(
                 float(confidence),
                 2,
             ),
+
             up_probability=round(
                 float(up_probability),
                 2,
             ),
+
             down_probability=round(
                 float(down_probability),
                 2,
             ),
+
             predict_close=round(
                 float(predict_close),
                 2,
             ),
+
             lower_price=round(
                 float(lower_price),
                 2,
             ),
+
             upper_price=round(
                 float(upper_price),
                 2,
             ),
+
+            ai_summary=ai_summary,
+
         )
 
+
+        # ==========================
+        # 新資料新增成功
+        # ==========================
+
         if success:
+
             print(
                 "✅ 預測紀錄已存入 SQLite："
                 f"{stock_code} "
                 f"{normalized_predict_date}"
             )
+
             return True
+
+
+
+        # ==========================
+        # 已存在資料，補更新 AI摘要
+        # ==========================
+
+        if ai_summary:
+
+            updated = (
+                update_prediction_ai_summary(
+                    predict_date=normalized_predict_date,
+                    stock_code=str(
+                        stock_code
+                    ).strip(),
+                    ai_summary=ai_summary,
+                )
+            )
+
+
+            if updated:
+
+                print(
+                    "🤖 AI摘要已補更新："
+                    f"{stock_code} "
+                    f"{normalized_predict_date}"
+                )
+
+                return True
+
+
 
         print(
             "ℹ️ 預測紀錄已存在或未新增："
             f"{stock_code} "
             f"{normalized_predict_date}"
         )
+
         return False
 
+
+
     except Exception as e:
+
         print(
             "❌ SQLite 預測紀錄寫入失敗："
             f"{stock_code} "
             f"{normalized_predict_date}，"
             f"原因：{e}"
         )
+
         return False
 
 

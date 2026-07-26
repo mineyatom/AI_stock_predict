@@ -95,6 +95,10 @@ class Prediction(Base):
         String,
         nullable=True
     )
+    ai_summary = Column(
+        String,
+        nullable=True
+   )
 
     created_at = Column(
         DateTime,

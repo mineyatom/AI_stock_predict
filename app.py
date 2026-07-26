@@ -18,6 +18,7 @@ from log_manager import(
     get_confidence_stats,
     get_recent_accuracy_stats,
     get_high_confidence_accuracy,
+    save_prediction_log,
     
     )
 

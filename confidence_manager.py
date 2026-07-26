@@ -3,10 +3,29 @@ confidence_manager.py
 
 負責管理模型信心值相關邏輯。
 
-Business Logic：
+Business Logic:
 - 信心等級
 - AI 描述語氣
+
+V11.5 Update:
+根據 Benchmark Confidence Threshold Analysis 調整門檻：
+
+80%以上:
+    極高可信度
+
+70~80%:
+    高可信度
+
+60~70%:
+    一般可信度
+
+60%以下:
+    低可信度
+
+Ollama 只負責自然語言潤稿，
+不負責判斷模型可信度。
 """
+
 
 
 def get_confidence_level(confidence):
@@ -16,81 +35,126 @@ def get_confidence_level(confidence):
 
     confidence = float(confidence)
 
-    if confidence >= 75:
+
+    if confidence >= 80:
+
+        return "極高可信度"
+
+
+    elif confidence >= 70:
+
         return "高可信度"
 
-    elif confidence >= 65:
-        return "偏高可信度"
 
-    elif confidence >= 55:
-        return "中等可信度"
+    elif confidence >= 60:
+
+        return "一般可信度"
+
 
     else:
+
         return "低可信度"
+
+
+
 
 
 def get_confidence_context(confidence):
     """
     根據信心值回傳 AI 分析語氣。
 
-    這些內容提供給 Prompt Builder 使用，
-    Ollama 只負責自然語言潤稿。
+    提供 Prompt Builder 使用。
+
+    Ollama 僅負責自然語言生成，
+    不進行模型判斷。
     """
 
     confidence = float(confidence)
 
-    if confidence >= 75:
+
+
+    if confidence >= 80:
 
         return {
 
-            "level": "高可信度",
+            "level":
+
+                "極高可信度",
+
 
             "tone":
-                "多數模型訊號方向一致，模型對目前判斷具有較高信心。",
+
+                "模型信心度較高，目前多數模型訊號支持相同方向。",
+
 
             "uncertainty":
-                "請不要強調模型存在明顯不確定性，只需提醒結果仍屬機率預測。",
+
+                "仍需說明結果屬於機率預測，不代表未來一定發生。",
 
         }
 
-    elif confidence >= 65:
+
+
+    elif confidence >= 70:
 
         return {
 
-            "level": "偏高可信度",
+            "level":
+
+                "高可信度",
+
 
             "tone":
-                "多數訊號支持目前方向，但仍有少部分訊號存在差異。",
+
+                "多數模型訊號支持目前方向，模型具有較高方向判斷信心。",
+
 
             "uncertainty":
-                "可簡單說明仍保留少量不確定性。",
+
+                "仍可能受到市場環境變化影響，需保留一定不確定性。",
 
         }
 
-    elif confidence >= 55:
+
+
+    elif confidence >= 60:
 
         return {
 
-            "level": "中等可信度",
+            "level":
+
+                "一般可信度",
+
 
             "tone":
-                "正向與負向訊號同時存在，模型綜合分析後形成目前判斷。",
+
+                "模型綜合多項特徵後形成目前判斷，但部分訊號仍存在差異。",
+
 
             "uncertainty":
-                "可說明模型仍存在一定程度的不確定性。",
+
+                "模型仍存在一定程度的不確定性，需要觀察後續市場變化。",
 
         }
+
+
 
     else:
 
         return {
 
-            "level": "低可信度",
+            "level":
+
+                "低可信度",
+
 
             "tone":
-                "目前多項訊號分歧明顯，因此模型判斷較為保守。",
+
+                "目前模型訊號分歧較大，因此判斷較為保守。",
+
 
             "uncertainty":
-                "請明確說明模型信心偏低，但不要加入任何投資建議。",
+
+                "請明確說明模型信心偏低，避免過度解讀預測結果。",
 
         }

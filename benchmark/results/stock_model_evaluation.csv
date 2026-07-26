@@ -1,0 +1,8 @@
+﻿stock,best_feature,best_model,accuracy,confidence_valid
+2330,Reduced,RandomForest,0.5206106870229007,True
+2454,Baseline,RandomForest,0.4893129770992366,False
+2317,Reduced,XGBoost,0.5267175572519084,True
+50,Baseline,LogisticRegression,0.5030534351145037,True
+2308,Baseline,LogisticRegression,0.4984732824427481,False
+2382,Reduced,RandomForest,0.5038167938931297,True
+3661,Baseline,XGBoost,0.5022900763358779,False
