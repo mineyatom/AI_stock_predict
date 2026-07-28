@@ -112,7 +112,7 @@ stock_df.to_csv(
     encoding="utf-8-sig"
 )
 
-print("✅ stock_names.csv 更新完成")
+print("[OK] stock_names.csv 更新完成")
 print(
     f"共 {len(stock_df)} 檔股票"
 )

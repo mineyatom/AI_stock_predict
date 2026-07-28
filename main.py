@@ -451,7 +451,7 @@ def save_prediction_log(
     )
 
     print(
-        "\n✅ 預測紀錄已存入 "
+        "\n[OK] 預測紀錄已存入 "
         "prediction_log.csv"
     )
 
@@ -459,15 +459,15 @@ def save_prediction_log(
 # ===== 更新預測結果 =====
 def update_prediction_result():
 
-    print("🔥 update_prediction_result 啟動")
+    print("[RUN] update_prediction_result 啟動")
 
     log_file = "prediction_log.csv"
 
     if not os.path.exists(log_file):
-        print("❌ 找不到 prediction_log.csv")
+        print("[ERROR] 找不到 prediction_log.csv")
         return
 
-    print("✅ 找到 prediction_log.csv")
+    print("[OK] 找到 prediction_log.csv")
 
     df_log = pd.read_csv(
         log_file,
@@ -497,7 +497,7 @@ def update_prediction_result():
         
         if pd.isna(predict_date):
             print(
-                f"⚠️ 跳過日期格式錯誤的資料列：第 {index + 2} 列"
+                f"[WARN] 跳過日期格式錯誤的資料列：第 {index + 2} 列"
         )
             continue
 
@@ -506,7 +506,7 @@ def update_prediction_result():
         # 預測日還沒過，不更新
         if predict_date > today:
             print(
-                f"⏳ 尚未到可更新日期："
+                f"[RUN] 尚未到可更新日期："
                 f"{row['股票代號']} "
                 f"{predict_date.date()}"
             )
@@ -559,10 +559,10 @@ def update_prediction_result():
             df_log.loc[index, "實際漲跌"] = str(actual_direction)
             df_log.loc[index, "是否預測正確"] = result_text
 
-            print(f"✅ 已更新：{stock_code} {predict_date.date()}")
+            print(f"[OK] 已更新：{stock_code} {predict_date.date()}")
 
         except Exception as e:
-            print(f"⚠️ 更新失敗：{stock_code}，原因：{e}")
+            print(f"[WARN] 更新失敗：{stock_code}，原因：{e}")
 
     # ===== 存檔前整理格式 =====
     df_log["實際收盤價"] =(
@@ -632,7 +632,7 @@ def fill_stock_names():
         encoding="utf-8-sig"
     )
 
-    print("✅ 股票名稱補完")
+    print("[OK] 股票名稱補完")
 
 
 # ===== 補股票名稱（只跑一次）=====
@@ -1009,7 +1009,7 @@ for backtest_days in backtest_days_list:
     start_index = len(X) - backtest_days
 
     if start_index < 0:
-        print(f"\n⚠️ 資料不足 {backtest_days} 天，跳過此回測。")
+        print(f"\n[WARN] 資料不足 {backtest_days} 天，跳過此回測。")
         continue
 
     for i in range(start_index, len(X) - 1):
