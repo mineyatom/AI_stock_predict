@@ -84,7 +84,7 @@ def load_valid_prediction_data():
 
     except Exception as e:
         print(
-            f"❌ SQLite 模型評估資料讀取失敗：{e}"
+            f"[ERROR] SQLite 模型評估資料讀取失敗：{e}"
         )
 
         return pd.DataFrame()

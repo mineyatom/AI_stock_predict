@@ -152,7 +152,7 @@ def create_prediction(
 
 
         print(
-            f"❌ SQLite 儲存失敗："
+            f"[ERROR] SQLite 儲存失敗："
             f"{predict_date} {stock_code} "
             f"原因：{e}"
         )
@@ -219,7 +219,7 @@ def update_prediction_ai_summary(
         if prediction is None:
 
             print(
-                "❌ 找不到 AI摘要更新紀錄："
+                "[ERROR] 找不到 AI摘要更新紀錄："
                 f"{normalized_date} "
                 f"{normalized_stock_code}"
             )
@@ -257,7 +257,7 @@ def update_prediction_ai_summary(
 
 
         print(
-            "❌ AI摘要更新失敗："
+            "[ERROR] AI摘要更新失敗："
             f"{e}"
         )
 
@@ -397,7 +397,7 @@ def update_prediction_validation(
         if prediction is None:
 
             print(
-                "❌ 找不到待更新的 SQLite 紀錄："
+                "[ERROR] 找不到待更新的 SQLite 紀錄："
                 f"日期={normalized_date}，"
                 f"股票={normalized_stock_code}"
             )
@@ -447,7 +447,7 @@ def update_prediction_validation(
 
 
         print(
-            "❌ SQLite 驗證更新異常："
+            "[ERROR] SQLite 驗證更新異常："
             f"{e}"
         )
 
@@ -511,7 +511,7 @@ def update_prediction_date(
         if prediction is None:
 
             print(
-                "❌ 找不到要順延的 SQLite 紀錄"
+                "[ERROR] 找不到要順延的 SQLite 紀錄"
             )
 
             return False
@@ -547,7 +547,7 @@ def update_prediction_date(
         db.rollback()
 
         print(
-            f"❌ 日期更新失敗：{e}"
+            f"[ERROR] 日期更新失敗：{e}"
         )
 
         return False
@@ -702,7 +702,7 @@ def get_prediction_history_from_db() -> dict:
 
 
         print(
-            f"❌ SQLite 歷史紀錄讀取失敗：{e}"
+            f"[ERROR] SQLite 歷史紀錄讀取失敗：{e}"
         )
 
 
@@ -861,7 +861,7 @@ def get_stock_accuracy_stats_from_db() -> list:
 
 
         print(
-            f"❌ SQLite 股票準確率統計失敗：{e}"
+            f"[ERROR] SQLite 股票準確率統計失敗：{e}"
         )
 
 
@@ -935,7 +935,7 @@ def get_validated_predictions_from_db() -> list:
     except Exception as e:
 
         print(
-            f"❌ SQLite 已驗證資料讀取失敗：{e}"
+            f"[ERROR] SQLite 已驗證資料讀取失敗：{e}"
         )
 
         return []
@@ -1012,7 +1012,7 @@ def get_latest_prediction_from_db() -> dict | None:
     except Exception as e:
 
         print(
-            f"❌ SQLite 最新預測讀取失敗：{e}"
+            f"[ERROR] SQLite 最新預測讀取失敗：{e}"
         )
 
         return None
@@ -1064,7 +1064,7 @@ def prediction_exists_for_date_from_db(
     except Exception as e:
 
         print(
-            f"❌ SQLite 預測日期檢查失敗：{e}"
+            f"[ERROR] SQLite 預測日期檢查失敗：{e}"
         )
 
         return False
@@ -1232,7 +1232,7 @@ def get_accuracy_chart_data_from_db() -> dict:
     except Exception as e:
 
         print(
-            f"❌ SQLite 勝率圖表讀取失敗：{e}"
+            f"[ERROR] SQLite 勝率圖表讀取失敗：{e}"
         )
 
         return {
@@ -1305,7 +1305,7 @@ def get_unvalidated_predictions_from_db() -> list:
     except Exception as e:
 
         print(
-            f"❌ SQLite 未驗證預測讀取失敗：{e}"
+            f"[ERROR] SQLite 未驗證預測讀取失敗：{e}"
         )
 
         return []

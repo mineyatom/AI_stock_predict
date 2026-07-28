@@ -229,7 +229,7 @@ def recover_missing_prediction():
 
 
     print(
-        f"🔍 檢查是否需要補預測：{target_date}"
+        f"[CHECK] 檢查是否需要補預測：{target_date}"
     )
 
 
@@ -238,7 +238,7 @@ def recover_missing_prediction():
     ):
 
         print(
-            f"✅ {target_date} 已有預測紀錄，不需補跑"
+            f"[OK] {target_date} 已有預測紀錄，不需補跑"
         )
 
         return
@@ -246,7 +246,7 @@ def recover_missing_prediction():
 
 
     print(
-        f"⚠️ {target_date} 尚無預測紀錄，開始補跑"
+        f"[WARN] {target_date} 尚無預測紀錄，開始補跑"
     )
 
 
@@ -261,7 +261,7 @@ def recover_missing_prediction():
 def run_daily_validation():
 
     print(
-        f"📅 開始每日休市檢查："
+        f"[INFO] 開始每日休市檢查："
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
@@ -270,7 +270,7 @@ def run_daily_validation():
 
 
     print(
-        f"🕒 開始每日預測驗證："
+        f"[RUN] 開始每日預測驗證："
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
@@ -279,7 +279,7 @@ def run_daily_validation():
 
 
     print(
-        "✅ 每日驗證流程完成"
+        "[OK] 每日驗證流程完成"
     )
 
 
@@ -296,7 +296,7 @@ def start_scheduler():
 
 
     print(
-        f"🧩 啟動補預測檢查："
+        f"[CHECK] 啟動補預測檢查："
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
@@ -346,12 +346,12 @@ def start_scheduler():
 
 
     print(
-        f"⏰ 排程已建立："
+        f"[INFO] 排程已建立："
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
 
     print(
-        f"✅ Scheduler 已啟動："
+        f"[OK] Scheduler 已啟動："
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )

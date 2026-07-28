@@ -55,7 +55,7 @@ def save_prediction_log(
 
     if pd.isna(normalized_predict_date):
         print(
-            f"❌ 無效的預測日期：{predict_date}"
+            f"[ERROR] 無效的預測日期：{predict_date}"
         )
         return False
 
@@ -122,7 +122,7 @@ def save_prediction_log(
         if success:
 
             print(
-                "✅ 預測紀錄已存入 SQLite："
+                "[OK] 預測紀錄已存入 SQLite："
                 f"{stock_code} "
                 f"{normalized_predict_date}"
             )
@@ -173,7 +173,7 @@ def save_prediction_log(
     except Exception as e:
 
         print(
-            "❌ SQLite 預測紀錄寫入失敗："
+            "[ERROR] SQLite 預測紀錄寫入失敗："
             f"{stock_code} "
             f"{normalized_predict_date}，"
             f"原因：{e}"
@@ -224,10 +224,10 @@ def shift_untraded_prediction_dates():
     自動順延到下一個預期交易日。
     """
 
-    print("🔄 開始檢查休市預測日期")
+    print("[RUN] 開始檢查休市預測日期")
 
     if not os.path.exists(LOG_FILE):
-        print("❌ 找不到 prediction_log.csv")
+        print("[ERROR] 找不到 prediction_log.csv")
         return
 
     df_log = pd.read_csv(
@@ -240,7 +240,7 @@ def shift_untraded_prediction_dates():
     )
 
     if df_log.empty:
-        print("❌ prediction_log.csv 沒有資料")
+        print("[ERROR] prediction_log.csv 沒有資料")
         return
 
     today = pd.Timestamp.today().normalize()
@@ -277,7 +277,7 @@ def shift_untraded_prediction_dates():
             predict_date.to_pydatetime()
         ):
             print(
-                f"⏳ 尚未到市場確認時間，保留原日期："
+                f"[RUN] 尚未到市場確認時間，保留原日期："
                 f"{predict_date.date()}"
             )
             continue
@@ -289,7 +289,7 @@ def shift_untraded_prediction_dates():
         # FinMind 查詢失敗，不修改日期
         if market_status is None:
             print(
-                f"⚠️ 無法確認市場狀態，保留原日期："
+                f"[WARN] 無法確認市場狀態，保留原日期："
                 f"{predict_date.date()}"
             )
             continue
@@ -329,7 +329,7 @@ def shift_untraded_prediction_dates():
         updated = True
 
         print(
-            f"📅 預測日期已順延："
+            f"[INFO] 預測日期已順延："
             f"{row['股票代號']} "
             f"{predict_date.date()} → {next_date_str}"
         )
@@ -341,10 +341,10 @@ def shift_untraded_prediction_dates():
             encoding="utf-8-sig"
         )
 
-        print("✅ 休市預測日期順延完成")
+        print("[OK] 休市預測日期順延完成")
 
     else:
-        print("✅ 沒有需要順延的預測日期")
+        print("[OK] 沒有需要順延的預測日期")
 
 
 def shift_untraded_prediction_dates():
@@ -355,14 +355,14 @@ def shift_untraded_prediction_dates():
     將預測日期順延至下一個預定交易日。
     """
 
-    print("🔄 開始檢查 SQLite 休市預測日期")
+    print("[CHECK] 開始檢查 SQLite 休市預測日期")
 
     predictions = (
         get_unvalidated_predictions_from_db()
     )
 
     if not predictions:
-        print("✅ SQLite 沒有待檢查的預測")
+        print("[OK] SQLite 沒有待檢查的預測")
         return
 
     today = pd.Timestamp.today().normalize()
@@ -388,7 +388,7 @@ def shift_untraded_prediction_dates():
 
         if pd.isna(predict_date):
             print(
-                "⚠️ SQLite 日期格式錯誤："
+                "[WARN] SQLite 日期格式錯誤："
                 f"{prediction_data['predict_date']}"
             )
             failed_count += 1
@@ -411,7 +411,7 @@ def shift_untraded_prediction_dates():
             and now < market_verify_time
         ):
             print(
-                "⏳ 尚未到休市確認時間："
+                "[RUN] 尚未到休市確認時間："
                 f"{stock_code} "
                 f"{predict_date.date()}"
             )
@@ -429,7 +429,7 @@ def shift_untraded_prediction_dates():
 
             if market_status is None:
                 print(
-                    "⚠️ 無法確認市場狀態："
+                    "[WARN] 無法確認市場狀態："
                     f"{stock_code} "
                     f"{predict_date.date()}"
                 )
@@ -470,7 +470,7 @@ def shift_untraded_prediction_dates():
 
             if not success:
                 print(
-                    "⚠️ SQLite 日期順延失敗："
+                    "[WARN] SQLite 日期順延失敗："
                     f"{stock_code} "
                     f"{predict_date.date()}"
                 )
@@ -480,7 +480,7 @@ def shift_untraded_prediction_dates():
             updated_count += 1
 
             print(
-                "📅 SQLite 預測日期已順延："
+                "[INFO] SQLite 預測日期已順延："
                 f"{stock_code} "
                 f"{predict_date.date()} "
                 f"→ {next_trade_date_str}"
@@ -490,7 +490,7 @@ def shift_untraded_prediction_dates():
             failed_count += 1
 
             print(
-                "⚠️ 休市日期檢查失敗："
+                "[WARN]休市日期檢查失敗："
                 f"{stock_code}，"
                 f"原因：{e}"
             )
@@ -512,12 +512,12 @@ def update_prediction_result():
     CSV 不再作為驗證流程的主資料來源。
     """
 
-    print("🔥 update_prediction_result 啟動")
+    print("[RUN] update_prediction_result 啟動")
 
     predictions = get_unvalidated_predictions_from_db()
 
     if not predictions:
-        print("✅ SQLite 沒有待驗證的預測")
+        print("[OK] SQLite 沒有待驗證的預測")
         return
 
     today = pd.Timestamp.today().normalize()
@@ -544,7 +544,7 @@ def update_prediction_result():
 
         if pd.isna(predict_date):
             print(
-                f"⚠️ SQLite 日期格式錯誤："
+                f"[WARN] SQLite 日期格式錯誤："
                 f"{prediction_data['predict_date']}"
             )
             failed_count += 1
@@ -562,7 +562,7 @@ def update_prediction_result():
 
         if predict_date > today:
             print(
-                f"⏳ 尚未到預測日期："
+                f"[RUN] 尚未到預測日期："
                 f"{stock_code} "
                 f"{predict_date.date()}"
             )
@@ -574,7 +574,7 @@ def update_prediction_result():
             and now < market_verify_time
         ):
             print(
-                f"⏳ 尚未到驗證時間："
+                f"[RUN] 尚未到驗證時間："
                 f"{stock_code} "
                 f"{predict_date.date()}"
             )
@@ -591,7 +591,7 @@ def update_prediction_result():
 
         if market_status is None:
             print(
-                f"⚠️ 無法確認市場狀態："
+                f"[WARN] 無法確認市場狀態："
                 f"{predict_date.date()}"
             )
             failed_count += 1
@@ -599,7 +599,7 @@ def update_prediction_result():
 
         if market_status is False:
             print(
-                f"🌀 無實際交易資料，略過驗證："
+                f"[INFO] 無實際交易資料，略過驗證："
                 f"{stock_code} "
                 f"{predict_date.date()}"
             )
@@ -640,7 +640,7 @@ def update_prediction_result():
 
             if history.empty:
                 print(
-                    f"⚠️ Yahoo 無交易資料："
+                    f"[WARN] Yahoo 無交易資料："
                     f"{yahoo_stock_code}"
                 )
                 failed_count += 1
@@ -653,7 +653,7 @@ def update_prediction_result():
 
             if close_series.empty:
                 print(
-                    f"⚠️ Yahoo 收盤價為空："
+                    f"[WARN] Yahoo 收盤價為空："
                     f"{yahoo_stock_code}"
                 )
                 failed_count += 1
@@ -701,7 +701,7 @@ def update_prediction_result():
 
             if not sqlite_updated:
                 print(
-                    f"⚠️ SQLite 驗證更新失敗："
+                    f"[WARN] SQLite 驗證更新失敗："
                     f"{stock_code} "
                     f"{predict_date.date()}"
                 )
@@ -711,7 +711,7 @@ def update_prediction_result():
             updated_count += 1
 
             print(
-                f"✅ SQLite 已驗證："
+                f"[OK] SQLite 已驗證："
                 f"{stock_code} "
                 f"{predict_date.date()} "
                 f"{result_text}"
@@ -721,7 +721,7 @@ def update_prediction_result():
             failed_count += 1
 
             print(
-                f"⚠️ 驗證失敗："
+                f"[WARN] 驗證失敗："
                 f"{stock_code} "
                 f"原因：{e}"
             )

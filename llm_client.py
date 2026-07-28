@@ -62,7 +62,7 @@ def generate_text(
     except Exception as e:
 
         print(
-            "⚠️ OpenAI API 錯誤：",
+            "[WARN] OpenAI API 錯誤：",
             e
         )
 
