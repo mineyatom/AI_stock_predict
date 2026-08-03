@@ -227,15 +227,11 @@ def recover_missing_prediction():
 
     target_date = get_next_trade_date()
 
-
     print(
         f"[CHECK] 檢查是否需要補預測：{target_date}"
     )
 
-
-    if prediction_exists_for_date(
-        target_date
-    ):
+    if prediction_exists_for_date(target_date):
 
         print(
             f"[OK] {target_date} 已有預測紀錄，不需補跑"
@@ -243,14 +239,24 @@ def recover_missing_prediction():
 
         return
 
-
-
     print(
         f"[WARN] {target_date} 尚無預測紀錄，開始補跑"
     )
 
+    try:
+        run_daily_prediction()
 
-    run_daily_prediction()
+    except ValueError as e:
+
+        print(
+            f"[WARN] 補預測略過：{e}"
+        )
+
+    except Exception as e:
+
+        print(
+            f"[ERROR] 補預測失敗：{e}"
+        )
 
 
 
