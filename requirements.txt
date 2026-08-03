@@ -98,3 +98,4 @@ openai
 SQLAlchemy
 apscheduler
 python-dotenv
+shap
