@@ -99,3 +99,4 @@ SQLAlchemy
 apscheduler
 python-dotenv
 shap
+taiwan-holidays
