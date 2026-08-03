@@ -15,3 +15,10 @@ env/
 
 # 環境變數
 .env
+
+# Database
+prediction.db
+
+# Logs
+logs/
+*.log
