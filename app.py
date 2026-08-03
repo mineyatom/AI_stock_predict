@@ -55,6 +55,10 @@ from model_evaluator import (
 
 
 app = FastAPI()
+from database import engine
+from models import Base
+
+Base.metadata.create_all(bind=engine)
 latest_prediction_result = None
 
 
