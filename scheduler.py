@@ -307,7 +307,7 @@ def start_scheduler():
     )
 
 
-    recover_missing_prediction()
+    #recover_missing_prediction()
 
 
 
