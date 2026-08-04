@@ -521,4 +521,115 @@ SQLite 預測驗證完成
 略過：21
 失敗：0
 INFO:     127.0.0.1:64256 - "GET / HTTP/1.1" 200 OK
+^C2026-08-04 17:41:58.947 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+INFO:     Started server process [13804]
+INFO:     Waiting for application startup.
+2026-08-04 17:42:48.206 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:42:48.207 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:42:48.701 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:42:48.701 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:42:49.053 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:42:49.053 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:42:49.421 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:42:49.421 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:42:49.781 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:42:49.781 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:42:50.150 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:42:50.150 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:42:50.643 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:42:50.643 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:42:51.015 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:42:51.015 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:42:51.367 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:42:51.367 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:42:51.803 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:42:51.803 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:43:14.450 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:43:14.450 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:43:15.514 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:43:15.514 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:43:16.384 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:43:16.384 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:43:19.923 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:43:19.923 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:43:20.744 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:43:20.744 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:43:21.519 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:43:21.520 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:43:22.466 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:43:22.466 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-04 17:43:23.304 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 17:43:23.304 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-08-04 19:53:49.084 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 19:53:49.113 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: TAIEX
+2026-08-04 19:54:25.268 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3017
+[INFO] 開始每日休市檢查：2026-08-04 17:42:47
+[CHECK] 開始檢查 SQLite 休市預測日期
+
+==================================================
+SQLite 休市日期檢查完成
+==================================================
+更新：0
+略過：9
+失敗：0
+[RUN] 開始每日預測驗證：2026-08-04 17:42:51
+[RUN] update_prediction_result 啟動
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2330.TW 2026-08-04
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2454.TW 2026-08-04
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2317.TW 2026-08-04
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：3661.TW 2026-08-04
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：6669.TW 2026-08-04
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2382.TW 2026-08-04
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：3231.TW 2026-08-04
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2356.TW 2026-08-04
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：3017.TW 2026-08-04
+
+==================================================
+SQLite 預測驗證完成
+==================================================
+成功：0
+略過：0
+失敗：9
+[OK] 每日驗證流程完成
+[CHECK] 啟動補預測檢查：2026-08-04 17:43:23
+[INFO] 排程已建立：2026-08-04 17:43:24
+[OK] Scheduler 已啟動：2026-08-04 17:43:24
+[RUN] update_prediction_result 啟動
+[OK] SQLite 沒有待驗證的預測
+INFO:     127.0.0.1:63198 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63198 - "GET /static/style.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63198 - "GET /static/css/base.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63243 - "GET /static/css/ranking.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63241 - "GET /static/css/predict.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63240 - "GET /static/css/home.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63242 - "GET /static/css/history.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63201 - "GET /static/css/components.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63198 - "GET /static/css/evaluation.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63198 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+Run time of job "run_daily_prediction (trigger: cron[hour='21', minute='0'], next run at: 2026-08-05 21:00:00 CST)" was missed by 0:00:02.462127
+2026-08-04 21:24:25.087 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-04 21:24:25.091 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: TAIEX
+2026-08-04 21:24:51.952 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3017
+[RUN] update_prediction_result 啟動
+[OK] SQLite 沒有待驗證的預測
+INFO:     127.0.0.1:64677 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64677 - "GET /static/style.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64678 - "GET /static/css/components.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64677 - "GET /static/css/base.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64698 - "GET /static/css/predict.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64697 - "GET /static/css/home.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64699 - "GET /static/css/history.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64700 - "GET /static/css/ranking.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64677 - "GET /static/css/evaluation.css HTTP/1.1" 200 OK
 ^C
