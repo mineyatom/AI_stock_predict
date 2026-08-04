@@ -225,11 +225,25 @@ def run_daily_prediction():
 
 def recover_missing_prediction():
 
+    now = datetime.now()
+
+    # 尚未到每日預測時間，不補跑
+    if now.hour < 21:
+
+        print(
+            "[CHECK] 尚未到預測時間，不補跑"
+        )
+
+        return
+
+
     target_date = get_next_trade_date()
+
 
     print(
         f"[CHECK] 檢查是否需要補預測：{target_date}"
     )
+
 
     if prediction_exists_for_date(target_date):
 
@@ -239,18 +253,23 @@ def recover_missing_prediction():
 
         return
 
+
     print(
         f"[WARN] {target_date} 尚無預測紀錄，開始補跑"
     )
 
+
     try:
+
         run_daily_prediction()
+
 
     except ValueError as e:
 
         print(
             f"[WARN] 補預測略過：{e}"
         )
+
 
     except Exception as e:
 
