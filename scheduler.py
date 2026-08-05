@@ -26,7 +26,9 @@ from market_calendar import get_next_trade_day
 
 
 
-scheduler = BackgroundScheduler()
+scheduler = BackgroundScheduler(
+    timezone=timezone("Asia/Taipei")
+)
 
 
 
