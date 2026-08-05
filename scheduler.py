@@ -17,7 +17,7 @@ from log_manager import (
     prediction_exists_for_date,
     shift_untraded_prediction_dates,
 )
-
+from pytz import timezone
 
 from datetime import datetime, timedelta
 
