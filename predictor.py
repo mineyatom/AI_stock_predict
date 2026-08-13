@@ -1,9 +1,8 @@
-import contextlib
-import io
+
 
 import pandas as pd
 import ta
-import yfinance as yf
+
 
 import shap
 
@@ -12,52 +11,33 @@ import os
 from FinMind.data import DataLoader
 from xgboost import XGBClassifier
 
+# ===== 市場資料快取 =====
+MARKET_DATA_CACHE = {}
+
 
 # ===== 自動判斷股票代號 =====
+# ===== 股票代號處理 =====
 def resolve_stock_code(stock_code):
 
-    stock_code = stock_code.strip()
+    # 確保股票代號一定是字串
+    stock_code = str(stock_code).strip()
 
-    if "." not in stock_code:
+    # 如果傳進來的是 2330.TW / 6488.TWO
+    # 去除 Yahoo Finance 使用的市場後綴
+    if "." in stock_code:
+        stock_code = stock_code.split(".", 1)[0]
 
-        original_code = stock_code
-
-        tw_code = original_code + ".TW"
-        two_code = original_code + ".TWO"
-
-        with contextlib.redirect_stdout(io.StringIO()):
-            with contextlib.redirect_stderr(io.StringIO()):
-
-                tw_data = yf.download(
-                    tw_code,
-                    period="5d",
-                    progress=False
-                )
-
-        if not tw_data.empty:
-            return tw_code
-
-        with contextlib.redirect_stdout(io.StringIO()):
-            with contextlib.redirect_stderr(io.StringIO()):
-
-                two_data = yf.download(
-                    two_code,
-                    period="5d",
-                    progress=False
-                )
-
-        if not two_data.empty:
-            return two_code
-
-        raise ValueError(
-            f"找不到股票代號：{original_code}"
-        )
-
+    # 台股主要資料來源已改為 FinMind
+    # 不再透過 Yahoo Finance 測試 .TW / .TWO
     return stock_code
-
 
 # ===== 股票名稱 =====
 def get_stock_name(stock_code):
+
+    stock_code = str(stock_code).strip()
+
+    # FinMind 使用純股票代號
+    clean_stock_code = stock_code.split(".", 1)[0]
 
     csv_path = os.path.join(
         "data",
@@ -68,50 +48,53 @@ def get_stock_name(stock_code):
 
         stock_name_df = pd.read_csv(
             csv_path,
-            encoding="utf-8-sig"
+            encoding="utf-8-sig",
+            dtype={"stock_code": str}
+        )
+
+        stock_name_df["stock_code"] = (
+            stock_name_df["stock_code"]
+            .astype(str)
+            .str.strip()
+        )
+
+        # CSV 是 2330.TW / 6488.TWO
+        # 比對時統一轉成純代號 2330 / 6488
+        stock_name_df["clean_stock_code"] = (
+            stock_name_df["stock_code"]
+            .str.split(".")
+            .str[0]
         )
 
         matched = stock_name_df[
-            stock_name_df["stock_code"] == stock_code
+            stock_name_df["clean_stock_code"]
+            == clean_stock_code
         ]
 
         if not matched.empty:
             return matched.iloc[0]["stock_name"]
 
-    ticker = yf.Ticker(stock_code)
-
-    try:
-        info = ticker.info
-
-        stock_name = (
-            info.get("longName")
-            or info.get("shortName")
-            or stock_code
-        )
-
-    except:
-        stock_name = stock_code
-
-    return stock_name
-
-
+    # 找不到名稱才回傳股票代號
+    return clean_stock_code
 # ===== 最新收盤價 =====
 def get_latest_close(stock_code, df):
 
-    ticker = yf.Ticker(stock_code)
-
-    try:
-        latest_close = ticker.fast_info["last_price"]
-
-        if latest_close is None or latest_close == 0:
-            raise ValueError("fast_info 無效")
-
-    except:
-        latest_close = float(
-            df["Close"]
-            .dropna()
-            .iloc[-1]
+    close_series = (
+        pd.to_numeric(
+            df["Close"],
+            errors="coerce"
         )
+        .dropna()
+    )
+
+    if close_series.empty:
+        raise ValueError(
+            f"找不到 {stock_code} 的有效收盤價"
+        )
+
+    latest_close = float(
+        close_series.iloc[-1]
+    )
 
     return latest_close
 
@@ -195,41 +178,63 @@ def build_feature_data(stock_code):
         if col not in finmind_df.columns:
             finmind_df[col] = 0
 
-    # ===== 台股加權指數 =====
-    twii = yf.download(
-        "^TWII",
-        start="2024-01-01",
-        auto_adjust=False,
-        progress=False
-    )
+    # ===== 台股加權指數（FinMind + Cache） =====
+    if "TAIEX" not in MARKET_DATA_CACHE:
 
-    if isinstance(twii.columns, pd.MultiIndex):
-        twii.columns = twii.columns.get_level_values(0)
+        print("[CACHE MISS] 下載 TAIEX")
 
-    twii = twii.reset_index()
+        twii = api.taiwan_stock_daily(
+            stock_id="TAIEX",
+            start_date="2024-01-01"
+        )
 
-    twii = twii.rename(columns={
-        "Date": "date"
-    })
+        MARKET_DATA_CACHE["TAIEX"] = twii.copy()
 
+    else:
+
+        print("[CACHE HIT] 使用 TAIEX 快取")
+
+        twii = MARKET_DATA_CACHE["TAIEX"].copy()
+
+    if twii.empty:
+        raise ValueError(
+            "FinMind 找不到台股加權指數 TAIEX 資料"
+        )
+
+    # ===== 日期格式統一 =====
     twii["date"] = (
         pd.to_datetime(twii["date"])
         .dt.strftime("%Y-%m-%d")
     )
 
-    twii["Market_Return"] = twii["Close"].pct_change()
+    # ===== FinMind close 轉成模型使用的 Close =====
+    twii["Close"] = pd.to_numeric(
+        twii["close"],
+        errors="coerce"
+    )
 
-    twii["Market_RSI"] = ta.momentum.RSIIndicator(
-        twii["Close"],
-        14
-    ).rsi()
+    # ===== 大盤報酬率 =====
+    twii["Market_Return"] = (
+        twii["Close"]
+        .pct_change()
+    )
 
+    # ===== 大盤 RSI =====
+    twii["Market_RSI"] = (
+        ta.momentum.RSIIndicator(
+            twii["Close"],
+            14
+        ).rsi()
+    )
+
+    # ===== 大盤波動率 =====
     twii["Market_Volatility"] = (
         twii["Market_Return"]
         .rolling(10)
         .std()
     )
 
+    # ===== 保留模型需要的大盤特徵 =====
     market_df = twii[
         [
             "date",
@@ -237,8 +242,9 @@ def build_feature_data(stock_code):
             "Market_RSI",
             "Market_Volatility"
         ]
-    ]
+    ].copy()
 
+    # ===== 合併台股大盤特徵 =====
     finmind_df = pd.merge(
         finmind_df,
         market_df,
@@ -247,8 +253,8 @@ def build_feature_data(stock_code):
     )
 
     finmind_df = finmind_df.fillna(0)
-
-    # ===== 美股領先指標 =====
+   
+    # ===== 美股領先指標（FinMind + Cache） =====
     us_symbols = {
         "NVDA": "NVDA",
         "QQQ": "QQQ",
@@ -257,49 +263,93 @@ def build_feature_data(stock_code):
 
     for name, symbol in us_symbols.items():
 
-        us_df = yf.download(
-            symbol,
-            start="2024-01-01",
-            auto_adjust=False,
-            progress=False
-        )
+        try:
+            # ===== 檢查 Cache =====
+            if symbol not in MARKET_DATA_CACHE:
 
-        if isinstance(us_df.columns, pd.MultiIndex):
-            us_df.columns = us_df.columns.get_level_values(0)
+                print(f"[CACHE MISS] 下載 {symbol}")
 
-        us_df = us_df.reset_index()
+                us_df = api.get_data(
+                    dataset="USStockPrice",
+                    data_id=symbol,
+                    start_date="2024-01-01"
+                )
 
-        us_df = us_df.rename(columns={
-            "Date": "date"
-        })
+                # 存入 Cache
+                MARKET_DATA_CACHE[symbol] = us_df.copy()
 
-        us_df["date"] = (
-            pd.to_datetime(us_df["date"])
-            .dt.strftime("%Y-%m-%d")
-        )
+            else:
 
-        us_df[f"{name}_Return"] = (
-            us_df["Close"]
-            .pct_change()
-            .shift(1)
-        )
+                print(f"[CACHE HIT] 使用 {symbol} 快取")
 
-        us_feature_df = us_df[
-            [
-                "date",
-                f"{name}_Return"
-            ]
-        ]
+                us_df = MARKET_DATA_CACHE[symbol].copy()
 
-        finmind_df = pd.merge(
-            finmind_df,
-            us_feature_df,
-            on="date",
-            how="left"
-        )
+       
+            if us_df.empty:
+                print(
+                    f"[WARN] FinMind 找不到美股資料：{symbol}"
+                )
+                finmind_df[f"{name}_Return"] = 0
+                continue
 
-    finmind_df = finmind_df.fillna(0)
+            # ===== 日期格式統一 =====
+            us_df["date"] = (
+                pd.to_datetime(us_df["date"])
+                .dt.strftime("%Y-%m-%d")
+            )
 
+            # ===== 收盤價轉數值 =====
+            us_df["Close"] = pd.to_numeric(
+                us_df["Close"],
+                errors="coerce"
+            )
+
+            # ===== 計算每日報酬率 =====
+            us_df[f"{name}_Return"] = (
+                us_df["Close"]
+                .pct_change()
+            )
+
+            # ===== 保留需要欄位 =====
+            us_feature_df = us_df[
+                [
+                    "date",
+                    f"{name}_Return"
+                ]
+            ].copy()
+
+            # ===== 合併進台股資料 =====
+            finmind_df = pd.merge(
+                finmind_df,
+                us_feature_df,
+                on="date",
+                how="left"
+            )
+
+        except Exception as e:
+
+            print(
+                f"[WARN] FinMind 美股資料取得失敗："
+                f"{symbol}，原因：{e}"
+            )
+
+            finmind_df[f"{name}_Return"] = 0
+
+    # ===== 美股休市日資料處理 =====
+    us_feature_columns = [
+        "NVDA_Return",
+        "QQQ_Return",
+        "SOX_Return"
+    ]
+
+    for col in us_feature_columns:
+        if col not in finmind_df.columns:
+            finmind_df[col] = 0
+
+    finmind_df[us_feature_columns] = (
+        finmind_df[us_feature_columns]
+        .fillna(0)
+    )
     df = finmind_df.copy()
 
     df = df[

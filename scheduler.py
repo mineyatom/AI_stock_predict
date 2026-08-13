@@ -1,15 +1,8 @@
-from apscheduler.schedulers.background import (
-    BackgroundScheduler
-)
-
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from predictor import predict_stock
 
-
-from ollama_analyzer import (
-    analyze_prediction_with_ollama
-)
-
+from ollama_analyzer import analyze_prediction_with_ollama
 
 from log_manager import (
     save_prediction_log,
@@ -17,19 +10,20 @@ from log_manager import (
     prediction_exists_for_date,
     shift_untraded_prediction_dates,
 )
+
 from pytz import timezone
-
 from datetime import datetime, timedelta
-
 
 from market_calendar import get_next_trade_day
 
 
+# ==========================
+# Scheduler
+# ==========================
 
 scheduler = BackgroundScheduler(
     timezone=timezone("Asia/Taipei")
 )
-
 
 
 # ==========================
@@ -58,9 +52,7 @@ HOT_STOCKS = [
     "0050",
     "2345",
     "2303",
-    
 ]
-
 
 
 # ==========================
@@ -78,14 +70,12 @@ def get_next_trade_date(
     if now is None:
         now = datetime.now()
 
-
     market_close_time = now.replace(
         hour=13,
         minute=30,
         second=0,
         microsecond=0
     )
-
 
     if now >= market_close_time:
 
@@ -97,34 +87,59 @@ def get_next_trade_date(
 
         start_date = now
 
-
     next_trade_day = get_next_trade_day(
         start_date
     )
-
 
     return next_trade_day.strftime(
         "%Y-%m-%d"
     )
 
 
-
 # ==========================
 # 每日自動預測
 # ==========================
 
-def run_daily_prediction():
+def run_daily_prediction(
+    target_date=None
+):
+
+    """
+    執行每日股票預測。
+
+    target_date:
+        None
+            → 正常排程模式，自動取得下一交易日
+
+        "2026-08-14"
+            → 手動補跑模式，強制將預測日期寫成指定日期
+    """
+
+    # ==========================
+    # 決定本輪預測日期
+    # ==========================
+
+    if target_date is None:
+
+        target_date = get_next_trade_date()
 
     print(
         f"開始自動預測："
         f"{datetime.now()}"
     )
 
+    print(
+        f"[INFO] 本輪預測日期："
+        f"{target_date}"
+    )
+
+    # ==========================
+    # 逐檔預測
+    # ==========================
 
     for stock_id in HOT_STOCKS:
 
         try:
-
 
             # ==========================
             # 模型預測
@@ -134,9 +149,8 @@ def run_daily_prediction():
                 stock_id
             )
 
-
             # ==========================
-            # Gemini AI 分析
+            # AI 分析
             # ==========================
 
             ai_analysis = (
@@ -145,13 +159,14 @@ def run_daily_prediction():
                 )
             )
 
+            # ==========================
+            # 預測價格區間
+            # ==========================
 
             lower_price, upper_price = (
                 result["price_range"]
                 .split(" ~ ")
             )
-
-
 
             # ==========================
             # 寫入 SQLite
@@ -159,9 +174,8 @@ def run_daily_prediction():
 
             save_prediction_log(
 
-                predict_date=(
-                    get_next_trade_date()
-                ),
+                # ★ 使用本輪已決定的日期
+                predict_date=target_date,
 
                 stock_code=result[
                     "stock_id"
@@ -199,13 +213,12 @@ def run_daily_prediction():
 
             )
 
-
             print(
                 f"{stock_id} "
                 f"預測完成，"
+                f"預測日期：{target_date}，"
                 f"AI摘要已保存"
             )
-
 
         except Exception as e:
 
@@ -214,11 +227,10 @@ def run_daily_prediction():
                 f"預測失敗：{e}"
             )
 
-
     print(
-        "本輪自動預測完成"
+        f"本輪自動預測完成，"
+        f"預測日期：{target_date}"
     )
-
 
 
 # ==========================
@@ -229,7 +241,10 @@ def recover_missing_prediction():
 
     now = datetime.now()
 
-    # 尚未到每日預測時間，不補跑
+    # ==========================
+    # 尚未到每日預測時間
+    # ==========================
+
     if now.hour < 21:
 
         print(
@@ -238,33 +253,47 @@ def recover_missing_prediction():
 
         return
 
+    # ==========================
+    # 取得應預測的下一交易日
+    # ==========================
 
     target_date = get_next_trade_date()
 
-
     print(
-        f"[CHECK] 檢查是否需要補預測：{target_date}"
+        f"[CHECK] 檢查是否需要補預測："
+        f"{target_date}"
     )
 
+    # ==========================
+    # 已存在預測
+    # ==========================
 
-    if prediction_exists_for_date(target_date):
+    if prediction_exists_for_date(
+        target_date
+    ):
 
         print(
-            f"[OK] {target_date} 已有預測紀錄，不需補跑"
+            f"[OK] {target_date} "
+            f"已有預測紀錄，不需補跑"
         )
 
         return
 
+    # ==========================
+    # 找不到 → 補跑
+    # ==========================
 
     print(
-        f"[WARN] {target_date} 尚無預測紀錄，開始補跑"
+        f"[WARN] {target_date} "
+        f"尚無預測紀錄，開始補跑"
     )
-
 
     try:
 
-        run_daily_prediction()
-
+        # ★ 把已經決定好的日期傳進去
+        run_daily_prediction(
+            target_date=target_date
+        )
 
     except ValueError as e:
 
@@ -272,13 +301,11 @@ def recover_missing_prediction():
             f"[WARN] 補預測略過：{e}"
         )
 
-
     except Exception as e:
 
         print(
             f"[ERROR] 補預測失敗：{e}"
         )
-
 
 
 # ==========================
@@ -292,23 +319,26 @@ def run_daily_validation():
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
+    # ==========================
+    # 處理休市日期
+    # ==========================
 
     shift_untraded_prediction_dates()
-
 
     print(
         f"[RUN] 開始每日預測驗證："
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
+    # ==========================
+    # 更新實際結果
+    # ==========================
 
     update_prediction_result()
-
 
     print(
         "[OK] 每日驗證流程完成"
     )
-
 
 
 # ==========================
@@ -317,20 +347,26 @@ def run_daily_validation():
 
 def start_scheduler():
 
+    # ==========================
+    # 啟動時先執行驗證
+    # ==========================
 
     run_daily_validation()
 
-
+    # ==========================
+    # 啟動時檢查是否漏預測
+    # ==========================
 
     print(
         f"[CHECK] 啟動補預測檢查："
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
-
     recover_missing_prediction()
 
-
+    # ==========================
+    # 每日 15:00 驗證
+    # ==========================
 
     scheduler.add_job(
 
@@ -348,7 +384,9 @@ def start_scheduler():
 
     )
 
-
+    # ==========================
+    # 每日 21:00 預測下一交易日
+    # ==========================
 
     scheduler.add_job(
 
@@ -366,17 +404,16 @@ def start_scheduler():
 
     )
 
-
+    # ==========================
+    # 啟動 Scheduler
+    # ==========================
 
     scheduler.start()
-
-
 
     print(
         f"[INFO] 排程已建立："
         f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
-
 
     print(
         f"[OK] Scheduler 已啟動："
