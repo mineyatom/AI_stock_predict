@@ -1,6 +1,6 @@
 ﻿import os
 import pandas as pd
-import yfinance as yf
+from FinMind.data import DataLoader
 
 from datetime import  timedelta
 
@@ -220,135 +220,6 @@ def get_stock_accuracy_stats():
 # ==========================
 def shift_untraded_prediction_dates():
     """
-    將因颱風假或臨時休市而沒有交易的預測日期，
-    自動順延到下一個預期交易日。
-    """
-
-    print("[RUN] 開始檢查休市預測日期")
-
-    if not os.path.exists(LOG_FILE):
-        print("[ERROR] 找不到 prediction_log.csv")
-        return
-
-    df_log = pd.read_csv(
-        LOG_FILE,
-        encoding="utf-8-sig",
-        dtype={
-            "實際漲跌": "object",
-            "是否預測正確": "object"
-        }
-    )
-
-    if df_log.empty:
-        print("[ERROR] prediction_log.csv 沒有資料")
-        return
-
-    today = pd.Timestamp.today().normalize()
-    updated = False
-
-    for index, row in df_log.iterrows():
-
-        # 已驗證完成，不處理
-        if (
-            pd.notna(row["是否預測正確"])
-            and str(row["是否預測正確"]).strip()
-            not in ("", "nan")
-        ):
-            continue
-
-        predict_date = pd.to_datetime(
-            row["預測日期"],
-            errors="coerce"
-        )
-
-        if pd.isna(predict_date):
-            continue
-
-        predict_date = predict_date.normalize()
-
-        # 未來日期暫時不處理
-        if predict_date > today:
-            continue
-
-        # ==========================
-        # 尚未到市場確認時間，不可判定休市
-        # ==========================
-        if not can_verify_market_data(
-            predict_date.to_pydatetime()
-        ):
-            print(
-                f"[RUN] 尚未到市場確認時間，保留原日期："
-                f"{predict_date.date()}"
-            )
-            continue
-
-        market_status = get_market_data_status(
-            predict_date.strftime("%Y-%m-%d")
-        )
-
-        # FinMind 查詢失敗，不修改日期
-        if market_status is None:
-            print(
-                f"[WARN] 無法確認市場狀態，保留原日期："
-                f"{predict_date.date()}"
-            )
-            continue
-
-        # 有交易資料，不需順延
-        if market_status is True:
-            continue
-
-        # 沒有交易資料，尋找下一個預期交易日
-        next_date = get_next_trade_day(
-            predict_date.to_pydatetime()
-            + timedelta(days=1)
-        )
-
-        next_date_str = next_date.strftime("%Y-%m-%d")
-        old_date_str = predict_date.strftime("%Y-%m-%d")
-
-
-        # ==========================
-        # 同步更新 SQLite
-        # ==========================
-        sqlite_updated = update_prediction_date(
-            old_predict_date=old_date_str,
-            new_predict_date=next_date_str,
-            stock_code=str(row["股票代號"]),
-        )
-
-
-        # ==========================
-        #更新 CSV
-        # ==========================
-        df_log.loc[
-            index,
-            "預測日期"
-        ] = next_date_str
-
-        updated = True
-
-        print(
-            f"[INFO] 預測日期已順延："
-            f"{row['股票代號']} "
-            f"{predict_date.date()} → {next_date_str}"
-        )
-
-    if updated:
-        df_log.to_csv(
-            LOG_FILE,
-            index=False,
-            encoding="utf-8-sig"
-        )
-
-        print("[OK] 休市預測日期順延完成")
-
-    else:
-        print("[OK] 沒有需要順延的預測日期")
-
-
-def shift_untraded_prediction_dates():
-    """
     檢查 SQLite 中尚未驗證的預測。
 
     若預測日期遇到颱風假、臨時休市或無成交資料，
@@ -504,6 +375,71 @@ def shift_untraded_prediction_dates():
     print(f"失敗：{failed_count}")        
 
 
+
+def _get_finmind_actual_close(
+    stock_code: str,
+    predict_date: pd.Timestamp,
+) -> float | None:
+    """
+    使用 FinMind TaiwanStockPrice 取得指定台股在預測日的實際收盤價。
+    """
+
+    normalized_code = (
+        str(stock_code)
+        .strip()
+        .replace(".TW", "")
+        .replace(".TWO", "")
+    )
+
+    target_date = pd.to_datetime(
+        predict_date
+    ).strftime("%Y-%m-%d")
+
+    api = DataLoader()
+
+    df = api.taiwan_stock_daily(
+        stock_id=normalized_code,
+        start_date=target_date,
+        end_date=(
+            pd.to_datetime(target_date)
+            + pd.Timedelta(days=1)
+        ).strftime("%Y-%m-%d"),
+    )
+
+    if df is None or df.empty:
+        return None
+
+    if "date" not in df.columns or "close" not in df.columns:
+        return None
+
+    df = df.copy()
+    df["date"] = pd.to_datetime(
+        df["date"],
+        errors="coerce",
+    )
+
+    target_ts = pd.to_datetime(
+        target_date
+    ).normalize()
+
+    matched = df[
+        df["date"].dt.normalize() == target_ts
+    ]
+
+    if matched.empty:
+        return None
+
+    close_value = pd.to_numeric(
+        matched.iloc[-1]["close"],
+        errors="coerce",
+    )
+
+    if pd.isna(close_value):
+        return None
+
+    return float(close_value)
+
+
 def update_prediction_result():
     """
     從 SQLite 讀取尚未驗證的預測，
@@ -607,61 +543,23 @@ def update_prediction_result():
             continue
 
         # ==========================
-        # Yahoo Finance 股票代號
+        # FinMind 取得實際收盤價
         # ==========================
 
-        yahoo_stock_code = stock_code
-
-        if (
-            ".TW" not in yahoo_stock_code
-            and ".TWO" not in yahoo_stock_code
-        ):
-            yahoo_stock_code = (
-                yahoo_stock_code
-                + ".TW"
-            )
-
         try:
-            ticker = yf.Ticker(
-                yahoo_stock_code
+            actual_close = _get_finmind_actual_close(
+                stock_code=stock_code,
+                predict_date=predict_date,
             )
 
-            history = ticker.history(
-                start=predict_date.strftime(
-                    "%Y-%m-%d"
-                ),
-                end=(
-                    predict_date
-                    + pd.Timedelta(days=7)
-                ).strftime(
-                    "%Y-%m-%d"
-                )
-            )
-
-            if history.empty:
+            if actual_close is None:
                 print(
-                    f"[WARN] Yahoo 無交易資料："
-                    f"{yahoo_stock_code}"
+                    f"[WARN] FinMind 無實際收盤資料："
+                    f"{stock_code} "
+                    f"{predict_date.date()}"
                 )
                 failed_count += 1
                 continue
-
-            close_series = (
-                history["Close"]
-                .dropna()
-            )
-
-            if close_series.empty:
-                print(
-                    f"[WARN] Yahoo 收盤價為空："
-                    f"{yahoo_stock_code}"
-                )
-                failed_count += 1
-                continue
-
-            actual_close = float(
-                close_series.iloc[0]
-            )
 
             reference_close = float(
                 prediction_data["predict_close"]
@@ -956,4 +854,3 @@ def prediction_exists_for_date(
     return prediction_exists_for_date_from_db(
         predict_date
     )
-       

@@ -632,4 +632,508 @@ INFO:     127.0.0.1:64697 - "GET /static/css/home.css HTTP/1.1" 200 OK
 INFO:     127.0.0.1:64699 - "GET /static/css/history.css HTTP/1.1" 200 OK
 INFO:     127.0.0.1:64700 - "GET /static/css/ranking.css HTTP/1.1" 200 OK
 INFO:     127.0.0.1:64677 - "GET /static/css/evaluation.css HTTP/1.1" 200 OK
+^C2026-08-05 17:45:34.086 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+INFO:     Started server process [12464]
+INFO:     Waiting for application startup.
+2026-08-05 17:45:39.494 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:39.494 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:39.871 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:39.871 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:40.238 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:40.239 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:40.578 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:40.578 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:40.932 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:40.932 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:41.338 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:41.338 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:41.686 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:41.686 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:42.051 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:42.051 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:42.401 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:42.401 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:42.777 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:42.777 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:43.157 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:43.157 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:43.678 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:43.685 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:44.203 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:44.203 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:44.618 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:44.619 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:44.982 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:44.983 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:45.354 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:45.354 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:45.706 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:45.706 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:46.071 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:46.071 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:46.447 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:46.447 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:46.801 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:46.802 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:47.175 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:47.175 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:47.557 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:47.557 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:49.183 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:49.183 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:49.797 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:49.797 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:50.448 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:50.448 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:51.155 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:51.155 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:51.847 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:51.847 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:52.496 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:52.496 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:53.156 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:53.156 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:53.809 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:53.810 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:54.501 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:54.501 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:55.095 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:55.095 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:55.779 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:55.779 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:56.431 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:56.431 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:57.122 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:57.122 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:57.729 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:57.729 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:58.378 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:58.378 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:59.085 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:59.085 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:45:59.686 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:45:59.686 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:46:00.268 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:46:00.268 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:46:00.916 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:46:00.916 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 17:46:01.543 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 17:46:01.543 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-08-05 21:00:01.441 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:00:01.442 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-05 21:00:01.818 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2330
+2026-08-05 21:01:03.992 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:01:03.992 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2454
+2026-08-05 21:01:04.437 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2454
+2026-08-05 21:02:39.613 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:02:39.613 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2317
+2026-08-05 21:02:39.945 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2317
+2026-08-05 21:04:15.171 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:04:15.171 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3661
+2026-08-05 21:04:15.675 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 3661
+2026-08-05 21:05:13.225 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:05:13.225 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 6669
+2026-08-05 21:05:13.587 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 6669
+2026-08-05 21:05:39.753 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:05:39.753 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2382
+2026-08-05 21:05:40.119 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2382
+2026-08-05 21:07:13.569 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:07:13.569 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3231
+2026-08-05 21:07:13.970 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 3231
+[INFO] 開始每日休市檢查：2026-08-05 17:45:39
+[CHECK] 開始檢查 SQLite 休市預測日期
+
+==================================================
+SQLite 休市日期檢查完成
+==================================================
+更新：0
+略過：21
+失敗：0
+[RUN] 開始每日預測驗證：2026-08-05 17:45:47
+[RUN] update_prediction_result 啟動
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2330.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2454.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2317.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：3661.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：6669.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2382.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：3231.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2356.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：3017.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：3443.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2308.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：3711.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：3037.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2379.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2408.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2337.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2357.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：1303.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：0050.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2345.TW 2026-08-05
+[ERROR] SQLite 驗證更新異常：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[WARN] SQLite 驗證更新失敗：2303.TW 2026-08-05
+
+==================================================
+SQLite 預測驗證完成
+==================================================
+成功：0
+略過：0
+失敗：21
+[OK] 每日驗證流程完成
+[CHECK] 啟動補預測檢查：2026-08-05 17:46:02
+[CHECK] 尚未到預測時間，不補跑
+[INFO] 排程已建立：2026-08-05 17:46:02
+[OK] Scheduler 已啟動：2026-08-05 17:46:02
+開始自動預測：2026-08-05 21:00:00.031053
+
+===== SHAP 解讀 =====
+正向因素： ['避險自營商', '當日報酬率', '自營商買賣超']
+負向因素： ['前二日報酬率', '前一日報酬率', '大盤報酬率']
+[ERROR] SQLite 儲存失敗：2026-08-06 2330.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：2330.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+2330 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['大盤報酬率', 'KD-K值', '前一日報酬率']
+負向因素： ['自營商買賣超', '當日報酬率', 'NVIDIA漲跌幅']
+[WARN] OpenAI API 錯誤： Request timed out.
+[ERROR] SQLite 儲存失敗：2026-08-06 2454.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：2454.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+2454 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['外資買賣超', '大盤報酬率', '大盤波動率']
+負向因素： ['前三日報酬率', '投信買賣超', '當日報酬率']
+[WARN] OpenAI API 錯誤： Request timed out.
+[ERROR] SQLite 儲存失敗：2026-08-06 2317.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：2317.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+2317 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['大盤波動率', '外資買賣超', '避險自營商']
+負向因素： ['KD-K值', '大盤報酬率', '當日報酬率']
+[ERROR] SQLite 儲存失敗：2026-08-06 3661.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：3661.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+3661 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['成交量均線', '當日報酬率', '大盤報酬率']
+負向因素： ['KD-D值', '前三日報酬率', '外資買賣超']
+[ERROR] SQLite 儲存失敗：2026-08-06 6669.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：6669.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+6669 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['前三日報酬率', '自營商買賣超', 'KD-K值']
+負向因素： ['前一日報酬率', '大盤波動率', '成交量均線']
+[WARN] OpenAI API 錯誤： Request timed out.
+[ERROR] SQLite 儲存失敗：2026-08-06 2382.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：2382.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+2382 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['前三日報酬率', '大盤報酬率', '避險自營商']
+負向因素： ['成交量均線', '前二日報酬率', '自營商買賣超']
+[WARN] OpenAI API 錯誤： Request timed out.
+[ERROR] SQLite 儲存失敗：2026-08-06 3231.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence2026-08-05 21:08:47.596 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:08:47.596 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2356
+2026-08-05 21:08:47.954 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2356
+2026-08-05 21:10:28.021 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:10:28.021 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3017
+2026-08-05 21:10:28.386 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 3017
+2026-08-05 21:12:02.059 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:12:02.059 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3443
+2026-08-05 21:12:02.422 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 3443
+2026-08-05 21:13:36.111 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:13:36.111 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2308
+2026-08-05 21:13:36.486 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2308
+2026-08-05 21:15:08.712 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:15:08.712 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3711
+2026-08-05 21:15:09.187 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 3711
+2026-08-05 21:16:34.064 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:16:34.064 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3037
+2026-08-05 21:16:34.438 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 3037
+2026-08-05 21:18:07.793 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:18:07.793 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2379
+2026-08-05 21:18:08.134 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2379
+2026-08-05 21:18:39.482 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:18:39.482 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2408
+2026-08-05 21:18:39.816 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2408
+2026-08-05 21:19:04.993 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:19:04.993 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2337
+2026-08-05 21:19:05.310 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2337
+2026-08-05 21:20:38.445 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:20:38.445 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2357
+2026-08-05 21:20:38.813 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2357
+2026-08-05 21:22:10.782 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:22:10.782 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 1303
+2026-08-05 21:22:11.124 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 1303
+2026-08-05 21:23:44.879 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:23:44.880 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 0050
+2026-08-05 21:23:45.232 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 0050
+2026-08-05 21:25:18.920 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:25:18.920 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2345
+2026-08-05 21:25:19.290 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2345
+2026-08-05 21:26:48.443 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-05 21:26:48.444 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2303
+2026-08-05 21:26:48.785 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2303
+
+[ERROR] SQLite 預測紀錄寫入失敗：3231.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+3231 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['前一日報酬率', '大盤波動率', 'QQQ漲跌幅']
+負向因素： ['前三日報酬率', '前二日報酬率', '大盤報酬率']
+[WARN] OpenAI API 錯誤： Request timed out.
+[ERROR] SQLite 儲存失敗：2026-08-06 2356.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：2356.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+2356 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['成交量均線', '前一日報酬率', 'NVIDIA漲跌幅']
+負向因素： ['KD-D值', '前二日報酬率', '大盤報酬率']
+[WARN] OpenAI API 錯誤： Request timed out.
+[ERROR] SQLite 儲存失敗：2026-08-06 3017.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：3017.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+3017 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['大盤報酬率', '大盤波動率', '避險自營商']
+負向因素： ['當日報酬率', '前二日報酬率', '自營商買賣超']
+[WARN] OpenAI API 錯誤： Request timed out.
+[ERROR] SQLite 儲存失敗：2026-08-06 3443.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：3443.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+3443 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['前三日報酬率', '自營商買賣超', '成交量均線']
+負向因素： ['大盤波動率', '前二日報酬率', 'KD-D值']
+[ERROR] SQLite 儲存失敗：2026-08-06 2308.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：2308.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+2308 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['大盤波動率', '自營商買賣超', '外資買賣超']
+負向因素： ['前二日報酬率', '前三日報酬率', 'KD-K值']
+[ERROR] SQLite 儲存失敗：2026-08-06 3711.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：3711.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+3711 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['大盤報酬率', '前二日報酬率', 'KD-K值']
+負向因素： ['前三日報酬率', '避險自營商', '當日報酬率']
+[WARN] OpenAI API 錯誤： Request timed out.
+[ERROR] SQLite 儲存失敗：2026-08-06 3037.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：3037.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+3037 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['大盤波動率', '前二日報酬率', '前一日報酬率']
+負向因素： ['當日報酬率', '避險自營商', '前三日報酬率']
+[ERROR] SQLite 儲存失敗：2026-08-06 2379.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：2379.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+2379 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['大盤波動率', '前一日報酬率', '大盤報酬率']
+負向因素： ['投信買賣超', '成交量均線', '前三日報酬率']
+[ERROR] SQLite 儲存失敗：2026-08-06 2408.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：2408.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+2408 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['大盤報酬率', '大盤波動率', '前二日報酬率']
+負向因素： ['前一日報酬率', '大盤RSI', '投信買賣超']
+[ERROR] SQLite 儲存失敗：2026-08-06 2337.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：2337.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+2337 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['大盤波動率', 'KD-D值', '大盤RSI']
+負向因素： ['當日報酬率', '前三日報酬率', '成交量均線']
+[ERROR] SQLite 儲存失敗：2026-08-06 2357.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：2357.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+2357 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['投信買賣超', '成交量均線', '大盤波動率']
+負向因素： ['前三日報酬率', 'KD-D值', '大盤RSI']
+[WARN] OpenAI API 錯誤： Request timed out.
+[ERROR] SQLite 儲存失敗：2026-08-06 1303.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：1303.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+1303 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['外資買賣超', '自營商買賣超', '當日報酬率']
+負向因素： ['前三日報酬率', '大盤報酬率', 'NVIDIA漲跌幅']
+[WARN] OpenAI API 錯誤： Request timed out.
+[ERROR] SQLite 儲存失敗：2026-08-06 0050.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：0050.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+0050 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['大盤報酬率', '大盤波動率', '自營商買賣超']
+負向因素： ['前二日報酬率', 'KD-D值', '前三日報酬率']
+[ERROR] SQLite 儲存失敗：2026-08-06 2345.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence
+[ERROR] AI摘要更新失敗：'cp950' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+[ERROR] SQLite 預測紀錄寫入失敗：2345.TW 2026-08-06，原因：'cp950' codec can't encode character '\u2139' in position 0: illegal multibyte sequence
+2345 預測完成，AI摘要已保存
+
+===== SHAP 解讀 =====
+正向因素： ['大盤波動率', '前三日報酬率', '成交量均線']
+負向因素： ['當日報酬率', '前二日報酬率', 'NVIDIA漲跌幅']
+[WARN] OpenAI API 錯誤： Request timed out.
+[ERROR] SQLite 儲存失敗：2026-08-06 2303.TW 原因：'cp950' codec can't encode character '\U0001f4be' in position 0: illegal multibyte sequence2026-08-06 18:43:25.007 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+INFO:     Started server process [2796]
+INFO:     Waiting for application startup.
+2026-08-06 18:43:38.054 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:38.054 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:38.537 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:38.538 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:38.966 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:38.966 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:39.370 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:39.370 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:39.770 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:39.770 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:40.145 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:40.145 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:40.644 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:40.644 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:41.066 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:41.066 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:41.471 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:41.471 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:41.868 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:41.868 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:42.297 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:42.297 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:42.687 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:42.687 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:43.308 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:43.308 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:43.727 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:43.727 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:44.127 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:44.127 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:44.523 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:44.523 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:44.909 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:44.909 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:45.333 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:45.333 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:45.742 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:45.742 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:46.166 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:46.166 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:46.571 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:46.571 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:46.989 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:46.989 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:49.031 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:49.031 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:49.720 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:49.720 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:50.385 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:50.385 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:51.228 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:51.228 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:51.884 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:51.884 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:52.624 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:52.624 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:53.316 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:53.316 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:54.043 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:54.043 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:54.788 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:54.788 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:55.445 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:55.445 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:56.176 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:56.177 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:56.859 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:56.859 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:57.552 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:57.552 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:58.227 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:58.227 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:58.940 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:58.940 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:43:59.671 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:43:59.671 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:44:00.380 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:44:00.381 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:44:01.314 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:44:01.314 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:44:01.963 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:44:01.963 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-06 18:44:02.607 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-06 18:44:02.607 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+Run time of job "run_daily_prediction (trigger: cron[hour='21', minute='0'], next run at: 2026-08-07 21:00:00 CST)" was missed by 0:00:03.336118
+^C2026-08-07 17:30:34.917 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+INFO:     Started server process [18672]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+^C2026-08-09 14:36:29.426 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+INFO:     Started server process [9264]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+Run time of job "run_daily_validation (trigger: cron[hour='15', minute='0'], next run at: 2026-08-10 15:00:00 CST)" was missed by 0:00:03.697215
+2026-08-10 17:44:07.074 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+INFO:     Started server process [19928]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+^C^C2026-08-13 00:40:52.838 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+INFO:     Started server process [13076]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 ^C
