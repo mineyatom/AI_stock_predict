@@ -1,5 +1,3 @@
-import yfinance as yf
-import pandas as pd
 from FinMind.data import DataLoader
 
 from datetime import datetime, timedelta
@@ -73,46 +71,49 @@ def get_market_data():
         )
 
     # ==========================
-    # 美股市場（Yahoo）
+    # 美股市場（FinMind）
     # ==========================
     symbols = {
         "SOX 指數": "^SOX",
         "NVDA": "NVDA",
-        "QQQ": "QQQ"
+        "QQQ": "QQQ",
     }
 
+    # 與台股加權共用同一個 DataLoader
+    # api 已在上方建立；若台股區塊建立失敗，這裡重新建立
+    try:
+        api
+    except NameError:
+        api = DataLoader()
+
+    us_start_date = (
+        datetime.today()
+        - timedelta(days=10)
+    ).strftime("%Y-%m-%d")
+
     for name, symbol in symbols.items():
-
         try:
-
-            df = yf.download(
-                symbol,
-                period="5d",
-                auto_adjust=False,
-                progress=False
+            df = api.us_stock_price(
+                stock_id=symbol,
+                start_date=us_start_date,
             )
 
-            if (
-                df.empty
-                or len(df) < 2
-            ):
+            if df is None or df.empty or len(df) < 2:
+                print(
+                    f"{symbol} FinMind 資料不足"
+                )
                 continue
 
-            if isinstance(
-                df.columns,
-                pd.MultiIndex
-            ):
-                df.columns = (
-                    df.columns
-                    .get_level_values(0)
-                )
-
+            # FinMind USStockPrice 欄位為 Close
             close_data = (
                 df["Close"]
                 .dropna()
             )
 
             if len(close_data) < 2:
+                print(
+                    f"{symbol} FinMind 收盤資料不足"
+                )
                 continue
 
             latest_close = float(
@@ -131,7 +132,7 @@ def get_market_data():
                     )
                     / previous_close
                 ) * 100,
-                2
+                2,
             )
 
             direction = (
@@ -146,19 +147,18 @@ def get_market_data():
                     "price": format(
                         round(
                             latest_close,
-                            2
+                            2,
                         ),
-                        ","
+                        ",",
                     ),
                     "change": change_percent,
-                    "direction": direction
+                    "direction": direction,
                 }
             )
 
         except Exception as e:
-
             print(
-                f"{symbol} 錯誤：{e}"
+                f"{symbol} FinMind 錯誤：{e}"
             )
 
     return market_data
