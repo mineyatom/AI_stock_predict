@@ -254,15 +254,6 @@ def recover_missing_prediction():
     # ==========================
     # 尚未到每日預測時間
     # ==========================
-
-    if now.hour < 21:
-
-        print(
-            "[CHECK] 尚未到預測時間，不補跑"
-        )
-
-        return
-
     # ==========================
     # 取得應預測的下一交易日
     # ==========================
@@ -418,6 +409,17 @@ def start_scheduler():
     # ==========================
     # 啟動 Scheduler
     # ==========================
+
+
+    # 每日 02:30：SQLite 缺漏檢查；缺少下一交易日預測才補跑
+    scheduler.add_job(
+        recover_missing_prediction,
+        "cron",
+        hour=2,
+        minute=30,
+        id="prediction_recovery_0230",
+        replace_existing=True,
+    )
 
     scheduler.start()
 
