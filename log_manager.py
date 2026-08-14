@@ -25,6 +25,9 @@ from prediction_repository import (
 )
 LOG_FILE = "prediction_log.csv"
 
+from pytz import timezone
+
+TAIPEI_TZ = timezone("Asia/Taipei")
 
 def save_prediction_log(
     predict_date,
@@ -236,8 +239,15 @@ def shift_untraded_prediction_dates():
         print("[OK] SQLite 沒有待檢查的預測")
         return
 
-    today = pd.Timestamp.today().normalize()
-    now = pd.Timestamp.now()
+    now_taipei = pd.Timestamp.now(tz=TAIPEI_TZ)
+
+    today = pd.Timestamp(
+    now_taipei.date()
+    )
+
+    now = pd.Timestamp(
+        now_taipei.replace(tzinfo=None)
+    )
 
     market_verify_time = (
         today
@@ -456,8 +466,15 @@ def update_prediction_result():
         print("[OK] SQLite 沒有待驗證的預測")
         return
 
-    today = pd.Timestamp.today().normalize()
-    now = pd.Timestamp.now()
+    now_taipei = pd.Timestamp.now(tz=TAIPEI_TZ)
+
+    today = pd.Timestamp(
+    now_taipei.date()
+)
+
+    now = pd.Timestamp(
+    now_taipei.replace(tzinfo=None)
+    )   
 
     market_verify_time = (
         today
