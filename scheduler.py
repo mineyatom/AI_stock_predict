@@ -310,6 +310,18 @@ def recover_missing_prediction():
         traceback.print_exc()
 
 
+def safe_recover_missing_prediction():
+    """
+    每日 02:30 補漏的安全包裝。
+    Recovery 發生例外時只記錄錯誤，不影響 FastAPI / Zeabur 服務。
+    """
+    try:
+        recover_missing_prediction()
+    except Exception as e:
+        print(f"[ERROR] 02:30 補預測失敗：{e}")
+        traceback.print_exc()
+
+
 # ==========================
 # 每日驗證流程
 # ==========================
@@ -355,16 +367,7 @@ def start_scheduler():
 
     run_daily_validation()
 
-    # ==========================
-    # 啟動時檢查是否漏預測
-    # ==========================
 
-    print(
-        f"[CHECK] 啟動補預測檢查："
-        f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
-    )
-
-    recover_missing_prediction()
 
     # ==========================
     # 每日 15:00 驗證
@@ -413,8 +416,8 @@ def start_scheduler():
 
     # 每日 02:30：SQLite 缺漏檢查；缺少下一交易日預測才補跑
     scheduler.add_job(
-        recover_missing_prediction,
-        "cron",
+        safe_recover_missing_prediction,
+        trigger="cron",
         hour=2,
         minute=30,
         id="prediction_recovery_0230",
