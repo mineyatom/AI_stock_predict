@@ -1136,4 +1136,135 @@ INFO:     Started server process [13076]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+^C2026-08-14 17:40:42.148 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+INFO:     Started server process [2400]
+INFO:     Waiting for application startup.
+2026-08-14 17:41:01.572 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:01.572 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:02.012 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:02.012 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:02.381 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:02.381 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:03.130 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:03.130 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:03.749 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:03.749 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:04.172 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:04.173 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:04.553 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:04.553 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:04.921 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:04.921 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:05.399 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:05.399 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:06.026 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:06.026 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:06.517 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:06.518 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:06.889 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:06.889 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:07.339 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:07.340 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:07.799 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:07.799 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:08.219 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:08.219 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:08.595 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:08.595 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:08.985 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:08.986 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:09.388 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:09.388 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:09.776 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:09.776 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:10.139 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:10.139 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:11.129 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:11.129 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:11.567 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:11.567 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:11.944 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:11.945 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:12.802 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:12.802 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:14.582 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:14.582 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2454
+2026-08-14 17:41:15.595 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:15.595 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:15.965 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:15.966 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2317
+2026-08-14 17:41:16.714 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:16.714 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:17.071 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:17.072 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3661
+2026-08-14 17:41:17.694 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:17.694 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:18.047 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:18.048 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 6669
+2026-08-14 17:41:18.656 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:18.656 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:19.008 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:19.009 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2382
+2026-08-14 17:41:19.585 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:19.585 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:19.949 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:19.949 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3231
+2026-08-14 17:41:20.468 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:20.468 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:20.844 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:20.845 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2356
+2026-08-14 17:41:21.490 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:21.490 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:21.852 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:21.852 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3017
+2026-08-14 17:41:22.745 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:22.745 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:23.118 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:23.119 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3443
+2026-08-14 17:41:23.707 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:23.707 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:24.076 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:24.077 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2308
+2026-08-14 17:41:24.753 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:24.754 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:25.110 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:25.111 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3711
+2026-08-14 17:41:25.718 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:25.718 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:26.066 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:26.067 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 3037
+2026-08-14 17:41:26.656 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:26.656 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:27.066 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:27.066 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2379
+2026-08-14 17:41:27.626 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:27.626 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:27.994 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:27.994 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2408
+2026-08-14 17:41:28.564 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:28.564 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:28.959 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:28.960 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2337
+2026-08-14 17:41:29.527 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:29.527 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:29.881 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:29.881 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2357
+2026-08-14 17:41:30.392 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:30.392 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:30.746 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:30.747 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 1303
+2026-08-14 17:41:31.289 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:31.289 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:31.637 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:31.638 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 0050
+2026-08-14 17:41:32.352 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:32.352 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:32.721 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:32.722 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2345
+2026-08-14 17:41:33.275 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:33.275 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2330
+2026-08-14 17:41:33.639 | INFO     | FinMind.data.finmind_api:login_by_token:85 - Login success
+2026-08-14 17:41:33.640 | INFO     | FinMind.data.finmind_api:get_data:164 - download Dataset.TaiwanStockPrice, data_id: 2303
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 ^C
