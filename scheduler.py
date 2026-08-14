@@ -13,6 +13,7 @@ from log_manager import (
 
 from pytz import timezone
 from datetime import datetime, timedelta
+import traceback
 
 from market_calendar import get_next_trade_day
 
@@ -21,8 +22,16 @@ from market_calendar import get_next_trade_day
 # Scheduler
 # ==========================
 
+TAIPEI_TZ = timezone("Asia/Taipei")
+
+
+def taipei_now() -> datetime:
+    """取得台北時間，並轉為 naive datetime 以相容既有日期比較邏輯。"""
+    return datetime.now(TAIPEI_TZ).replace(tzinfo=None)
+
+
 scheduler = BackgroundScheduler(
-    timezone=timezone("Asia/Taipei")
+    timezone=TAIPEI_TZ
 )
 
 
@@ -68,7 +77,7 @@ def get_next_trade_date(
     """
 
     if now is None:
-        now = datetime.now()
+        now = taipei_now()
 
     market_close_time = now.replace(
         hour=13,
@@ -125,7 +134,7 @@ def run_daily_prediction(
 
     print(
         f"開始自動預測："
-        f"{datetime.now()}"
+        f"{taipei_now()}"
     )
 
     print(
@@ -223,9 +232,10 @@ def run_daily_prediction(
         except Exception as e:
 
             print(
-                f"{stock_id} "
+                f"[ERROR] {stock_id} "
                 f"預測失敗：{e}"
             )
+            traceback.print_exc()
 
     print(
         f"本輪自動預測完成，"
@@ -239,7 +249,7 @@ def run_daily_prediction(
 
 def recover_missing_prediction():
 
-    now = datetime.now()
+    now = taipei_now()
 
     # ==========================
     # 尚未到每日預測時間
@@ -306,6 +316,7 @@ def recover_missing_prediction():
         print(
             f"[ERROR] 補預測失敗：{e}"
         )
+        traceback.print_exc()
 
 
 # ==========================
@@ -316,7 +327,7 @@ def run_daily_validation():
 
     print(
         f"[INFO] 開始每日休市檢查："
-        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
     # ==========================
@@ -327,7 +338,7 @@ def run_daily_validation():
 
     print(
         f"[RUN] 開始每日預測驗證："
-        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
     # ==========================
@@ -359,7 +370,7 @@ def start_scheduler():
 
     print(
         f"[CHECK] 啟動補預測檢查："
-        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
     recover_missing_prediction()
@@ -412,10 +423,10 @@ def start_scheduler():
 
     print(
         f"[INFO] 排程已建立："
-        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
     print(
         f"[OK] Scheduler 已啟動："
-        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
