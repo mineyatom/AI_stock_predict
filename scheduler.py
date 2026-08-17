@@ -418,20 +418,35 @@ def start_scheduler():
     scheduler.add_job(
         safe_recover_missing_prediction,
         trigger="cron",
-        hour=2,
+        hour=0,
         minute=30,
         id="prediction_recovery_0230",
         replace_existing=True,
     )
-#====#
+
     scheduler.start()
 
+print(
+    f"[INFO] 排程已建立："
+    f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
+)
+
+print(
+    f"[OK] Scheduler 已啟動："
+    f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
+)
+
+# ==========================
+# 顯示所有排程的下一次執行時間
+# ==========================
+
+print("=" * 60)
+print("[INFO] Scheduler Jobs")
+
+for job in scheduler.get_jobs():
     print(
-        f"[INFO] 排程已建立："
-        f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
+        f"[JOB] id={job.id} | "
+        f"next_run_time={job.next_run_time}"
     )
 
-    print(
-        f"[OK] Scheduler 已啟動："
-        f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
-    )
+print("=" * 60)
