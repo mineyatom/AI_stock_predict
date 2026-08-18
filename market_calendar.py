@@ -77,8 +77,14 @@ def is_scheduled_trade_day(date_value: datetime | str) -> bool:
 
     date_str = date_obj.strftime("%Y-%m-%d")
 
-    if calendar.is_holiday(date_str):
-        return False
+    try:
+        if calendar.is_holiday(date_str):
+            return False
+    except ValueError as e:
+        print(
+            f"[WARN] taiwan_holidays 無 {date_str} 資料，"
+            f"暫按一般工作日處理：{e}"
+        )
 
     return True
 
