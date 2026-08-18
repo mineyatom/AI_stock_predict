@@ -1,8 +1,25 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-DATABASE_URL = "sqlite:////data/prediction.db"
 
+# ==========================
+# Database Path
+# ==========================
+
+if os.path.exists("/data"):
+    DATABASE_URL = "sqlite:////data/prediction.db"
+else:
+    DATABASE_URL = "sqlite:///./prediction.db"
+
+
+print(f"[DB] 使用資料庫：{DATABASE_URL}")
+
+
+# ==========================
+# SQLAlchemy Engine
+# ==========================
 
 engine = create_engine(
     DATABASE_URL,
@@ -24,7 +41,7 @@ Base = declarative_base()
 
 def get_db():
     """
-    FastAPI Dependency 使用。
+    FastAPI Database Dependency
     """
     db = SessionLocal()
 

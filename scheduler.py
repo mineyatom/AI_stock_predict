@@ -170,7 +170,12 @@ def run_daily_prediction(
             result = predict_stock(
                 stock_id
             )
-
+            # XGBoost / SHAP 預測完成後先清理無用物件
+            gc.collect()
+            print(
+            f"[MEM] {stock_id} "
+            f"模型完成，已先執行記憶體清理"
+            )
             # ==========================
             # AI 分析
             # ==========================
