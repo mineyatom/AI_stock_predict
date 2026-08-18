@@ -2,6 +2,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 from predictor import predict_stock
 
+import gc
+
 from ollama_analyzer import analyze_prediction_with_ollama
 
 from log_manager import (
@@ -148,11 +150,22 @@ def run_daily_prediction(
 
     for stock_id in HOT_STOCKS:
 
+        # 每一檔股票重新初始化
+        # 避免保留上一檔股票的參考
+        result = None
+        ai_analysis = None
+        lower_price = None
+        upper_price = None
+
         try:
 
             # ==========================
             # 模型預測
             # ==========================
+
+            print(
+                f"[RUN] 開始預測 {stock_id}"
+            )
 
             result = predict_stock(
                 stock_id
@@ -183,7 +196,6 @@ def run_daily_prediction(
 
             save_prediction_log(
 
-                # ★ 使用本輪已決定的日期
                 predict_date=target_date,
 
                 stock_code=result[
@@ -223,7 +235,7 @@ def run_daily_prediction(
             )
 
             print(
-                f"{stock_id} "
+                f"[OK] {stock_id} "
                 f"預測完成，"
                 f"預測日期：{target_date}，"
                 f"AI摘要已保存"
@@ -235,7 +247,26 @@ def run_daily_prediction(
                 f"[ERROR] {stock_id} "
                 f"預測失敗：{e}"
             )
+
             traceback.print_exc()
+
+        finally:
+
+            # ==========================
+            # 每檔股票結束後清理記憶體
+            # ==========================
+
+            result = None
+            ai_analysis = None
+            lower_price = None
+            upper_price = None
+
+            gc.collect()
+
+            print(
+                f"[MEM] {stock_id} "
+                f"預測結束，已執行記憶體清理"
+            )
 
     print(
         f"本輪自動預測完成，"
@@ -251,9 +282,6 @@ def recover_missing_prediction():
 
     now = taipei_now()
 
-    # ==========================
-    # 尚未到每日預測時間
-    # ==========================
     # ==========================
     # 取得應預測的下一交易日
     # ==========================
@@ -291,7 +319,6 @@ def recover_missing_prediction():
 
     try:
 
-        # ★ 把已經決定好的日期傳進去
         run_daily_prediction(
             target_date=target_date
         )
@@ -307,18 +334,27 @@ def recover_missing_prediction():
         print(
             f"[ERROR] 補預測失敗：{e}"
         )
+
         traceback.print_exc()
 
 
 def safe_recover_missing_prediction():
     """
-    每日 02:30 補漏的安全包裝。
-    Recovery 發生例外時只記錄錯誤，不影響 FastAPI / Zeabur 服務。
+    每日補漏的安全包裝。
+    Recovery 發生例外時只記錄錯誤，
+    不影響 FastAPI / Zeabur 服務。
     """
+
     try:
+
         recover_missing_prediction()
+
     except Exception as e:
-        print(f"[ERROR] 02:30 補預測失敗：{e}")
+
+        print(
+            f"[ERROR] 00:30 補預測失敗：{e}"
+        )
+
         traceback.print_exc()
 
 
@@ -367,8 +403,6 @@ def start_scheduler():
 
     run_daily_validation()
 
-
-
     # ==========================
     # 每日 15:00 驗證
     # ==========================
@@ -410,43 +444,54 @@ def start_scheduler():
     )
 
     # ==========================
+    # 每日 00:30 補預測
+    # ==========================
+
+    scheduler.add_job(
+
+        safe_recover_missing_prediction,
+
+        trigger="cron",
+
+        hour=0,
+
+        minute=30,
+
+        id="prediction_recovery_0030",
+
+        replace_existing=True,
+
+    )
+
+    # ==========================
     # 啟動 Scheduler
     # ==========================
 
-
-    # 每日 02:30：SQLite 缺漏檢查；缺少下一交易日預測才補跑
-    scheduler.add_job(
-        safe_recover_missing_prediction,
-        trigger="cron",
-        hour=0,
-        minute=30,
-        id="prediction_recovery_0230",
-        replace_existing=True,
-    )
-
     scheduler.start()
 
-print(
-    f"[INFO] 排程已建立："
-    f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
-)
-
-print(
-    f"[OK] Scheduler 已啟動："
-    f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
-)
-
-# ==========================
-# 顯示所有排程的下一次執行時間
-# ==========================
-
-print("=" * 60)
-print("[INFO] Scheduler Jobs")
-
-for job in scheduler.get_jobs():
     print(
-        f"[JOB] id={job.id} | "
-        f"next_run_time={job.next_run_time}"
+        f"[INFO] 排程已建立："
+        f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
     )
 
-print("=" * 60)
+    print(
+        f"[OK] Scheduler 已啟動："
+        f"{taipei_now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )
+
+    # ==========================
+    # 顯示所有排程
+    # ==========================
+
+    print("=" * 60)
+    print("[INFO] Scheduler Jobs")
+    print("=" * 60)
+
+    for job in scheduler.get_jobs():
+
+        print(
+            f"[JOB] id={job.id} | "
+            f"next_run_time={job.next_run_time}"
+        )
+
+    print("=" * 60)

@@ -501,6 +501,7 @@ def run_xgboost_prediction(df):
         learning_rate=0.05,
         max_depth=5,
         random_state=42,
+        n_jobs=1,
     )
 
     model.fit(X, y)
