@@ -1,6 +1,14 @@
 from datetime import datetime, timedelta
 
 from FinMind.data import DataLoader
+from pytz import timezone
+
+
+# ==========================
+# 台灣時區
+# ==========================
+
+TAIPEI_TZ = timezone("Asia/Taipei")
 
 
 api = DataLoader()
@@ -19,8 +27,9 @@ def get_stock_price(stock_id):
             .replace(".TWO", "")
         )
 
+        # 使用台灣時間計算資料查詢起始日期
         start_date = (
-            datetime.now()
+            datetime.now(TAIPEI_TZ)
             - timedelta(days=14)
         ).strftime("%Y-%m-%d")
 
@@ -79,12 +88,22 @@ def get_stock_price(stock_id):
             "price": current_price,
             "change": abs(change_percent),
             "direction": direction,
-            "market_datetime": f"{latest_market_date} 13:30",
-            "updated_at": datetime.now().strftime(
+
+            # FinMind 最新交易日收盤時間
+            "market_datetime": (
+                f"{latest_market_date} 13:30"
+            ),
+
+            # 網頁顯示的資料更新時間固定使用台灣時間
+            "updated_at": datetime.now(
+                TAIPEI_TZ
+            ).strftime(
                 "%Y/%m/%d %H:%M"
             )
         }
 
     except Exception as e:
-        print(f"FinMind 股價取得失敗：{e}")
+        print(
+            f"FinMind 股價取得失敗：{e}"
+        )
         return None
